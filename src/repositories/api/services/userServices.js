@@ -7,10 +7,10 @@ export const getUsers = async () => {
     const response = await axios.get(`${API_URL}/users`, {
       headers: authHeader(),
     });
-    const token = JSON.parse(localStorage.getItem("token"));
+    // const token = JSON.parse(localStorage.getItem("token"));
     // console.log("token from userServices", token);
-    // console.log("response from userServices", response);
-    return response.data;
+    console.log("response from userServices", response.data.data);
+    return response.data.data;
   } catch (error) {
     throw error.response.data.error;
   }
@@ -28,19 +28,47 @@ export const createUser = async () => {
 };
 
 export const storeUser = async (id, userData) => {
-  return await axios.post(`${API_URL}/users`, userData);
+  try {
+    const response = await axios.post(`${API_URL}/users`, userData, {
+      headers: authHeader(),
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
 };
 
 export const showUser = async (id) => {
-  return await axios.get(`${API_URL}/users/${id}`);
+  try {
+    const response = await axios.get(`${API_URL}/users/${id}`, {
+      headers: authHeader(),
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
 };
 
-export const editUser = async (id, userData) => {
-  return await axios.get(`${API_URL}/users/${id}/edit`);
+export const editUser = async (id) => {
+  try {
+    const response = await axios.get(`${API_URL}/users/${id}/edit`, {
+      headers: authHeader(),
+    });
+    return response.form;
+  } catch (error) {
+    throw error.response.form.error;
+  }
 };
 
 export const updateUser = async (id, userData) => {
-  return await axios.put(`${API_URL}/users/${id}`, userData);
+  try {
+    const response = await axios.put(`${API_URL}/users/${id}`, userData, {
+      headers: authHeader(),
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
 };
 
 export const deleteUser = async (id) => {

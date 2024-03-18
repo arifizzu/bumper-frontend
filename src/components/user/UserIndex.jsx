@@ -141,7 +141,7 @@ const UserIndex = ({ tableColumns }) => {
     try {
       dispatch(getUsersStart());
       const userData = await getUsers();
-      dispatch(getUsersSuccess(userData.data));
+      dispatch(getUsersSuccess(userData));
     } catch (error) {
       dispatch(getUsersFailure(error));
     }
