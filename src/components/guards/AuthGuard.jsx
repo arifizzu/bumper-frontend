@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
 import useAuth from "../../hooks/useAuth";
@@ -16,7 +15,7 @@ import useAuth from "../../hooks/useAuth";
 // }
 
 function AuthGuard({ children }) {
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const isAuthenticated = localStorage.getItem("isAuthenticated");
 
   if (!isAuthenticated) {
     return <Navigate to="/auth/sign-in" />;
