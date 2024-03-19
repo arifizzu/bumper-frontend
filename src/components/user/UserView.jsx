@@ -32,6 +32,7 @@ import {
 import { showUser } from "../../repositories/api/services/userServices";
 
 import avatar4 from "../../assets/img/avatars/avatar-4.jpg";
+import defaultUser from "../../assets/img/avatars/default-user.png";
 
 const UserView = ({ id }) => {
   const navigate = useNavigate();
@@ -61,13 +62,13 @@ const UserView = ({ id }) => {
         </Card.Header>
         <Card.Body className="text-center">
           <img
-            src={avatar4}
+            // src={avatar4}
+            src={defaultUser}
             alt="Stacie Hall"
             className="img-fluid rounded-circle mb-2"
-            width="128"
-            height="128"
+            width="100"
+            height="100"
           />
-          {/* <Card.Title className="mb-0">Stacy</Card.Title> */}
           <Card.Title className="mb-0">
             {user ? user.name : "Loading..."}
           </Card.Title>
@@ -99,86 +100,6 @@ const UserView = ({ id }) => {
             </li>
           </ul>
         </Card.Body>
-
-        {/* <hr className="my-0" />
-
-        <Card.Body>
-          <Card.Title>Skills</Card.Title>
-          <Badge bg="primary" className="me-2 my-1">
-            HTML
-          </Badge>
-          <Badge bg="primary" className="me-2 my-1">
-            JavaScript
-          </Badge>
-          <Badge bg="primary" className="me-2 my-1">
-            Sass
-          </Badge>
-          <Badge bg="primary" className="me-2 my-1">
-            Angular
-          </Badge>
-          <Badge bg="primary" className="me-2 my-1">
-            Vue
-          </Badge>
-          <Badge bg="primary" className="me-2 my-1">
-            React
-          </Badge>
-          <Badge bg="primary" className="me-2 my-1">
-            Redux
-          </Badge>
-          <Badge bg="primary" className="me-2 my-1">
-            UI
-          </Badge>
-          <Badge bg="primary" className="me-2 my-1">
-            UX
-          </Badge>
-        </Card.Body>
-
-        <hr className="my-0" />
-        <Card.Body>
-          <Card.Title>About</Card.Title>
-          <ul className="list-unstyled mb-0">
-            <li className="mb-1">
-              <Home width={14} height={14} className="me-1" /> Lives in{" "}
-              <Link to="/dashboard/default">San Francisco, SA</Link>
-            </li>
-
-            <li className="mb-1">
-              <User width={14} height={14} className="me-1" /> Works at{" "}
-              <Link to="/dashboard/default">GitHub</Link>
-            </li>
-            <li className="mb-1">
-              <MapPin width={14} height={14} className="me-1" /> From{" "}
-              <Link to="/dashboard/default">Boston</Link>
-            </li>
-          </ul>
-        </Card.Body>
-        <hr className="my-0" />
-        <Card.Body>
-          <Card.Title>Elsewhere</Card.Title>
-
-          <ul className="list-unstyled mb-0">
-            <li className="mb-1">
-              <FontAwesomeIcon icon={faGlobe} fixedWidth className="me-1" />
-              <Link to="/dashboard/default">staciehall.co</Link>
-            </li>
-            <li className="mb-1">
-              <FontAwesomeIcon icon={faTwitter} fixedWidth className="me-1" />
-              <Link to="/dashboard/default">Twitter</Link>
-            </li>
-            <li className="mb-1">
-              <FontAwesomeIcon icon={faFacebook} fixedWidth className="me-1" />
-              <Link to="/dashboard/default">Facebook</Link>
-            </li>
-            <li className="mb-1">
-              <FontAwesomeIcon icon={faInstagram} fixedWidth className="me-1" />
-              <Link to="/dashboard/default">Instagram</Link>
-            </li>
-            <li className="mb-1">
-              <FontAwesomeIcon icon={faLinkedin} fixedWidth className="me-1" />
-              <Link to="/dashboard/default">LinkedIn</Link>
-            </li>
-          </ul>
-        </Card.Body> */}
       </Card>
     </React.Fragment>
   );

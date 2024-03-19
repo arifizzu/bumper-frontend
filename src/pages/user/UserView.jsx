@@ -29,7 +29,7 @@ const UserViewPage = () => {
       <Helmet title="User" />
       <Container fluid className="p-0">
         <Button
-          variant="primary"
+          variant="warning"
           className="float-end mt-n1"
           onClick={handleEditButton}
         >
@@ -40,10 +40,10 @@ const UserViewPage = () => {
           <Breadcrumb.Item active>View</Breadcrumb.Item>
         </Breadcrumb>
         <Row>
-          <Col md="4" xl="3">
+          <Col md="5" xl="4">
             <UserView id={id} />
           </Col>
-          <Col md="8" xl="9">
+          <Col md="7" xl="8">
             {/* <Activities /> */}
           </Col>
         </Row>

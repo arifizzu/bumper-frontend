@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { Dropdown } from "react-bootstrap";
 
-import { PieChart, Settings, User } from "react-feather";
+import { PieChart, Settings, User, LogOut } from "react-feather";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -14,11 +14,14 @@ import {
 } from "../../redux/slices/authSlice";
 
 import avatar1 from "../../assets/img/avatars/avatar.jpg";
+import defaultUser from "../../assets/img/avatars/default-user.png";
 
 const NavbarUser = () => {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.auth.loading);
   const error = useSelector((state) => state.auth.error);
+  const user = JSON.parse(localStorage.getItem("user"));
+  // console.log("user in navbar", user);
 
   const handleLogout = async () => {
     try {
@@ -42,15 +45,17 @@ const NavbarUser = () => {
       <span className="d-none d-sm-inline-block">
         <Dropdown.Toggle as="a" className="nav-link">
           <img
-            src={avatar1}
+            // src={avatar1}
+            src={defaultUser}
             className="avatar img-fluid rounded-circle me-1"
             alt="Chris Wood"
           />
-          <span className="text-dark">Chris Wood</span>
+          {/* <span className="text-dark">Chris Wood</span> */}
+          <span className="text-dark">{user ? user.name : "Loading..."}</span>
         </Dropdown.Toggle>
       </span>
       <Dropdown.Menu drop="end">
-        <Dropdown.Item>
+        {/* <Dropdown.Item>
           <User size={18} className="align-middle me-2" />
           Profile
         </Dropdown.Item>
@@ -60,9 +65,13 @@ const NavbarUser = () => {
         </Dropdown.Item>
         <Dropdown.Divider />
         <Dropdown.Item>Settings & Privacy</Dropdown.Item>
-        <Dropdown.Item>Help</Dropdown.Item>
-        {/* <Dropdown.Item>Sign out</Dropdown.Item> */}
-        <Dropdown.Item onClick={handleLogout}>Sign out</Dropdown.Item>
+        <Dropdown.Item>Help</Dropdown.Item> */}
+        <div onClick={handleLogout} className="dropdown-item-wrapper">
+          <Dropdown.Item>
+            <LogOut size={18} className="align-middle me-2" />
+            Sign out
+          </Dropdown.Item>
+        </div>
       </Dropdown.Menu>
     </Dropdown>
   );
