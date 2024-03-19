@@ -9,11 +9,15 @@ export const login = async (email, password) => {
       password,
     });
     // console.log(response);
-    // localStorage.setItem("user", response.data.user);
-    // localStorage.setItem("token", response.data.access_token);
     localStorage.setItem("user", JSON.stringify(response.data.user));
     localStorage.setItem("token", JSON.stringify(response.data.access_token));
 
+    const expires_in = response.data.expires_in;
+    const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+    const tokenExpiration = currentTime + expires_in; // Token expiration time
+    localStorage.setItem("tokenExpiration", tokenExpiration);
+
+    console.log("tokenExpiration", tokenExpiration);
     // const token = JSON.parse(localStorage.getItem("token"));
     // console.log("token", token);
     return response.data;
