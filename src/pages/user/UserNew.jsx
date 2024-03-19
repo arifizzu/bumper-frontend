@@ -9,7 +9,7 @@ import UserNew from "../../components/user/UserNew";
 const UserNewPage = () => {
   const navigate = useNavigate();
 
-  const handleUserClick = () => {
+  const handleUserBreadcrumb = () => {
     navigate("/users/index");
   };
 
@@ -18,7 +18,7 @@ const UserNewPage = () => {
       <Helmet title="User" />
       <Container fluid className="p-0">
         <Breadcrumb style={{ fontSize: "1.3rem" }}>
-          <Breadcrumb.Item onClick={handleUserClick}>User</Breadcrumb.Item>
+          <Breadcrumb.Item onClick={handleUserBreadcrumb}>User</Breadcrumb.Item>
           <Breadcrumb.Item active>Create</Breadcrumb.Item>
         </Breadcrumb>
         <UserNew />

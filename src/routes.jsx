@@ -113,8 +113,9 @@ const Changelog = lazy(() => import("./pages/docs/Changelog"));
 const ProtectedPage = lazy(() => import("./pages/protected/ProtectedPage"));
 
 // Users
-const UserIndex = lazy(() => import("./pages/user/UserIndex"));
+const UserIndex = lazy(() => import("./pages/user/userIndex"));
 const UserNew = lazy(() => import("./pages/user/UserNew"));
+const UserView = lazy(() => import("./pages/user/UserView"));
 
 const routes = [
   {
@@ -523,6 +524,10 @@ const routes = [
       {
         path: "create",
         element: <UserNew />,
+      },
+      {
+        path: "view/:id",
+        element: <UserView />,
       },
       // {
       //   path: "analytics",

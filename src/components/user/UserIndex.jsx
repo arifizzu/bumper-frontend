@@ -42,9 +42,9 @@ const UserIndex = ({ tableColumns }) => {
   const { users, loading, error } = useSelector((state) => state.user);
   const [updatedColumns, setUpdatedColumns] = useState([]);
 
-  const handleViewButton = async () => {
+  const handleViewButton = async (id) => {
     try {
-      navigate("/users/create");
+      navigate(`/users/view/${id}`);
     } catch (error) {
       console.error("View user failed:", error);
     }
@@ -94,7 +94,10 @@ const UserIndex = ({ tableColumns }) => {
           variant="info"
           size="sm"
           className="me-2"
-          onClick={handleViewButton}
+          // onClick={handleViewButton}
+          onClick={() => {
+            handleViewButton(row.id);
+          }}
         >
           <FontAwesomeIcon icon={faEye} /> View
         </Button>

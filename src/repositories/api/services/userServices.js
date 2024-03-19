@@ -9,7 +9,7 @@ export const getUsers = async () => {
     });
     // const token = JSON.parse(localStorage.getItem("token"));
     // console.log("token from userServices", token);
-    console.log("response from userServices", response.data.data);
+    console.log("response from getUsers-userservices", response.data.data);
     return response.data.data;
   } catch (error) {
     throw error.response.data.error;
@@ -43,7 +43,8 @@ export const showUser = async (id) => {
     const response = await axios.get(`${API_URL}/users/${id}`, {
       headers: authHeader(),
     });
-    return response.data;
+    console.log("response from showUser", response.data.data);
+    return response.data.data;
   } catch (error) {
     throw error.response.data.error;
   }
