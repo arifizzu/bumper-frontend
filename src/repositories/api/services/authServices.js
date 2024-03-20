@@ -17,7 +17,7 @@ export const login = async (email, password) => {
     const tokenExpiration = currentTime + expires_in; // Token expiration time
     localStorage.setItem("tokenExpiration", tokenExpiration);
 
-    console.log("tokenExpiration", tokenExpiration);
+    // console.log("tokenExpiration", tokenExpiration);
     // const token = JSON.parse(localStorage.getItem("token"));
     // console.log("token", token);
     return response.data;
