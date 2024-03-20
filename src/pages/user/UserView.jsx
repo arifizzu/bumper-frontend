@@ -21,7 +21,7 @@ const UserViewPage = () => {
   };
 
   const handleUserBreadcrumb = () => {
-    navigate("/users/index");
+    navigate("/users");
   };
 
   return (

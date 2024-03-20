@@ -78,7 +78,7 @@ const UserEdit = ({ id }) => {
                 if (result.success === true) {
                   console.log(values); // Handle form submission
                   console.log("User updated successfully");
-                  navigate("/users/index");
+                  navigate("/users");
                 } else {
                   console.error("Error saving user:", result);
                   if (Array.isArray(result.error.email)) {

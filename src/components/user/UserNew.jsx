@@ -56,16 +56,6 @@ const UserNew = ({}) => {
     fetchUserForm();
   }, []);
 
-  // const handleSaveUserButton = async (values) => {
-  //   try {
-  //     await storeUser(values);
-  //     navigate("/users/index");
-  //     return true;
-  //   } catch (error) {
-  //     return error;
-  //   }
-  // };
-
   return (
     <React.Fragment>
       <Card>
@@ -84,7 +74,7 @@ const UserNew = ({}) => {
                 if (result.success === true) {
                   console.log(values); // Handle form submission
                   console.log("User saved successfully");
-                  navigate("/users/index");
+                  navigate("/users");
                 } else {
                   console.error("Error saving user:", result);
                   if (Array.isArray(result.error.email)) {

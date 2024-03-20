@@ -10,7 +10,7 @@ const UserNewPage = () => {
   const navigate = useNavigate();
 
   const handleUserBreadcrumb = () => {
-    navigate("/users/index");
+    navigate("/users");
   };
 
   return (

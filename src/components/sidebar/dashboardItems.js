@@ -369,7 +369,7 @@ const formSection = [
 
 const formBuilderSection = [
   {
-    href: "/notifications",
+    href: "/forms",
     icon: List,
     title: "Existing Forms",
   },
@@ -414,12 +414,12 @@ const managementSettingsSection = [
     ],
   },
   {
-    href: "/users/index",
+    href: "/users",
     icon: Users,
     title: "User Account",
     // children: [
     //   {
-    //     href: "/users/index",
+    //     href: "/users",
     //     title: "Existing Users",
     //   },
     //   {

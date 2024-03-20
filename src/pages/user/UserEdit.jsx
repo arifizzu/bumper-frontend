@@ -11,7 +11,7 @@ const UserEditPage = () => {
   const { id } = useParams();
 
   const handleUserBreadcrumb = () => {
-    navigate("/users/index");
+    navigate("/users");
   };
 
   return (

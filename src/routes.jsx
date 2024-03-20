@@ -118,6 +118,12 @@ const UserNew = lazy(() => import("./pages/user/UserNew"));
 const UserView = lazy(() => import("./pages/user/UserView"));
 const UserEdit = lazy(() => import("./pages/user/UserEdit"));
 
+// Form Builder
+const FormIndex = lazy(() => import("./pages/form/FormIndex"));
+// const FormNew = lazy(() => import("./pages/form/FormNew"));
+// const FormView = lazy(() => import("./pages/form/FormView"));
+// const FormEdit = lazy(() => import("./pages/form/FormEdit"));
+
 const routes = [
   {
     path: "/",
@@ -519,7 +525,7 @@ const routes = [
     ),
     children: [
       {
-        path: "index",
+        path: "",
         element: <UserIndex />,
       },
       {
@@ -534,9 +540,32 @@ const routes = [
         path: "edit/:id",
         element: <UserEdit />,
       },
+    ],
+  },
+  {
+    path: "forms",
+    // element: <DashboardLayout />,
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
+    children: [
+      {
+        path: "",
+        element: <FormIndex />,
+      },
       // {
-      //   path: "analytics",
-      //   element: <Analytics />,
+      //   path: "create",
+      //   element: <FormNew />,
+      // },
+      // {
+      //   path: "view/:id",
+      //   element: <FormView />,
+      // },
+      // {
+      //   path: "edit/:id",
+      //   element: <FormEdit />,
       // },
     ],
   },
