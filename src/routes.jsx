@@ -116,6 +116,7 @@ const ProtectedPage = lazy(() => import("./pages/protected/ProtectedPage"));
 const UserIndex = lazy(() => import("./pages/user/userIndex"));
 const UserNew = lazy(() => import("./pages/user/UserNew"));
 const UserView = lazy(() => import("./pages/user/UserView"));
+const UserEdit = lazy(() => import("./pages/user/UserEdit"));
 
 const routes = [
   {
@@ -528,6 +529,10 @@ const routes = [
       {
         path: "view/:id",
         element: <UserView />,
+      },
+      {
+        path: "edit/:id",
+        element: <UserEdit />,
       },
       // {
       //   path: "analytics",

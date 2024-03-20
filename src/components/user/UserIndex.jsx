@@ -50,9 +50,9 @@ const UserIndex = ({ tableColumns }) => {
     }
   };
 
-  const handleEditButton = async () => {
+  const handleEditButton = async (id) => {
     try {
-      navigate("/users/create");
+      navigate(`/users/edit/${id}`);
     } catch (error) {
       console.error("Edit user failed:", error);
     }
@@ -94,7 +94,6 @@ const UserIndex = ({ tableColumns }) => {
           variant="info"
           size="sm"
           className="me-2"
-          // onClick={handleViewButton}
           onClick={() => {
             handleViewButton(row.id);
           }}
@@ -106,7 +105,9 @@ const UserIndex = ({ tableColumns }) => {
           variant="warning"
           size="sm"
           className="me-2"
-          onClick={handleEditButton}
+          onClick={() => {
+            handleEditButton(row.id);
+          }}
         >
           <FontAwesomeIcon icon={faEdit} /> Edit
         </Button>

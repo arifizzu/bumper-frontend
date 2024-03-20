@@ -38,7 +38,8 @@ const UserView = ({ id }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
-  console.log("user", user);
+  // console.log("user", user);
+  // console.log("id in userview", id);
 
   useEffect(() => {
     const fetchUsers = async () => {

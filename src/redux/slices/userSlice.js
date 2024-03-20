@@ -3,6 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   users: [],
   user: null,
+  form: null,
+  forms: {},
   loading: false,
   error: null,
 };
@@ -25,6 +27,46 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+
+    createUserStart(state) {
+      state.loading = true;
+      state.error = null;
+    },
+    createUserSuccess(state, action) {
+      state.loading = false;
+      state.form = action.payload;
+      state.error = null;
+      // console.log("action", action);
+    },
+    createUserFailure(state, action) {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
+    editUserStart(state) {
+      state.loading = true;
+      state.error = null;
+    },
+    editUserSuccess(state, action) {
+      state.loading = false;
+      const { id, formData } = action.payload;
+      state.forms[id] = formData; // Store form data with the corresponding user ID
+      state.error = null;
+      // console.log("action", action);
+    },
+    editUserFailure(state, action) {
+      state.loading = false;
+      state.error = action.payload;
+      // console.log("action", action);
+    },
+
+    // updateTodo(state, action) {
+    //   const { id, text } = action.payload;
+    //   const todoToUpdate = state.todos.find((todo) => todo.id === id);
+    //   if (todoToUpdate) {
+    //     todoToUpdate.text = text;
+    //   }
+    // },
 
     showUserStart(state) {
       state.loading = true;
@@ -63,6 +105,12 @@ export const {
   getUsersStart,
   getUsersSuccess,
   getUsersFailure,
+  createUserStart,
+  createUserSuccess,
+  createUserFailure,
+  editUserStart,
+  editUserSuccess,
+  editUserFailure,
   showUserStart,
   showUserSuccess,
   showUserFailure,

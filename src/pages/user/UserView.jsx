@@ -4,7 +4,7 @@ import { Container, Button, Breadcrumb, Row, Col } from "react-bootstrap";
 import { useNavigate, Link, useParams } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 import UserView from "../../components/user/UserView";
 
@@ -12,11 +12,11 @@ const UserViewPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const handleEditButton = async () => {
+  const handleEditButton = async (id) => {
     try {
-      navigate("/users/create");
+      navigate(`/users/edit/${id}`);
     } catch (error) {
-      console.error("Create new user failed:", error);
+      console.error("Edit user failed:", error);
     }
   };
 
@@ -31,7 +31,9 @@ const UserViewPage = () => {
         <Button
           variant="warning"
           className="float-end mt-n1"
-          onClick={handleEditButton}
+          onClick={() => {
+            handleEditButton(id);
+          }}
         >
           <FontAwesomeIcon icon={faEdit} /> Edit
         </Button>

@@ -17,14 +17,14 @@ import {
 
 import { useDispatch, useSelector } from "react-redux";
 import {
-  createUser,
-  storeUser,
+  editUser,
+  updateUser,
 } from "../../repositories/api/services/userServices";
 
 import {
-  createUserStart,
-  createUserSuccess,
-  createUserFailure,
+  editUserStart,
+  editUserSuccess,
+  editUserFailure,
 } from "../../redux/slices/userSlice";
 
 const schema = Yup.object().shape({
@@ -38,39 +38,33 @@ const schema = Yup.object().shape({
     .required("Confirm Password is required"),
 });
 
-const UserNew = ({}) => {
+const UserEdit = ({ id }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const form = useSelector((state) => state.user.form);
+  const form = useSelector((state) => state.user.forms[id]);
 
   useEffect(() => {
-    const fetchUserForm = async () => {
+    const fetchUserForm = async (id) => {
       try {
-        dispatch(createUserStart());
-        const form = await createUser();
-        dispatch(createUserSuccess(form));
+        dispatch(editUserStart());
+        const formData = await editUser(id);
+        dispatch(editUserSuccess({ id, formData }));
       } catch (error) {
-        dispatch(createUserFailure(error));
+        dispatch(editUserFailure(error));
       }
     };
-    fetchUserForm();
-  }, []);
+    fetchUserForm(id);
+  }, [dispatch, id]);
 
-  // const handleSaveUserButton = async (values) => {
-  //   try {
-  //     await storeUser(values);
-  //     navigate("/users/index");
-  //     return true;
-  //   } catch (error) {
-  //     return error;
-  //   }
-  // };
+  if (!form) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <React.Fragment>
       <Card>
         <Card.Header>
-          <Card.Title>Create New User</Card.Title>
+          <Card.Title>Edit User</Card.Title>
           <h6 className="card-subtitle text-muted">Enter user details</h6>
         </Card.Header>
         <Card.Body>
@@ -80,10 +74,10 @@ const UserNew = ({}) => {
               try {
                 setSubmitting(true);
                 const { name, email, password } = values; // Destructure name, email, and password from values
-                const result = await storeUser({ name, email, password });
+                const result = await updateUser(id, { name, email, password });
                 if (result.success === true) {
                   console.log(values); // Handle form submission
-                  console.log("User saved successfully");
+                  console.log("User updated successfully");
                   navigate("/users/index");
                 } else {
                   console.error("Error saving user:", result);
@@ -216,4 +210,4 @@ const UserNew = ({}) => {
   );
 };
 
-export default UserNew;
+export default UserEdit;
