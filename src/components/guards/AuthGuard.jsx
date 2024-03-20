@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 import useAuth from "../../hooks/useAuth";
 
@@ -29,6 +29,7 @@ import useAuth from "../../hooks/useAuth";
 function AuthGuard({ children }) {
   const isAuthenticated = localStorage.getItem("isAuthenticated");
   const [tokenExpired, setTokenExpired] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const tokenExpiration = localStorage.getItem("tokenExpiration");
@@ -46,7 +47,7 @@ function AuthGuard({ children }) {
     } else {
       setTokenExpired(false);
     }
-  }, []);
+  }, [location]);
 
   if (!isAuthenticated || tokenExpired) {
     return <Navigate to="/auth/sign-in" />;
