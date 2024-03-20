@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { Dropdown } from "react-bootstrap";
 
@@ -18,6 +19,7 @@ import defaultUser from "../../assets/img/avatars/default-user.png";
 
 const NavbarUser = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const loading = useSelector((state) => state.auth.loading);
   const error = useSelector((state) => state.auth.error);
   const user = JSON.parse(localStorage.getItem("user"));
@@ -32,6 +34,14 @@ const NavbarUser = () => {
     } catch (error) {
       dispatch(logoutFailure(error));
       console.error("Logout failed:", error);
+    }
+  };
+
+  const handleViewProfile = async (id) => {
+    try {
+      navigate(`/users/view/${id}`);
+    } catch (error) {
+      console.error("View failed:", error);
     }
   };
 
@@ -55,11 +65,16 @@ const NavbarUser = () => {
         </Dropdown.Toggle>
       </span>
       <Dropdown.Menu drop="end">
+        <div
+          onClick={() => handleViewProfile(user.id)} // Pass id inside an arrow function
+          className="dropdown-item-wrapper"
+        >
+          <Dropdown.Item>
+            <User size={18} className="align-middle me-2" />
+            Profile
+          </Dropdown.Item>
+        </div>
         {/* <Dropdown.Item>
-          <User size={18} className="align-middle me-2" />
-          Profile
-        </Dropdown.Item>
-        <Dropdown.Item>
           <PieChart size={18} className="align-middle me-2" />
           Analytics
         </Dropdown.Item>
