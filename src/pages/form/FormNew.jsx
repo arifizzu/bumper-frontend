@@ -126,7 +126,7 @@ const FormNewPage = () => {
         <Button
           variant="success"
           className="float-end mt-n1"
-          // hidden
+          hidden={!formIsFilled}
           onClick={() => {
             if (
               !formDetails ||
@@ -194,6 +194,8 @@ const FormNewPage = () => {
         <FormNewDetails
           setFormDetails={setFormDetails}
           fieldError={fieldError}
+          formIsFilled={formIsFilled}
+          setFormIsFilled={setFormIsFilled}
         />
 
         <Row>

@@ -39,7 +39,12 @@ const schema = Yup.object().shape({
   table_name: Yup.string(),
 });
 
-const FormNewDetails = ({ setFormDetails, fieldError }) => {
+const FormNewDetails = ({
+  setFormDetails,
+  fieldError,
+  setFormIsFilled,
+  formIsFilled,
+}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const form = useSelector((state) => state.form.form);
@@ -73,6 +78,10 @@ const FormNewDetails = ({ setFormDetails, fieldError }) => {
     fetchTableOptions();
   }, [dispatch]);
 
+  const handleEdit = () => {
+    setFormIsFilled(false); // Reset formIsFilled to false
+  };
+
   return (
     <React.Fragment>
       <Card>
@@ -85,7 +94,13 @@ const FormNewDetails = ({ setFormDetails, fieldError }) => {
         <Card.Body>
           <Formik
             validationSchema={schema}
-            onSubmit={(values) => {}}
+            // onSubmit={(values) => {}}
+            onSubmit={(values) => {
+              // Handle form submission logic here
+              console.log(values); // For example, you can log the form values
+              setFormIsFilled(true);
+              console.log("formIsFilled", formIsFilled);
+            }}
             initialValues={{
               name: (form && form.name) || "",
               short_name: (form && form.short_name) || "",
@@ -104,66 +119,68 @@ const FormNewDetails = ({ setFormDetails, fieldError }) => {
             }) => (
               <Form noValidate onSubmit={handleSubmit}>
                 <Row>
-                  <Form.Group
-                    as={Col}
-                    md="4"
-                    controlId="validationFormik09"
-                    className="mb-3"
-                  >
-                    <Form.Label>Name*</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="name"
-                      value={values.name}
-                      //   onChange={handleChange}
-                      onChange={(e) => {
-                        handleChange(e);
-                        setFormDetails((prevFormDetails) => ({
-                          ...prevFormDetails,
-                          name: e.target.value,
-                        }));
-                      }}
-                      //   isValid={touched.name && !errors.name}
-                      //   isInvalid={touched.name && !!errors.name}
-                      isValid={touched.name && !fieldError.name}
-                      isInvalid={touched.name && !!fieldError.name}
-                    />
-                    {/* <Form.Control.Feedback type="invalid">
-                      {errors.name}
-                    </Form.Control.Feedback> */}
+                  {!formIsFilled ? (
+                    <>
+                      <Form.Group
+                        as={Col}
+                        md="4"
+                        controlId="validationFormik09"
+                        className="mb-3"
+                      >
+                        <Form.Label>Name*</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="name"
+                          value={values.name}
+                          //   onChange={handleChange}
+                          onChange={(e) => {
+                            handleChange(e);
+                            setFormDetails((prevFormDetails) => ({
+                              ...prevFormDetails,
+                              name: e.target.value,
+                            }));
+                          }}
+                          isValid={touched.name && !errors.name}
+                          isInvalid={touched.name && !!errors.name}
+                          // isValid={touched.name && !fieldError.name}
+                          // isInvalid={touched.name && !!fieldError.name}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.name}
+                        </Form.Control.Feedback>
 
-                    <Form.Control.Feedback type="invalid">
-                      {/* {fieldError.name[0]} */}
-                    </Form.Control.Feedback>
-                  </Form.Group>
-                  <Form.Group
-                    as={Col}
-                    md="4"
-                    controlId="validationFormik10"
-                    className="mb-3"
-                  >
-                    <Form.Label>Short Name*</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="short_name"
-                      value={values.short_name}
-                      //   onChange={handleChange}
-                      onChange={(e) => {
-                        handleChange(e);
-                        setFormDetails((prevFormDetails) => ({
-                          ...prevFormDetails,
-                          short_name: e.target.value,
-                        }));
-                      }}
-                      //   isValid={touched.short_name && !errors.short_name}
-                      //   isInvalid={touched.short_name && !!errors.short_name}
-                      isValid={touched.short_name && !fieldError.short_name}
-                      isInvalid={touched.short_name && !!fieldError.short_name}
-                    />
-                    {/* <Form.Control.Feedback type="invalid">
-                      {errors.short_name}
+                        {/* <Form.Control.Feedback type="invalid">
+                      {fieldError.name[0]}
                     </Form.Control.Feedback> */}
-                    <Form.Control.Feedback type="invalid">
+                      </Form.Group>
+                      <Form.Group
+                        as={Col}
+                        md="4"
+                        controlId="validationFormik10"
+                        className="mb-3"
+                      >
+                        <Form.Label>Short Name*</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="short_name"
+                          value={values.short_name}
+                          //   onChange={handleChange}
+                          onChange={(e) => {
+                            handleChange(e);
+                            setFormDetails((prevFormDetails) => ({
+                              ...prevFormDetails,
+                              short_name: e.target.value,
+                            }));
+                          }}
+                          isValid={touched.short_name && !errors.short_name}
+                          isInvalid={touched.short_name && !!errors.short_name}
+                          // isValid={touched.short_name && !fieldError.short_name}
+                          // isInvalid={touched.short_name && !!fieldError.short_name}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.short_name}
+                        </Form.Control.Feedback>
+                        {/* <Form.Control.Feedback type="invalid">
                       {fieldError.name && fieldError.name.length > 0 && (
                         <div>
                           {fieldError.name.map((message, index) => (
@@ -171,38 +188,99 @@ const FormNewDetails = ({ setFormDetails, fieldError }) => {
                           ))}
                         </div>
                       )}
-                    </Form.Control.Feedback>
-                  </Form.Group>
-                  <Form.Group
-                    as={Col}
-                    md="4"
-                    controlId="validationFormik11"
-                    className="mb-3"
-                  >
-                    <Form.Label>Database Table (Optional)</Form.Label>
-                    <Form.Select
-                      name="table_name"
-                      //   onChange={handleChange}
-                      onChange={(e) => {
-                        handleChange(e);
-                        setFormDetails((prevFormDetails) => ({
-                          ...prevFormDetails,
-                          table_name: e.target.value,
-                        }));
-                      }}
-                      value={values.table_name || ""}
-                    >
-                      <option value="">Not chosen</option>
-                      {tableOptions.map((tableName, index) => (
-                        <option key={index} value={tableName}>
-                          {tableName}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Form.Group>
+                    </Form.Control.Feedback> */}
+                      </Form.Group>
+                      <Form.Group
+                        as={Col}
+                        md="4"
+                        controlId="validationFormik11"
+                        className="mb-3"
+                      >
+                        <Form.Label>Database Table (Optional)</Form.Label>
+                        <Form.Select
+                          name="table_name"
+                          //   onChange={handleChange}
+                          onChange={(e) => {
+                            handleChange(e);
+                            setFormDetails((prevFormDetails) => ({
+                              ...prevFormDetails,
+                              table_name: e.target.value,
+                            }));
+                          }}
+                          value={values.table_name || ""}
+                        >
+                          <option value="">Not chosen</option>
+                          {tableOptions.map((tableName, index) => (
+                            <option key={index} value={tableName}>
+                              {tableName}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </Form.Group>
+                    </>
+                  ) : (
+                    <>
+                      <Form.Group
+                        as={Col}
+                        md="4"
+                        controlId="validationFormik09"
+                        className="mb-3"
+                      >
+                        <Form.Label>Name*</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="name"
+                          value={values.name}
+                          //   onChange={handleChange}
+                          disabled
+                        />
+                      </Form.Group>
+                      <Form.Group
+                        as={Col}
+                        md="4"
+                        controlId="validationFormik10"
+                        className="mb-3"
+                      >
+                        <Form.Label>Short Name*</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="short_name"
+                          value={values.short_name}
+                          disabled
+                        />
+                      </Form.Group>
+                      <Form.Group
+                        as={Col}
+                        md="4"
+                        controlId="validationFormik11"
+                        className="mb-3"
+                      >
+                        <Form.Label>Database Table (Optional)</Form.Label>
+                        <Form.Select
+                          name="table_name"
+                          //   onChange={handleChange}
+                          disabled
+                          value={values.table_name || ""}
+                        >
+                          <option value="">Not chosen</option>
+                          {tableOptions.map((tableName, index) => (
+                            <option key={index} value={tableName}>
+                              {tableName}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </Form.Group>
+                    </>
+                  )}
                 </Row>
-                {/* <Button>Edit</Button>
-                <Button>Confirm</Button> */}
+                <div className="text-end">
+                  {!formIsFilled && <Button type="submit">Confirm</Button>}
+                  {formIsFilled && (
+                    <Button onClick={handleEdit} variant="warning">
+                      Edit
+                    </Button>
+                  )}
+                </div>
               </Form>
             )}
           </Formik>
