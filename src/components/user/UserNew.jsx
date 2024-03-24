@@ -115,10 +115,10 @@ const UserNew = ({}) => {
                   <Form.Group
                     as={Col}
                     md="6"
-                    controlId="validationFormik06"
+                    controlId="validationFormik16"
                     className="mb-3"
                   >
-                    <Form.Label>Name</Form.Label>
+                    <Form.Label>Name*</Form.Label>
                     <Form.Control
                       type="text"
                       name="name"
@@ -134,10 +134,10 @@ const UserNew = ({}) => {
                   <Form.Group
                     as={Col}
                     md="6"
-                    controlId="validationFormik07"
+                    controlId="validationFormik17"
                     className="mb-3"
                   >
-                    <Form.Label>Email</Form.Label>
+                    <Form.Label>Email*</Form.Label>
                     <Form.Control
                       type="email"
                       name="email"
@@ -155,10 +155,10 @@ const UserNew = ({}) => {
                   <Form.Group
                     as={Col}
                     md="6"
-                    controlId="validationFormik08"
+                    controlId="validationFormik18"
                     className="mb-3"
                   >
-                    <Form.Label>Password</Form.Label>
+                    <Form.Label>Password*</Form.Label>
                     <Form.Control
                       type="password"
                       name="password"
@@ -175,10 +175,10 @@ const UserNew = ({}) => {
                   <Form.Group
                     as={Col}
                     md="6"
-                    controlId="validationFormik09"
+                    controlId="validationFormik19"
                     className="mb-3"
                   >
-                    <Form.Label>Confirm Password</Form.Label>
+                    <Form.Label>Confirm Password*</Form.Label>
                     <Form.Control
                       type="password"
                       name="confirmPassword"

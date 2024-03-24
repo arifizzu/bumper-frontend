@@ -26,6 +26,9 @@ import {
   getFormsStart,
   getFormsSuccess,
   getFormsFailure,
+  deleteFormStart,
+  deleteFormSuccess,
+  deleteFormFailure,
 } from "../../redux/slices/formSlice";
 
 import {
@@ -57,12 +60,12 @@ const FormIndex = ({ tableColumns }) => {
 
   const handleDeleteButton = async (id) => {
     try {
-      //   dispatch(deleteFormStart());
+      dispatch(deleteFormStart());
       console.log("Deleting form with id:", id);
-      //   await deleteForm(id);
-      //   dispatch(deleteFormSuccess(id));
+      await deleteForm(id);
+      dispatch(deleteFormSuccess(id));
     } catch (error) {
-      //   dispatch(deleteFormFailure());
+      dispatch(deleteFormFailure());
       console.error("Delete form failed:", error);
     }
   };

@@ -6,6 +6,7 @@ import AuthLayout from "./layouts/Auth";
 import DashboardLayout from "./layouts/Dashboard";
 import DocLayout from "./layouts/Doc";
 import LandingLayout from "./layouts/Landing";
+import FormBuilderLayout from "./layouts/FormBuilder";
 
 // Guards
 import AuthGuard from "./components/guards/AuthGuard";
@@ -120,7 +121,7 @@ const UserEdit = lazy(() => import("./pages/user/UserEdit"));
 
 // Form Builder
 const FormIndex = lazy(() => import("./pages/form/FormIndex"));
-// const FormNew = lazy(() => import("./pages/form/FormNew"));
+const FormNew = lazy(() => import("./pages/form/FormNew"));
 // const FormView = lazy(() => import("./pages/form/FormView"));
 // const FormEdit = lazy(() => import("./pages/form/FormEdit"));
 
@@ -555,10 +556,10 @@ const routes = [
         path: "",
         element: <FormIndex />,
       },
-      // {
-      //   path: "create",
-      //   element: <FormNew />,
-      // },
+      {
+        path: "create",
+        element: <FormNew />,
+      },
       // {
       //   path: "view/:id",
       //   element: <FormView />,
@@ -569,6 +570,28 @@ const routes = [
       // },
     ],
   },
+  // {
+  //   path: "forms",
+  //   element: (
+  //     <AuthGuard>
+  //       <FormBuilderLayout />
+  //     </AuthGuard>
+  //   ),
+  //   children: [
+  //     {
+  //       path: "create",
+  //       element: <FormNew />,
+  //     },
+  //     // {
+  //     //   path: "view/:id",
+  //     //   element: <FormView />,
+  //     // },
+  //     // {
+  //     //   path: "edit/:id",
+  //     //   element: <FormEdit />,
+  //     // },
+  //   ],
+  // },
 ];
 
 export default routes;

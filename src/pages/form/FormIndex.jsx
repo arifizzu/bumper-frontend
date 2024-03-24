@@ -14,7 +14,7 @@ const FormIndexPage = () => {
   const navigate = useNavigate();
   const handleCreateNew = async () => {
     try {
-      //   navigate("/users/create");
+      navigate("/forms/create");
     } catch (error) {
       console.error("Create new form failed:", error);
     }
@@ -29,7 +29,7 @@ const FormIndexPage = () => {
           className="float-end mt-n1"
           onClick={handleCreateNew}
         >
-          <FontAwesomeIcon icon={faPlus} /> New user
+          <FontAwesomeIcon icon={faPlus} /> New Form
         </Button>
         <Breadcrumb style={{ fontSize: "1.3rem" }}>
           <Breadcrumb.Item active>Form</Breadcrumb.Item>

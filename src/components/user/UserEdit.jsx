@@ -119,7 +119,7 @@ const UserEdit = ({ id }) => {
                   <Form.Group
                     as={Col}
                     md="6"
-                    controlId="validationFormik06"
+                    controlId="validationFormik12"
                     className="mb-3"
                   >
                     <Form.Label>Name</Form.Label>
@@ -138,7 +138,7 @@ const UserEdit = ({ id }) => {
                   <Form.Group
                     as={Col}
                     md="6"
-                    controlId="validationFormik07"
+                    controlId="validationFormik13"
                     className="mb-3"
                   >
                     <Form.Label>Email</Form.Label>
@@ -159,7 +159,7 @@ const UserEdit = ({ id }) => {
                   <Form.Group
                     as={Col}
                     md="6"
-                    controlId="validationFormik08"
+                    controlId="validationFormik14"
                     className="mb-3"
                   >
                     <Form.Label>Password</Form.Label>
@@ -179,7 +179,7 @@ const UserEdit = ({ id }) => {
                   <Form.Group
                     as={Col}
                     md="6"
-                    controlId="validationFormik09"
+                    controlId="validationFormik15"
                     className="mb-3"
                   >
                     <Form.Label>Confirm Password</Form.Label>
