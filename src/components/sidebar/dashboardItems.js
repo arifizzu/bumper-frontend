@@ -15,6 +15,7 @@ import {
   Key,
   FilePlus,
   FolderPlus,
+  Trello,
 } from "react-feather";
 
 const pagesSection = [
@@ -370,27 +371,27 @@ const formSection = [
 const formBuilderSection = [
   {
     href: "/forms",
-    icon: List,
-    title: "Existing Forms",
+    icon: CheckSquare,
+    title: "Forms",
   },
-  {
-    href: "/notifications",
-    icon: FilePlus,
-    title: "Create New Form",
-  },
+  // {
+  //   href: "/notifications",
+  //   icon: FilePlus,
+  //   title: "Create New Form",
+  // },
 ];
 
 const processBuilderSection = [
   {
     href: "/notifications",
-    icon: List,
-    title: "Existing Processes",
+    icon: Trello,
+    title: "Processes",
   },
-  {
-    href: "/notifications",
-    icon: FolderPlus,
-    title: "Create New Process",
-  },
+  // {
+  //   href: "/notifications",
+  //   icon: FolderPlus,
+  //   title: "Create New Process",
+  // },
 ];
 
 const managementSettingsSection = [

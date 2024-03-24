@@ -33,6 +33,8 @@ const FormNewPage = () => {
   const [fieldError, setFieldError] = useState({});
 
   const [formDetails, setFormDetails] = useState({});
+  const [formIsFilled, setFormIsFilled] = useState(false);
+
   const [fieldDetails, setFieldDetails] = useState({});
   const [formId, setFormId] = useState({});
   const [showModal, setShowModal] = useState(false);
@@ -124,6 +126,7 @@ const FormNewPage = () => {
         <Button
           variant="success"
           className="float-end mt-n1"
+          // hidden
           onClick={() => {
             if (
               !formDetails ||

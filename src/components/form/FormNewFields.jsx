@@ -98,7 +98,12 @@ const FormNewFields = ({ fieldLayout, setFieldLayout }) => {
           </Button>
         </div>
 
-        {field.name === "Text Input" && <FieldTextInput />}
+        {field.name === "Text Input" && (
+          <FieldTextInput
+          // fieldLayout={fieldLayout}
+          // setFieldLayout={setFieldLayout}
+          />
+        )}
         {field.name === "Textarea" && <FieldTextarea />}
         {field.name === "Number Input" && <FieldNumberInput />}
         {field.name === "Checkbox" && <FieldCheckbox />}

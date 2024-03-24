@@ -201,6 +201,8 @@ const FormNewDetails = ({ setFormDetails, fieldError }) => {
                     </Form.Select>
                   </Form.Group>
                 </Row>
+                {/* <Button>Edit</Button>
+                <Button>Confirm</Button> */}
               </Form>
             )}
           </Formik>

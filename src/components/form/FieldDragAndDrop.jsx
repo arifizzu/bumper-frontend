@@ -84,7 +84,6 @@ const TabsWithFieldTypes = ({
   field,
   columnOptions,
   formId,
-  setFieldDetails,
   fieldLayout,
   setFieldLayout,
 }) => {
@@ -103,7 +102,8 @@ const TabsWithFieldTypes = ({
     const initialValues = {};
     if (Array.isArray(fieldLayout) && fieldLayout.length > 0) {
       fieldLayout.forEach((field, index) => {
-        initialValues[`caption-${index}`] = field.detail.caption || "";
+        initialValues[`caption-${index}`] =
+          (field && field.detail.caption) || "";
         // Add other initial values here
       });
     }
@@ -213,21 +213,180 @@ const TabsWithFieldTypes = ({
 
                             <Form.Group
                               as={Col}
-                              controlId={`type_id-${index}`}
+                              controlId={`is_required-${index}`}
                               className="mb-3"
                             >
                               <FloatingLabel
-                                label="Field Type (view-only)"
+                                label="Is Required*"
                                 style={{ color: "grey" }}
                               >
-                                <Form.Control
-                                  readOnly
-                                  type="number"
-                                  name={`type_id-${index}`}
-                                  value={field.detail.type_id}
-                                />
+                                <Form.Select
+                                  aria-label="Floating label select example"
+                                  name={`is_required-${index}`}
+                                  value={values[`is_required-${index}`]}
+                                  onChange={(e) => handleChange(e)}
+                                >
+                                  <option>Please Choose</option>
+                                  <option value="0">No</option>
+                                  <option value="1">Yes</option>
+                                </Form.Select>
                               </FloatingLabel>
                             </Form.Group>
+
+                            <Form.Group
+                              as={Col}
+                              controlId={`column_name-${index}`}
+                              className="mb-3"
+                            >
+                              <FloatingLabel
+                                label="Database Column (Optional)"
+                                style={{ color: "grey" }}
+                              >
+                                <Form.Select
+                                  aria-label="Floating label select example"
+                                  name={`column_name-${index}`}
+                                  value={values[`column_name-${index}`]}
+                                  onChange={(e) => handleChange(e)}
+                                >
+                                  <option value="">Not chosen</option>
+                                  {columnOptions !== null ? (
+                                    columnOptions.map((columnName, index) => (
+                                      <option key={index} value={columnName}>
+                                        {columnName}
+                                      </option>
+                                    ))
+                                  ) : (
+                                    <option value="" disabled>
+                                      You need to choose Database Table first...
+                                    </option>
+                                  )}
+                                </Form.Select>
+                              </FloatingLabel>
+                            </Form.Group>
+
+                            <Row>
+                              <Form.Group
+                                as={Col}
+                                md="6"
+                                controlId={`width-${index}`}
+                                className="mb-3"
+                              >
+                                <FloatingLabel
+                                  label="Width*"
+                                  className="mb-3"
+                                  style={{ color: "grey" }}
+                                >
+                                  <Form.Control
+                                    type="number"
+                                    name={`width-${index}`}
+                                    value={values[`width-${index}`]}
+                                    onChange={(e) => handleChange(e)}
+                                    isValid={
+                                      touched[`width-${index}`] &&
+                                      !errors[`width-${index}`]
+                                    }
+                                    isInvalid={
+                                      touched[`width-${index}`] &&
+                                      !!errors[`width-${index}`]
+                                    }
+                                    placeholder=""
+                                    min={3}
+                                  />
+                                </FloatingLabel>
+                              </Form.Group>
+
+                              <Form.Group
+                                as={Col}
+                                md="6"
+                                controlId={`height-${index}`}
+                                className="mb-3"
+                              >
+                                <FloatingLabel
+                                  label="Height*"
+                                  className="mb-3"
+                                  style={{ color: "grey" }}
+                                >
+                                  <Form.Control
+                                    type="number"
+                                    name={`height-${index}`}
+                                    value={values[`height-${index}`]}
+                                    onChange={(e) => handleChange(e)}
+                                    isValid={
+                                      touched[`height-${index}`] &&
+                                      !errors[`height-${index}`]
+                                    }
+                                    isInvalid={
+                                      touched[`height-${index}`] &&
+                                      !!errors[`height-${index}`]
+                                    }
+                                    placeholder=""
+                                    min={3}
+                                  />
+                                </FloatingLabel>
+                              </Form.Group>
+                            </Row>
+
+                            <Row>
+                              <Form.Group
+                                as={Col}
+                                md="6"
+                                controlId={`x_coordinate-${index}`}
+                                className="mb-3"
+                              >
+                                <FloatingLabel
+                                  label="X-coordinate*"
+                                  className="mb-3"
+                                  style={{ color: "grey" }}
+                                >
+                                  <Form.Control
+                                    type="number"
+                                    name={`x_coordinate-${index}`}
+                                    value={values[`x_coordinate-${index}`]}
+                                    onChange={(e) => handleChange(e)}
+                                    isValid={
+                                      touched[`x_coordinate-${index}`] &&
+                                      !errors[`x_coordinate-${index}`]
+                                    }
+                                    isInvalid={
+                                      touched[`x_coordinate-${index}`] &&
+                                      !!errors[`x_coordinate-${index}`]
+                                    }
+                                    placeholder=""
+                                    min={0}
+                                  />
+                                </FloatingLabel>
+                              </Form.Group>
+
+                              <Form.Group
+                                as={Col}
+                                md="6"
+                                controlId={`y_coordinate-${index}`}
+                                className="mb-3"
+                              >
+                                <FloatingLabel
+                                  label="Y-coordinate*"
+                                  className="mb-3"
+                                  style={{ color: "grey" }}
+                                >
+                                  <Form.Control
+                                    type="number"
+                                    name={`y_coordinate-${index}`}
+                                    value={values[`y_coordinate-${index}`]}
+                                    onChange={(e) => handleChange(e)}
+                                    isValid={
+                                      touched[`y_coordinate-${index}`] &&
+                                      !errors[`y_coordinate-${index}`]
+                                    }
+                                    isInvalid={
+                                      touched[`y_coordinate-${index}`] &&
+                                      !!errors[`y_coordinate-${index}`]
+                                    }
+                                    placeholder=""
+                                    min={0}
+                                  />
+                                </FloatingLabel>
+                              </Form.Group>
+                            </Row>
                           </Accordion.Body>
                         </Accordion.Item>
                       ))}
@@ -244,7 +403,12 @@ const TabsWithFieldTypes = ({
                     onClick={() => {
                       const arrayValues = fieldLayout.map((field, index) => ({
                         caption: values[`caption-${index}`],
-                        type_id: values[`type_id-${index}`],
+                        is_required: values[`is_required-${index}`],
+                        column_name: values[`column_name-${index}`],
+                        height: values[`height-${index}`],
+                        width: values[`width-${index}`],
+                        x_coordinate: values[`x_coordinate-${index}`],
+                        y_coordinate: values[`y_coordinate-${index}`],
                       }));
                       console.log("values from save button", values);
                       console.log("values from save button", arrayValues);
@@ -267,7 +431,6 @@ const FieldDragAndDrop = ({
   formDetails,
   tableData,
   formId,
-  setFieldDetails,
   fieldLayout,
   setFieldLayout,
 }) => {
@@ -349,7 +512,6 @@ const FieldDragAndDrop = ({
             field={field}
             columnOptions={columnOptions}
             formId={formId}
-            setFieldDetails={setFieldDetails}
             fieldLayout={fieldLayout}
             setFieldLayout={setFieldLayout}
           />

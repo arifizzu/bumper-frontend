@@ -21,6 +21,36 @@ export const FieldTextInput = () => (
   </React.Fragment>
 );
 
+//cubaan utk dynamic kan input - gagal
+// export const FieldTextInput = ({ fieldLayout, setFieldLayout }) => (
+//   <React.Fragment>
+//     {Array.isArray(fieldLayout) && fieldLayout.length > 0 ? (
+//       fieldLayout.map((field, index) => (
+//         <FloatingLabel
+//           key={index}
+//           controlId={`input-${index}`}
+//           label={field.detail.caption} // Use caption from fieldLayout
+//           style={{ color: "grey", marginLeft: "5px", marginRight: "5px" }}
+//         >
+//           <Form.Control
+//             type="text"
+//             placeholder=""
+//             value={field.detail.caption} // Set initial value to caption
+//             onChange={(e) => {
+//               // Update the caption in fieldLayout when input changes
+//               const updatedLayout = [...fieldLayout];
+//               updatedLayout[index].detail.caption = e.target.value;
+//               setFieldLayout(updatedLayout);
+//             }}
+//           />
+//         </FloatingLabel>
+//       ))
+//     ) : (
+//       <div>Drag and Drop field first</div>
+//     )}
+//   </React.Fragment>
+// );
+
 export const FieldTextarea = () => (
   <React.Fragment>
     <FloatingLabel
