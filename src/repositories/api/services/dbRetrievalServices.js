@@ -27,3 +27,15 @@ export const getColumns = async (tableName) => {
     throw error.response.data.error;
   }
 };
+
+export const getLatestId = async (formTableName) => {
+  try {
+    const response = await axios.get(`${API_URL}/database/latestId`, {
+      params: formTableName, // Pass tableName as a query parameter
+      headers: authHeader(),
+    });
+    return response.data.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};

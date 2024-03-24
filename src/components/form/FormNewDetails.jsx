@@ -39,18 +39,12 @@ const schema = Yup.object().shape({
   table_name: Yup.string(),
 });
 
-const FormNewDetails = ({
-  setFormDetails,
-  fieldError,
-  setFormIsFilled,
-  formIsFilled,
-}) => {
+const FormNewDetails = ({ setFormDetails, setFormIsFilled, formIsFilled }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const form = useSelector((state) => state.form.form);
   const tableOptions = useSelector((state) => state.dbRetrieval.tableOptions);
   const loading = useSelector((state) => state.form.loading);
-  //   console.log("fieldError in child component", fieldError);
 
   useEffect(() => {
     const fetchForm = async () => {
@@ -115,7 +109,6 @@ const FormNewDetails = ({
               touched,
               isValid,
               errors,
-              //   fieldError,
             }) => (
               <Form noValidate onSubmit={handleSubmit}>
                 <Row>
@@ -142,16 +135,10 @@ const FormNewDetails = ({
                           }}
                           isValid={touched.name && !errors.name}
                           isInvalid={touched.name && !!errors.name}
-                          // isValid={touched.name && !fieldError.name}
-                          // isInvalid={touched.name && !!fieldError.name}
                         />
                         <Form.Control.Feedback type="invalid">
                           {errors.name}
                         </Form.Control.Feedback>
-
-                        {/* <Form.Control.Feedback type="invalid">
-                      {fieldError.name[0]}
-                    </Form.Control.Feedback> */}
                       </Form.Group>
                       <Form.Group
                         as={Col}
@@ -174,21 +161,10 @@ const FormNewDetails = ({
                           }}
                           isValid={touched.short_name && !errors.short_name}
                           isInvalid={touched.short_name && !!errors.short_name}
-                          // isValid={touched.short_name && !fieldError.short_name}
-                          // isInvalid={touched.short_name && !!fieldError.short_name}
                         />
                         <Form.Control.Feedback type="invalid">
                           {errors.short_name}
                         </Form.Control.Feedback>
-                        {/* <Form.Control.Feedback type="invalid">
-                      {fieldError.name && fieldError.name.length > 0 && (
-                        <div>
-                          {fieldError.name.map((message, index) => (
-                            <div key={index}>{message}</div>
-                          ))}
-                        </div>
-                      )}
-                    </Form.Control.Feedback> */}
                       </Form.Group>
                       <Form.Group
                         as={Col}

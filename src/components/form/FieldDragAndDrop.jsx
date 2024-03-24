@@ -56,12 +56,18 @@ import {
   addField,
 } from "../../redux/slices/fieldSlice";
 
-import { getColumns } from "../../repositories/api/services/dbRetrievalServices";
+import {
+  getColumns,
+  getLatestId,
+} from "../../repositories/api/services/dbRetrievalServices";
 
 import {
   getColumnsStart,
   getColumnsSuccess,
   getColumnsFailure,
+  getLatestIdStart,
+  getLatestIdSuccess,
+  getLatestIdFailure,
 } from "../../redux/slices/dbRetrievalSlice";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -86,13 +92,26 @@ const TabsWithFieldTypes = ({
   formId,
   fieldLayout,
   setFieldLayout,
+  fieldDetails,
+  setFieldDetails,
+  fieldIsFilled,
+  setFieldIsFilled,
 }) => {
   const fieldType = useSelector((state) => state.field.fieldType);
+  const formLatestId = useSelector((state) => state.dbRetrieval.latestId);
+
   //   console.log("fieldType dalam tabswithfieldtypes", fieldType);
 
   const handleDragStart = (e, field) => {
     e.dataTransfer.setData("field", JSON.stringify(field));
   };
+
+  useEffect(() => {
+    console.log(
+      "formLatestId updated in FieldDragAndDrop child:",
+      formLatestId
+    );
+  }, [formLatestId]);
 
   useEffect(() => {
     console.log("fieldLayout updated in FieldDragAndDrop child:", fieldLayout);
@@ -158,7 +177,12 @@ const TabsWithFieldTypes = ({
             <h4 className="tab-title">Field Details</h4>
             <Formik
               validationSchema={schema}
-              onSubmit={(values) => {}}
+              // onSubmit={(values) => {}}
+              onSubmit={(values) => {
+                console.log(values);
+                // setFieldIsFilled(true);
+                // console.log("fieldIsFilled", fieldIsFilled);
+              }}
               initialValues={generateInitialValues(fieldLayout)}
             >
               {({
@@ -224,9 +248,17 @@ const TabsWithFieldTypes = ({
                                   aria-label="Floating label select example"
                                   name={`is_required-${index}`}
                                   value={values[`is_required-${index}`]}
-                                  onChange={(e) => handleChange(e)}
+                                  // onChange={(e) => handleChange(e)}
+                                  onChange={(e) => {
+                                    const newValue = e.target.value === "1"; // Convert "1" to true, and "0" to false
+                                    handleChange({
+                                      target: {
+                                        name: e.target.name,
+                                        value: newValue,
+                                      },
+                                    });
+                                  }}
                                 >
-                                  <option>Please Choose</option>
                                   <option value="0">No</option>
                                   <option value="1">Yes</option>
                                 </Form.Select>
@@ -264,7 +296,7 @@ const TabsWithFieldTypes = ({
                               </FloatingLabel>
                             </Form.Group>
 
-                            <Row>
+                            {/* <Row>
                               <Form.Group
                                 as={Col}
                                 md="6"
@@ -386,7 +418,56 @@ const TabsWithFieldTypes = ({
                                   />
                                 </FloatingLabel>
                               </Form.Group>
-                            </Row>
+                            </Row> */}
+                            <div className="text-end">
+                              <Button
+                                type="submit"
+                                variant="primary"
+                                // onClick={() =>
+                                //   console.log("values from save button", values)
+                                // }
+                                onClick={() => {
+                                  setFieldIsFilled(true);
+                                  const arrayValues = fieldLayout.map(
+                                    (field, index) => ({
+                                      caption: values[`caption-${index}`] || "",
+                                      is_required:
+                                        values[`is_required-${index}`] || false,
+                                      column_name:
+                                        values[`column_name-${index}`] ||
+                                        "none",
+                                      // height: values[`height-${index}`] || 3,
+                                      // width: values[`width-${index}`] || 3,
+                                      // x_coordinate:
+                                      //   values[`x_coordinate-${index}`] || 0,
+                                      // y_coordinate:
+                                      //   values[`y_coordinate-${index}`] || 0,
+                                      height: field.layout.h || 3,
+                                      width: field.layout.w || 3,
+                                      x_coordinate: field.layout.x || 0,
+                                      y_coordinate: field.layout.y || 0,
+                                      type_id: field.detail.type_id,
+                                      form_id: formLatestId + 1,
+                                    })
+                                  );
+                                  setFieldDetails(arrayValues);
+                                  console.log(
+                                    "values from save button",
+                                    values
+                                  );
+                                  console.log(
+                                    "arrayValues from save button",
+                                    arrayValues
+                                  );
+                                  console.log(
+                                    "fieldDetails from save button",
+                                    fieldDetails
+                                  );
+                                }}
+                              >
+                                Save
+                              </Button>
+                            </div>
                           </Accordion.Body>
                         </Accordion.Item>
                       ))}
@@ -394,28 +475,6 @@ const TabsWithFieldTypes = ({
                   ) : (
                     <div>Drag and Drop field first</div>
                   )}
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    // onClick={() =>
-                    //   console.log("values from save button", values)
-                    // }
-                    onClick={() => {
-                      const arrayValues = fieldLayout.map((field, index) => ({
-                        caption: values[`caption-${index}`],
-                        is_required: values[`is_required-${index}`],
-                        column_name: values[`column_name-${index}`],
-                        height: values[`height-${index}`],
-                        width: values[`width-${index}`],
-                        x_coordinate: values[`x_coordinate-${index}`],
-                        y_coordinate: values[`y_coordinate-${index}`],
-                      }));
-                      console.log("values from save button", values);
-                      console.log("values from save button", arrayValues);
-                    }}
-                  >
-                    Save
-                  </Button>
                 </Form>
               )}
             </Formik>
@@ -433,6 +492,10 @@ const FieldDragAndDrop = ({
   formId,
   fieldLayout,
   setFieldLayout,
+  fieldDetails,
+  setFieldDetails,
+  fieldIsFilled,
+  setFieldIsFilled,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -487,6 +550,21 @@ const FieldDragAndDrop = ({
     }
   }, [dispatch, formDetails]);
 
+  useEffect(() => {
+    const formTableName = { tableName: "forms" };
+    const fetchLatestId = async () => {
+      try {
+        dispatch(getLatestIdStart());
+        const latestId = await getLatestId(formTableName);
+        console.log("latestId", latestId);
+        dispatch(getLatestIdSuccess(latestId));
+      } catch (error) {
+        dispatch(getLatestIdFailure(error));
+      }
+    };
+    fetchLatestId();
+  }, []);
+
   return (
     <React.Fragment>
       <Card>
@@ -514,6 +592,10 @@ const FieldDragAndDrop = ({
             formId={formId}
             fieldLayout={fieldLayout}
             setFieldLayout={setFieldLayout}
+            fieldDetails={fieldDetails}
+            setFieldDetails={setFieldDetails}
+            fieldIsFilled={fieldIsFilled}
+            setFieldIsFilled={setFieldIsFilled}
           />
         </Card.Body>
       </Card>

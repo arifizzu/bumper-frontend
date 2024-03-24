@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   tableOptions: [],
   columnOptions: [],
+  latestId: null,
   loading: false,
   error: null,
 };
@@ -39,6 +40,20 @@ export const dbRetrievalSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    getLatestIdStart(state) {
+      state.loading = true;
+      state.error = null;
+    },
+    getLatestIdSuccess(state, action) {
+      state.loading = false;
+      state.latestId = action.payload;
+      state.error = null;
+      // console.log("action", action);
+    },
+    getLatestIdFailure(state, action) {
+      state.loading = false;
+      state.error = action.payload;
+    },
   },
 });
 
@@ -49,6 +64,9 @@ export const {
   getColumnsStart,
   getColumnsSuccess,
   getColumnsFailure,
+  getLatestIdStart,
+  getLatestIdSuccess,
+  getLatestIdFailure,
 } = dbRetrievalSlice.actions;
 
 export default dbRetrievalSlice.reducer;
