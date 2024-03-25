@@ -80,9 +80,19 @@ const FormNewDetails = ({ setFormDetails, setFormIsFilled, formIsFilled }) => {
     <React.Fragment>
       <Card>
         <Card.Header>
-          <Card.Title>Create New Form</Card.Title>
+          <Card.Title>Form Details*</Card.Title>
           <Row>
-            <h6 className="card-subtitle text-muted">Enter form details</h6>
+            <h6 className="card-subtitle text-muted mb-3 mt-3">
+              Kindly provide the necessary form details.
+            </h6>
+            <h6 className="card-subtitle text-muted mb-3">
+              Ensure all mandatory fields are filled out before proceeding with
+              saving.
+            </h6>
+            <h6 className="card-subtitle text-muted mb-3">
+              The Save Button will only be accessible once both sections are
+              fully completed.
+            </h6>
           </Row>
         </Card.Header>
         <Card.Body>

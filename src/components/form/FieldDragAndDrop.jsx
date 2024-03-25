@@ -574,7 +574,7 @@ const FieldDragAndDrop = ({
       <Card>
         <Card.Header>
           <Card.Title>
-            Fields Type
+            Fields Details*
             <Button
               variant="primary"
               className="float-end mt-n1"

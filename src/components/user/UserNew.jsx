@@ -196,7 +196,9 @@ const UserNew = ({}) => {
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Row>
-                <Button type="submit">Save</Button>
+                <div className="text-end">
+                  <Button type="submit">Save</Button>
+                </div>
               </Form>
             )}
           </Formik>
