@@ -2,6 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   user: null,
+  roles: [],
+  permissions: [],
   loading: false,
   error: null,
 };
@@ -19,6 +21,10 @@ export const authSlice = createSlice({
       state.loading = false;
       localStorage.setItem("isAuthenticated", "true");
       state.user = action.payload.user;
+      // state.roles = action.payload.roles;
+      // state.permissions = action.payload.roles;
+      localStorage.setItem("roles", JSON.stringify(action.payload.roles));
+      localStorage.setItem("permissions", JSON.stringify(action.payload.roles));
       console.log("action", action.payload);
       // console.log("loginSuccess");
     },
