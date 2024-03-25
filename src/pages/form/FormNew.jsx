@@ -19,6 +19,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAnglesLeft,
   faAnglesRight,
+  faMaximize,
   faSave,
 } from "@fortawesome/free-solid-svg-icons";
 

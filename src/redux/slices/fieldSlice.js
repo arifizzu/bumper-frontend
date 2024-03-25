@@ -75,6 +75,20 @@ export const fieldSlice = createSlice({
       state.error = action.payload;
     },
 
+    showFieldStart(state) {
+      state.loading = true;
+      state.error = null;
+    },
+    showFieldSuccess(state, action) {
+      state.loading = false;
+      state.fields = action.payload;
+      state.error = null;
+    },
+    showFieldFailure(state, action) {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
     addField: (state, action) => {
       state.fields.push(action.payload);
     },
@@ -101,6 +115,9 @@ export const {
   getFieldTypeStart,
   getFieldTypeSuccess,
   getFieldTypeFailure,
+  showFieldStart,
+  showFieldSuccess,
+  showFieldFailure,
   addField,
   removeField,
 } = fieldSlice.actions;

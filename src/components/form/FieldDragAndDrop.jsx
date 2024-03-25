@@ -71,7 +71,11 @@ import {
 } from "../../redux/slices/dbRetrievalSlice";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAnglesLeft, faX } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAnglesLeft,
+  faX,
+  faWindowMinimize,
+} from "@fortawesome/free-solid-svg-icons";
 
 const schema = Yup.object().shape({
   caption: Yup.string().required("Name is required"),
@@ -572,11 +576,11 @@ const FieldDragAndDrop = ({
           <Card.Title>
             Fields Type
             <Button
-              variant="danger"
+              variant="primary"
               className="float-end mt-n1"
               onClick={toggleFieldDragAndDrop}
             >
-              <FontAwesomeIcon icon={faX} />
+              <FontAwesomeIcon icon={faWindowMinimize} />
             </Button>
           </Card.Title>
 

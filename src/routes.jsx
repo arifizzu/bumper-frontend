@@ -122,7 +122,7 @@ const UserEdit = lazy(() => import("./pages/user/UserEdit"));
 // Form Builder
 const FormIndex = lazy(() => import("./pages/form/FormIndex"));
 const FormNew = lazy(() => import("./pages/form/FormNew"));
-// const FormView = lazy(() => import("./pages/form/FormView"));
+const FormView = lazy(() => import("./pages/form/FormView"));
 // const FormEdit = lazy(() => import("./pages/form/FormEdit"));
 
 const routes = [
@@ -560,10 +560,10 @@ const routes = [
         path: "create",
         element: <FormNew />,
       },
-      // {
-      //   path: "view/:id",
-      //   element: <FormView />,
-      // },
+      {
+        path: "view/:id",
+        element: <FormView />,
+      },
       // {
       //   path: "edit/:id",
       //   element: <FormEdit />,

@@ -44,7 +44,7 @@ const FormIndex = ({ tableColumns }) => {
 
   const handleViewButton = async (id) => {
     try {
-      //   navigate(`/forms/view/${id}`);
+      navigate(`/forms/view/${id}`);
     } catch (error) {
       console.error("View form failed:", error);
     }
