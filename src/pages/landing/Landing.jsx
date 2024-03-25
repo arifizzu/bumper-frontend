@@ -76,7 +76,7 @@ const Navigation = () => (
           BUMPER
         </Badge>
       </Navbar.Brand>
-      <Nav className="ms-auto" navbar>
+      {/* <Nav className="ms-auto" navbar>
         <Nav.Item className="d-none d-md-inline-block">
           <Nav.Link
             href="/dashboard/default"
@@ -108,7 +108,7 @@ const Navigation = () => (
             Support
           </Nav.Link>
         </Nav.Item>
-      </Nav>
+      </Nav> */}
       <Button
         href="/auth/sign-in"
         target="_blank"

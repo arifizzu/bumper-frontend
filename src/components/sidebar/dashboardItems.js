@@ -362,9 +362,11 @@ const pluginsSection = [
 
 const formSection = [
   {
-    href: "/notifications",
+    href: "/forms",
     icon: List,
     title: "Forms",
+    roles: ["admin", "user"],
+    permissions: ["view form"],
   },
 ];
 
@@ -373,6 +375,8 @@ const formBuilderSection = [
     href: "/forms",
     icon: CheckSquare,
     title: "Forms",
+    roles: ["admin"],
+    // permissions: ["view form"],
   },
   // {
   //   href: "/notifications",
@@ -383,9 +387,11 @@ const formBuilderSection = [
 
 const processBuilderSection = [
   {
-    href: "/notifications",
+    href: "/processes",
     icon: Trello,
     title: "Processes",
+    roles: ["user"],
+    // permissions: ["view process"],
   },
   // {
   //   href: "/notifications",
@@ -399,6 +405,8 @@ const managementSettingsSection = [
     href: "/notifications",
     icon: Key,
     title: "Role & Permission",
+    roles: ["admin"],
+    // permissions: ["view process"],
     children: [
       {
         href: "/form-plugins/advanced-inputs",
@@ -433,18 +441,6 @@ const managementSettingsSection = [
 
 const navItems = [
   {
-    title: "Pages",
-    pages: pagesSection,
-  },
-  {
-    title: "Tools & Components",
-    pages: componentsSection,
-  },
-  {
-    title: "Plugins & Addons",
-    pages: pluginsSection,
-  },
-  {
     title: "Form",
     pages: formSection,
   },
@@ -460,6 +456,18 @@ const navItems = [
     title: "Management Settings",
     pages: managementSettingsSection,
   },
+  // {
+  //   title: "Pages",
+  //   pages: pagesSection,
+  // },
+  // {
+  //   title: "Tools & Components",
+  //   pages: componentsSection,
+  // },
+  // {
+  //   title: "Plugins & Addons",
+  //   pages: pluginsSection,
+  // },
 ];
 
 export default navItems;
