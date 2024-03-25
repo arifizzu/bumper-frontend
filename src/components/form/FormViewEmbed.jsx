@@ -12,22 +12,8 @@ import {
   Row,
   Modal,
 } from "react-bootstrap";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faFileExport,
-  faMagnifyingGlassArrowRight,
-  faMagnifyingGlass,
-} from "@fortawesome/free-solid-svg-icons";
-import {
-  Briefcase,
-  Home,
-  MapPin,
-  MessageSquare,
-  Mail,
-  User,
-} from "react-feather";
-
+import { faSave } from "@fortawesome/free-solid-svg-icons";
 import {
   FieldTextInput,
   FieldTextarea,
@@ -55,10 +41,10 @@ import GridLayout from "react-grid-layout";
 import "../../grid-layout/css/styles.css";
 import "../../grid-layout/css/example-styles.css";
 
-const FormView = ({ id }) => {
+const FormViewEmbed = ({ id }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [showEmbedModal, setShowEmbedModal] = useState(false);
+  const [isValid, setIsValid] = useState(false);
   const fields = useSelector((state) => state.field.fields);
 
   // console.log("user", user);
@@ -88,35 +74,15 @@ const FormView = ({ id }) => {
     detail: field,
   }));
 
+  const handleSubmitButton = async () => {
+    setIsValid(true);
+  };
+
   console.log("fieldLayout", fieldLayout);
-
-  const url = window.location.origin;
-
-  const handleExportFormButton = (urlDownload) => {
-    const newWindow = window.open(urlDownload, "_blank");
-    if (newWindow) {
-      setTimeout(() => {
-        newWindow.print();
-      }, 1000); // Wait for 1 second (adjust as needed)
-    } else {
-      alert("Popup blocked! Please allow popups and try again.");
-    }
-  };
-
-  const handleViewPreviewButton = async (id) => {
-    try {
-      navigate(`/forms/view/preview/${id}`);
-    } catch (error) {
-      console.error("View form previewfailed:", error);
-    }
-  };
-
-  const handleEmbedFormButton = async () => {
-    setShowEmbedModal(true);
-  };
 
   const generateDOM = () => {
     return fieldLayout.map((field, index) => (
+      //   </div>
       <div
         key={index}
         data-grid={{
@@ -162,98 +128,57 @@ const FormView = ({ id }) => {
     ));
   };
 
+  console.log("fields", fields);
   return (
     <React.Fragment>
       <Card>
         <Card.Header>
-          <Card.Title className="mb-0 text-center">Form Details</Card.Title>
-        </Card.Header>
-        <Card.Body className="text-left">
-          {fields && fields.length > 0 ? (
-            <>
-              <Row>
-                <Col md="6" xl="">
-                  <h5>Name: {fields[0]?.form?.name}</h5>
-                  <h5>Short Name: {fields[0]?.form?.short_name}</h5>
-                </Col>
-                <Col md="6" xl="">
-                  <h5>Table Name (Database): {fields[0]?.form?.table_name}</h5>
-                  <h5>Created At: {fields[0]?.form?.created_at}</h5>
-                </Col>
-              </Row>
-            </>
-          ) : (
-            <Col>
-              <h5>Loading...</h5>
-            </Col>
-          )}
-        </Card.Body>
-        <hr className="my-0" />
-      </Card>
-      <Card>
-        <Card.Header>
-          <Card.Title className="mb-0 ">Form Preview</Card.Title>
-
-          <Button
-            variant="primary"
-            className="float-end mt-n1 me-2"
-            onClick={() => {
-              handleExportFormButton(url + "/forms/view/embed/" + id);
-            }}
-          >
-            <FontAwesomeIcon icon={faFileExport} /> Export Form
-          </Button>
-
-          <Button
-            variant="info"
-            className="float-end mt-n1 me-2"
-            onClick={() => {
-              handleEmbedFormButton();
-            }}
-          >
-            <FontAwesomeIcon icon={faMagnifyingGlassArrowRight} /> Embed Form
-          </Button>
-
-          <Button
-            variant="info"
-            className="float-end mt-n1 me-2"
-            onClick={() => {
-              handleViewPreviewButton(id);
-            }}
-          >
-            <FontAwesomeIcon icon={faMagnifyingGlass} /> Preview Embedded Form
-          </Button>
+          <Card.Title className="mb-0 text-center">
+            {fields && fields.length > 0 ? (
+              <>
+                <h3>{fields[0]?.form?.name}</h3>
+              </>
+            ) : (
+              <Col>
+                <h5>Loading...</h5>
+              </Col>
+            )}
+          </Card.Title>
         </Card.Header>
         <Card.Body>
-          <GridLayout
-            className="fieldLayout"
-            layout={fieldLayout}
-            cols={12}
-            rowHeight={30}
-            width={1200}
-          >
-            {generateDOM()}
-          </GridLayout>
+          <div style={{ marginBottom: "20px" }}>
+            <GridLayout
+              className="fieldLayout"
+              layout={fieldLayout}
+              cols={12}
+              rowHeight={30}
+              width={1200}
+            >
+              {generateDOM()}
+            </GridLayout>
+          </div>
+          <div>
+            <Button
+              variant="primary"
+              className="float-end mt-n1 me-2"
+              onClick={() => {
+                //   handleSubmitButton(id);
+                handleSubmitButton();
+              }}
+            >
+              <FontAwesomeIcon icon={faSave} /> Submit
+            </Button>
+          </div>
         </Card.Body>
       </Card>
 
-      <Modal show={showEmbedModal} onHide={() => setShowEmbedModal(false)}>
-        <Modal.Header closeButton>Embed Form</Modal.Header>
+      <Modal show={isValid} onHide={() => setIsValid(false)}>
+        <Modal.Header closeButton>Submit Form</Modal.Header>
         <Modal.Body className="text-center m-3">
-          <p className="mb-0">
-            Please copy the URL link provided below and embed it within an
-            iframe on your desired website or page to integrate the form
-            seamlessly:
-          </p>
-          <p className="mb-0">
-            URL:{" "}
-            <a href={url}>
-              {url}/forms/view/embed/{id}
-            </a>
-          </p>
+          <p className="mb-0">This is just a form preview</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowEmbedModal(false)}>
+          <Button variant="secondary" onClick={() => setIsValid(false)}>
             Close
           </Button>{" "}
         </Modal.Footer>
@@ -262,4 +187,4 @@ const FormView = ({ id }) => {
   );
 };
 
-export default FormView;
+export default FormViewEmbed;

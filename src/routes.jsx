@@ -7,6 +7,7 @@ import DashboardLayout from "./layouts/Dashboard";
 import DocLayout from "./layouts/Doc";
 import LandingLayout from "./layouts/Landing";
 import FormBuilderLayout from "./layouts/FormBuilder";
+import FormViewEmbedExport from "./layouts/FormViewEmbedExport";
 
 // Guards
 import AuthGuard from "./components/guards/AuthGuard";
@@ -123,7 +124,17 @@ const UserEdit = lazy(() => import("./pages/user/UserEdit"));
 const FormIndex = lazy(() => import("./pages/form/FormIndex"));
 const FormNew = lazy(() => import("./pages/form/FormNew"));
 const FormView = lazy(() => import("./pages/form/FormView"));
+const FormViewPreviewEmbed = lazy(() =>
+  import("./pages/form/FormViewPreviewEmbed")
+);
+const FormViewEmbed = lazy(() => import("./pages/form/FormViewEmbed"));
 // const FormEdit = lazy(() => import("./pages/form/FormEdit"));
+
+// Process Builder
+const ProcessIndex = lazy(() => import("./pages/process/ProcessIndex"));
+const ProcessNew = lazy(() => import("./pages/process/ProcessNew"));
+// const ProcessView = lazy(() => import("./pages/process/ProcessView"));
+// const ProcessEdit = lazy(() => import("./pages/process/ProcessEdit"));
 
 const routes = [
   {
@@ -564,34 +575,60 @@ const routes = [
         path: "view/:id",
         element: <FormView />,
       },
+      {
+        path: "view/preview/:id",
+        element: <FormViewPreviewEmbed />,
+      },
       // {
       //   path: "edit/:id",
       //   element: <FormEdit />,
       // },
+      ,
     ],
   },
-  // {
-  //   path: "forms",
-  //   element: (
-  //     <AuthGuard>
-  //       <FormBuilderLayout />
-  //     </AuthGuard>
-  //   ),
-  //   children: [
-  //     {
-  //       path: "create",
-  //       element: <FormNew />,
-  //     },
-  //     // {
-  //     //   path: "view/:id",
-  //     //   element: <FormView />,
-  //     // },
-  //     // {
-  //     //   path: "edit/:id",
-  //     //   element: <FormEdit />,
-  //     // },
-  //   ],
-  // },
+
+  {
+    path: "forms",
+    element: (
+      <AuthGuard>
+        <FormViewEmbedExport />
+      </AuthGuard>
+    ),
+    // element: <AuthGuard></AuthGuard>,
+    children: [
+      {
+        path: "view/embed/:id",
+        element: <FormViewEmbed />,
+      },
+    ],
+  },
+
+  {
+    path: "processes",
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
+    children: [
+      {
+        path: "",
+        element: <ProcessIndex />,
+      },
+      {
+        path: "create",
+        element: <ProcessNew />,
+      },
+      // {
+      //   path: "view/:id",
+      //   element: <ProcessView />,
+      // },
+      // {
+      //   path: "edit/:id",
+      //   element: <ProcessEdit />,
+      // },
+    ],
+  },
 ];
 
 export default routes;
