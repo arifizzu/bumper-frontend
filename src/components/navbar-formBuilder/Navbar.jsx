@@ -95,7 +95,7 @@ const NavbarComponent = () => {
           className="sidebar-toggle d-flex"
           onClick={() => {
             setIsOpen(!isOpen);
-            console.log("open Dashboard.jsx");
+            // console.log("open Dashboard.jsx");
           }}
         >
           <i className="hamburger align-self-center" />
