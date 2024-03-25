@@ -5,6 +5,7 @@ import userReducer from "./slices/userSlice";
 import formReducer from "./slices/formSlice";
 import dbRetrievalReducer from "./slices/dbRetrievalSlice";
 import fieldReducer from "./slices/fieldSlice";
+import processReducer from "./slices/processSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
     form: formReducer,
     dbRetrieval: dbRetrievalReducer,
     field: fieldReducer,
+    process: processReducer,
   },
 });
