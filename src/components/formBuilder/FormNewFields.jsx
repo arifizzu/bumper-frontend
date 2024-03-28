@@ -29,7 +29,7 @@ const ReactGridLayout = WidthProvider(RGL);
 
 const FormNewFields = ({ fieldLayout, setFieldLayout }) => {
   const dispatch = useDispatch();
-  const fields = useSelector((state) => state.field.fields);
+  const fieldListInput = useSelector((state) => state.field.fieldListInput);
   const [layout, setLayout] = useState([{}]);
   const [layoutLength, setLayoutLength] = useState(0);
   // const [fieldLayout, setFieldLayout] = useState([]);
@@ -39,7 +39,7 @@ const FormNewFields = ({ fieldLayout, setFieldLayout }) => {
     const field = JSON.parse(e.dataTransfer.getData("field"));
 
     const newLayoutItem = {
-      i: field.name + "_" + fields.length,
+      i: field.name + "_" + fieldListInput.length,
       x: 0,
       y: Infinity, // puts it at the bottom
       w: 3,
@@ -56,8 +56,8 @@ const FormNewFields = ({ fieldLayout, setFieldLayout }) => {
   };
 
   useEffect(() => {
-    console.log("fields updated:", fields);
-  }, [fields]);
+    console.log("fieldListInput updated:", fieldListInput);
+  }, [fieldListInput]);
 
   useEffect(() => {
     console.log("layout updated:", layout);
@@ -73,7 +73,7 @@ const FormNewFields = ({ fieldLayout, setFieldLayout }) => {
 
   const generateDOM = () => {
     // console.log("generateDom");
-    return fields.map((field, index) => (
+    return fieldListInput.map((field, index) => (
       <div
         key={index}
         className="draggable-field"
@@ -100,8 +100,8 @@ const FormNewFields = ({ fieldLayout, setFieldLayout }) => {
 
         {field.name === "Text Input" && (
           <FieldTextInput
-          // fieldLayout={fieldLayout}
-          // setFieldLayout={setFieldLayout}
+            fieldLayout={fieldLayout}
+            // setFieldLayout={setFieldLayout}
           />
         )}
         {field.name === "Textarea" && <FieldTextarea />}
@@ -128,9 +128,9 @@ const FormNewFields = ({ fieldLayout, setFieldLayout }) => {
   const onLayoutChange = (newLayout) => {
     setLayout(newLayout);
     console.log("newLayout", newLayout);
-    const updatedFieldLayout = fields.map((field, index) => ({
+    const updatedFieldLayout = fieldListInput.map((field, index) => ({
       ...field,
-      layout: newLayout[index], // Assuming layout has the same length as fields
+      layout: newLayout[index], // Assuming layout has the same length as fieldListInput
       detail: {
         caption: "",
         type_id: field.id,

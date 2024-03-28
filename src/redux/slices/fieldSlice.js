@@ -90,13 +90,13 @@ export const fieldSlice = createSlice({
     },
 
     addField: (state, action) => {
-      state.fields.push(action.payload);
+      state.fieldListInput.push(action.payload);
     },
 
     removeField: (state, action) => {
       const index = action.payload;
-      if (index >= 0 && index < state.fields.length) {
-        state.fields.splice(index, 1);
+      if (index >= 0 && index < state.fieldListInput.length) {
+        state.fieldListInput.splice(index, 1);
       }
     },
   },
