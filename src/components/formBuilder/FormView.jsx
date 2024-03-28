@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import html2pdf from "html2pdf.js";
 
 import {
   Badge,
@@ -19,14 +20,6 @@ import {
   faMagnifyingGlassArrowRight,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  Briefcase,
-  Home,
-  MapPin,
-  MessageSquare,
-  Mail,
-  User,
-} from "react-feather";
 
 import {
   FieldTextInput,
@@ -41,7 +34,15 @@ import {
   FieldTimePicker,
   FieldEmailInput,
   FieldPasswordInput,
-} from "./field-type/FieldType";
+} from "./fieldType/FieldType";
+
+import {
+  showFormStart,
+  showFormSuccess,
+  showFormFailure,
+} from "../../redux/slices/formSlice";
+
+import { showForm } from "../../repositories/api/services/formServices";
 
 import {
   showFieldStart,
@@ -60,11 +61,20 @@ const FormView = ({ id }) => {
   const dispatch = useDispatch();
   const [showEmbedModal, setShowEmbedModal] = useState(false);
   const fields = useSelector((state) => state.field.fields);
-
-  // console.log("user", user);
-  // console.log("id in userview", id);
+  const form = useSelector((state) => state.form.form);
 
   useEffect(() => {
+    const fetchForm = async () => {
+      try {
+        dispatch(showFormStart());
+        const formData = await showForm(id);
+        dispatch(showFormSuccess(formData));
+        console.log("formData", formData);
+      } catch (error) {
+        dispatch(showFormFailure(error));
+      }
+    };
+
     const fetchFields = async () => {
       try {
         dispatch(showFieldStart());
@@ -76,8 +86,8 @@ const FormView = ({ id }) => {
       }
     };
 
+    fetchForm();
     fetchFields();
-    console.log("fields from fieldstate", fields);
   }, []);
 
   const fieldLayout = fields.map((field) => ({
@@ -92,20 +102,14 @@ const FormView = ({ id }) => {
 
   const url = window.location.origin;
 
-  const handleExportFormButton = (urlDownload) => {
-    const newWindow = window.open(urlDownload, "_blank");
-    if (newWindow) {
-      setTimeout(() => {
-        newWindow.print();
-      }, 1000); // Wait for 1 second (adjust as needed)
-    } else {
-      alert("Popup blocked! Please allow popups and try again.");
-    }
+  const handleExportFormButton = () => {
+    const element = document.getElementById("form-content"); // Assuming you have a container with id 'form-content' wrapping your form
+    html2pdf(element);
   };
 
   const handleViewPreviewButton = async (id) => {
     try {
-      navigate(`/forms/view/preview/${id}`);
+      navigate(`/form-builder/view/preview/${id}`);
     } catch (error) {
       console.error("View form previewfailed:", error);
     }
@@ -169,24 +173,18 @@ const FormView = ({ id }) => {
           <Card.Title className="mb-0 text-center">Form Details</Card.Title>
         </Card.Header>
         <Card.Body className="text-left">
-          {fields && fields.length > 0 ? (
-            <>
-              <Row>
-                <Col md="6" xl="">
-                  <h5>Name: {fields[0]?.form?.name}</h5>
-                  <h5>Short Name: {fields[0]?.form?.short_name}</h5>
-                </Col>
-                <Col md="6" xl="">
-                  <h5>Table Name (Database): {fields[0]?.form?.table_name}</h5>
-                  <h5>Created At: {fields[0]?.form?.created_at}</h5>
-                </Col>
-              </Row>
-            </>
-          ) : (
-            <Col>
-              <h5>Loading...</h5>
+          <Row>
+            <Col md="6" xl="">
+              <h5>Name: {form ? form.name : "Loading..."}</h5>
+              <h5>Short Name: {form ? form.short_name : "Loading..."}</h5>
             </Col>
-          )}
+            <Col md="6" xl="">
+              <h5>
+                Table Name (Database): {form ? form.table_name : "Loading..."}
+              </h5>
+              <h5>Created At: {form ? form.created_at : "Loading..."}</h5>
+            </Col>
+          </Row>
         </Card.Body>
         <hr className="my-0" />
       </Card>
@@ -198,7 +196,7 @@ const FormView = ({ id }) => {
             variant="primary"
             className="float-end mt-n1 me-2"
             onClick={() => {
-              handleExportFormButton(url + "/forms/view/embed/" + id);
+              handleExportFormButton();
             }}
           >
             <FontAwesomeIcon icon={faFileExport} /> Export Form
@@ -225,15 +223,20 @@ const FormView = ({ id }) => {
           </Button>
         </Card.Header>
         <Card.Body>
-          <GridLayout
-            className="fieldLayout"
-            layout={fieldLayout}
-            cols={12}
-            rowHeight={30}
-            width={1200}
-          >
-            {generateDOM()}
-          </GridLayout>
+          <Container id="form-content" fluid className="p-0">
+            <h2 className="mt-3 mb-4 text-center">
+              {form ? form.name : "Loading..."}
+            </h2>
+            <GridLayout
+              className="fieldLayout"
+              layout={fieldLayout}
+              cols={12}
+              rowHeight={30}
+              width={1200}
+            >
+              {generateDOM()}
+            </GridLayout>
+          </Container>
         </Card.Body>
       </Card>
 

@@ -121,18 +121,18 @@ const UserView = lazy(() => import("./pages/user/UserView"));
 const UserEdit = lazy(() => import("./pages/user/UserEdit"));
 
 // Form Builder
-const FormIndex = lazy(() => import("./pages/form/FormIndex"));
-const FormNew = lazy(() => import("./pages/form/FormNew"));
-const FormView = lazy(() => import("./pages/form/FormView"));
+const FormIndex = lazy(() => import("./pages/formBuilder/FormIndex"));
+const FormNew = lazy(() => import("./pages/formBuilder/FormNew"));
+const FormView = lazy(() => import("./pages/formBuilder/FormView"));
 const FormViewPreviewEmbed = lazy(() =>
-  import("./pages/form/FormViewPreviewEmbed")
+  import("./pages/formBuilder/FormViewPreviewEmbed")
 );
-const FormViewEmbed = lazy(() => import("./pages/form/FormViewEmbed"));
+const FormViewEmbed = lazy(() => import("./pages/formBuilder/FormViewEmbed"));
 // const FormEdit = lazy(() => import("./pages/form/FormEdit"));
 
 // Process Builder
-const ProcessIndex = lazy(() => import("./pages/process/ProcessIndex"));
-const ProcessNew = lazy(() => import("./pages/process/ProcessNew"));
+const ProcessIndex = lazy(() => import("./pages/processBuilder/ProcessIndex"));
+const ProcessNew = lazy(() => import("./pages/processBuilder/ProcessNew"));
 // const ProcessView = lazy(() => import("./pages/process/ProcessView"));
 // const ProcessEdit = lazy(() => import("./pages/process/ProcessEdit"));
 
@@ -555,7 +555,7 @@ const routes = [
     ],
   },
   {
-    path: "forms",
+    path: "form-builder",
     // element: <DashboardLayout />,
     element: (
       <AuthGuard>
@@ -604,7 +604,7 @@ const routes = [
   },
 
   {
-    path: "processes",
+    path: "process-builder",
     element: (
       <AuthGuard>
         <DashboardLayout />

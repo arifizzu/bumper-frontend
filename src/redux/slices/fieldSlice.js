@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  fields: [],
-  field: null,
-  fieldList: [],
-  fieldType: [],
+  fields: [], // fields associated to the form // used for view forms & view embedded
+  field: null, //used to create new field
+  fieldListInput: [], // used for list of fields created
+  fieldType: [], // used to display Field Type
   loading: false,
   error: null,
 };
@@ -13,52 +13,52 @@ export const fieldSlice = createSlice({
   name: "field",
   initialState,
   reducers: {
-    getFieldsStart(state) {
-      state.loading = true;
-      state.error = null;
-    },
-    getFieldsSuccess(state, action) {
-      state.loading = false;
-      state.fields = action.payload;
-      state.error = null;
-      // console.log("action", action);
-    },
-    getFieldsFailure(state, action) {
-      state.loading = false;
-      state.error = action.payload;
-    },
+    // getFieldsStart(state) {
+    //   state.loading = true;
+    //   state.error = null;
+    // },
+    // getFieldsSuccess(state, action) {
+    //   state.loading = false;
+    //   state.fields = action.payload;
+    //   state.error = null;
+    //   // console.log("action", action);
+    // },
+    // getFieldsFailure(state, action) {
+    //   state.loading = false;
+    //   state.error = action.payload;
+    // },
 
-    getCreateFieldStart(state) {
+    createFieldStart(state) {
       state.loading = true;
       state.error = null;
     },
-    getCreateFieldSuccess(state, action) {
+    createFieldSuccess(state, action) {
       state.loading = false;
       state.field = action.payload;
       state.error = null;
       // console.log("action", action);
     },
-    getCreateFieldFailure(state, action) {
+    createFieldFailure(state, action) {
       state.loading = false;
       state.error = action.payload;
     },
 
-    deleteFieldStart(state) {
-      state.loading = true;
-      state.error = null;
-    },
-    deleteFieldSuccess(state, action) {
-      state.loading = false;
-      state.fields = state.fields.filter(
-        (fields) => fields.id !== action.payload
-      );
-      state.error = null;
-      // console.log("action", action);
-    },
-    deleteFieldFailure(state, action) {
-      state.loading = false;
-      state.error = action.payload;
-    },
+    // deleteFieldStart(state) {
+    //   state.loading = true;
+    //   state.error = null;
+    // },
+    // deleteFieldSuccess(state, action) {
+    //   state.loading = false;
+    //   state.fields = state.fields.filter(
+    //     (fields) => fields.id !== action.payload
+    //   );
+    //   state.error = null;
+    //   // console.log("action", action);
+    // },
+    // deleteFieldFailure(state, action) {
+    //   state.loading = false;
+    //   state.error = action.payload;
+    // },
 
     getFieldTypeStart(state) {
       state.loading = true;
@@ -106,9 +106,9 @@ export const {
   //   getFieldsStart,
   //   getFieldsSuccess,
   //   getFieldsFailure,
-  getCreateFieldStart,
-  getCreateFieldSuccess,
-  getCreateFieldFailure,
+  createFieldStart,
+  createFieldSuccess,
+  createFieldFailure,
   //   deletefieldStart,
   //   deletefieldSuccess,
   //   deletefieldFailure,

@@ -20,9 +20,9 @@ import {
 } from "../../repositories/api/services/formServices";
 
 import {
-  getCreateFormStart,
-  getCreateFormSuccess,
-  getCreateFormFailure,
+  createFormStart,
+  createFormSuccess,
+  createFormFailure,
 } from "../../redux/slices/formSlice";
 
 import { getTables } from "../../repositories/api/services/dbRetrievalServices";
@@ -42,19 +42,19 @@ const schema = Yup.object().shape({
 const FormNewDetails = ({ setFormDetails, setFormIsFilled, formIsFilled }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const form = useSelector((state) => state.form.form);
+  const formDetailInput = useSelector((state) => state.form.formDetailInput);
   const tableOptions = useSelector((state) => state.dbRetrieval.tableOptions);
   const loading = useSelector((state) => state.form.loading);
 
   useEffect(() => {
     const fetchForm = async () => {
       try {
-        dispatch(getCreateFormStart());
+        dispatch(createFormStart());
         const form = await createForm();
         // console.log("form", form);
-        dispatch(getCreateFormSuccess(form));
+        dispatch(createFormSuccess(form));
       } catch (error) {
-        dispatch(getCreateFormFailure(error));
+        dispatch(createFormFailure(error));
       }
     };
 
@@ -74,6 +74,7 @@ const FormNewDetails = ({ setFormDetails, setFormIsFilled, formIsFilled }) => {
 
   const handleEdit = () => {
     setFormIsFilled(false); // Reset formIsFilled to false
+    console.log("formIsFilled", formIsFilled);
   };
 
   return (
@@ -106,9 +107,9 @@ const FormNewDetails = ({ setFormDetails, setFormIsFilled, formIsFilled }) => {
               console.log("formIsFilled", formIsFilled);
             }}
             initialValues={{
-              name: (form && form.name) || "",
-              short_name: (form && form.short_name) || "",
-              table_name: (form && form.table_name) || "",
+              name: (formDetailInput && formDetailInput.name) || "",
+              short_name: (formDetailInput && formDetailInput.short_name) || "",
+              table_name: (formDetailInput && formDetailInput.table_name) || "",
             }}
           >
             {({

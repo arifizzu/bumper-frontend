@@ -11,9 +11,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-import FormNewDetails from "../../components/form/FormNewDetails";
-import FormNewFields from "../../components/form/FormNewFields";
-import FieldDragAndDrop from "../../components/form/FieldDragAndDrop";
+import FormNewDetails from "../../components/formBuilder/FormNewDetails";
+import FormNewFields from "../../components/formBuilder/FormNewFields";
+import FieldDragAndDrop from "../../components/formBuilder/FieldDragAndDrop";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -45,7 +45,7 @@ const FormNewPage = () => {
   const [fieldLayout, setFieldLayout] = useState({});
 
   const handleUserBreadcrumb = () => {
-    navigate("/forms");
+    navigate("/form-builder");
   };
 
   const toggleFieldDragAndDrop = () => {
@@ -67,63 +67,6 @@ const FormNewPage = () => {
   useEffect(() => {
     console.log("fieldLayout updated in parent component:", fieldLayout);
   }, [fieldLayout]);
-
-  // const handleFormNewDetailsData = async () => {
-  //   try {
-  //     setSubmitting(true);
-  //     const result = await storeForm(formDetails);
-  //     console.log("Result from storeForm", result);
-  //     //   console.log("Result.data from storeForm", result.data);
-  //     //   console.log("Result.data.id from storeForm", result.data.id);
-  //     if (result.success === true) {
-  //       console.log(formDetails); // Handle form submission
-  //       console.log("Form saved successfully");
-  //       setFormId(result.data.id);
-  //     }
-  //   } catch (error) {
-  //     //   setShowModal(true);
-  //     console.error("Unexpected error:", error);
-  //     const formattedErrors = {};
-
-  //     if (error.name && !error.short_name) {
-  //       formattedErrors.name = [error.name[0]];
-  //     }
-
-  //     if (error.short_name && !error.name) {
-  //       formattedErrors.short_name = [error.short_name[0]];
-  //     }
-
-  //     if (error.name && error.short_name) {
-  //       formattedErrors.name = [error.name[0]];
-  //       formattedErrors.short_name = [error.short_name[0]];
-  //     }
-  //     //   console.error("formattedErrors", formattedErrors);
-  //     setFieldError(formattedErrors);
-  //     //   console.error("Field Error:", fieldError);
-  //   } finally {
-  //     setSubmitting(false); // Reset form submitting state
-  //   }
-  //   console.log("FormNewDetails:", formDetails);
-  // };
-
-  // const handleFormNewFieldsData = async () => {
-  //   try {
-  //     setSubmitting(true);
-  //     const result = await storeField(fieldDetails);
-  //     console.log("Result from storeField", result);
-  //     //   console.log("Result.data from storeField", result.data);
-  //     //   console.log("Result.data.id from storeField", result.data.id);
-  //     if (result.success === true) {
-  //       console.log(fieldDetails); // Handle form submission
-  //       console.log("Field saved successfully");
-  //     }
-  //   } catch (error) {
-  //     console.error("Unexpected error:", error);
-  //   } finally {
-  //     setSubmitting(false); // Reset form submitting state
-  //   }
-  //   console.log("FormNewFields:", fieldDetails);
-  // };
 
   const handleFormNewDetailsData = async () => {
     try {
@@ -163,52 +106,12 @@ const FormNewPage = () => {
           variant="success"
           className="float-end mt-n1"
           hidden={!formIsFilled || !fieldIsFilled}
-          // onClick={() => {
-          //   if (
-          //     !formDetails ||
-          //     !formDetails.name ||
-          //     formDetails.name === "" ||
-          //     !formDetails.short_name ||
-          //     formDetails.short_name === ""
-          //   ) {
-          //     setShowModal(true);
-          //     setIsValid(false);
-          //   } else if (
-          //     !fieldDetails ||
-          //     !fieldDetails.caption ||
-          //     fieldDetails.caption === "" ||
-          //     !fieldDetails.is_required ||
-          //     fieldDetails.is_required === "" ||
-          //     !fieldDetails.width ||
-          //     fieldDetails.width === "" ||
-          //     !fieldDetails.height ||
-          //     fieldDetails.height === "" ||
-          //     !fieldDetails.x_coordinate ||
-          //     fieldDetails.x_coordinate === "" ||
-          //     !fieldDetails.y_coordinate ||
-          //     fieldDetails.y_coordinate === ""
-          //   ) {
-          //     setShowModal(true);
-          //     setIsValid(false);
-          //   } else {
-          //     setIsValid(true);
-          //     console.log("isValid dalam else statement", isValid);
-          //   }
-          //   console.log("isValid di luar ifelse statement", isValid);
-          //   if (isValid) {
-          //     handleFormNewDetailsData();
-          //     handleFormNewFieldsData();
-          //   }
-          //   console.log("FormNewDetails:", formDetails);
-          //   console.log("FormNewFields:", fieldDetails);
-          //   //   navigate("/forms");
-          // }}
           onClick={() => {
             handleFormNewDetailsData();
             handleFormNewFieldsData();
             // setFieldLayout({});
-            navigate("/forms");
-            // window.location.href = "/forms";
+            navigate("/form-builder");
+            // window.location.href = "/form-builder";
           }}
         >
           <FontAwesomeIcon icon={faSave} /> Save Form

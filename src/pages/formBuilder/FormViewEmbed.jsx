@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { Container, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Link, useParams } from "react-router-dom";
-import FormViewEmbed from "../../components/form/FormViewEmbed";
+import FormViewEmbed from "../../components/formBuilder/FormViewEmbed";
 
 const FormViewEmbedPage = () => {
   const navigate = useNavigate();

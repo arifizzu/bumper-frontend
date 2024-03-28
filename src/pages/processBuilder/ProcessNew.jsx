@@ -4,13 +4,13 @@ import { Container, Breadcrumb } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-import ProcessNewDetails from "../../components/process/ProcessNewDetails";
+import ProcessNewDetails from "../../components/processBuilder/ProcessNewDetails";
 
 const FormNewPage = () => {
   const navigate = useNavigate();
 
   const handleUserBreadcrumb = () => {
-    navigate("/processes");
+    navigate("/process-builder");
   };
 
   return (

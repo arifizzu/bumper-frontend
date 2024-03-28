@@ -7,14 +7,14 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-import ProcessIndex from "../../components/process/ProcessIndex";
+import ProcessIndex from "../../components/processBuilder/ProcessIndex.jsx";
 import { tableColumns } from "./data.js";
 
 const ProcessIndexPage = () => {
   const navigate = useNavigate();
   const handleCreateNew = async () => {
     try {
-      navigate("/processes/create");
+      navigate("/process-builder/create");
     } catch (error) {
       console.error("Create new user failed:", error);
     }

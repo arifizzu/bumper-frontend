@@ -372,11 +372,11 @@ const formSection = [
 
 const formBuilderSection = [
   {
-    href: "/forms",
+    href: "/form-builder",
     icon: CheckSquare,
     title: "Forms",
     roles: ["admin"],
-    // permissions: ["view form"],
+    permissions: ["view form", "create form", "edit form", "delete form"],
   },
   // {
   //   href: "/notifications",
@@ -387,11 +387,16 @@ const formBuilderSection = [
 
 const processBuilderSection = [
   {
-    href: "/processes",
+    href: "/process-builder",
     icon: Trello,
     title: "Processes",
-    roles: ["user"],
-    // permissions: ["view process"],
+    roles: ["admin"],
+    permissions: [
+      "view process",
+      "create process",
+      "edit process",
+      "delete process",
+    ],
   },
   // {
   //   href: "/notifications",
@@ -426,6 +431,8 @@ const managementSettingsSection = [
     href: "/users",
     icon: Users,
     title: "User Account",
+    roles: ["admin"],
+    permissions: ["view user", "create user", "edit user", "delete user"],
     // children: [
     //   {
     //     href: "/users",
@@ -456,18 +463,18 @@ const navItems = [
     title: "Management Settings",
     pages: managementSettingsSection,
   },
-  // {
-  //   title: "Pages",
-  //   pages: pagesSection,
-  // },
-  // {
-  //   title: "Tools & Components",
-  //   pages: componentsSection,
-  // },
-  // {
-  //   title: "Plugins & Addons",
-  //   pages: pluginsSection,
-  // },
+  {
+    title: "Pages",
+    pages: pagesSection,
+  },
+  {
+    title: "Tools & Components",
+    pages: componentsSection,
+  },
+  {
+    title: "Plugins & Addons",
+    pages: pluginsSection,
+  },
 ];
 
 export default navItems;

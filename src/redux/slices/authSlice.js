@@ -24,7 +24,10 @@ export const authSlice = createSlice({
       // state.roles = action.payload.roles;
       // state.permissions = action.payload.roles;
       localStorage.setItem("roles", JSON.stringify(action.payload.roles));
-      localStorage.setItem("permissions", JSON.stringify(action.payload.roles));
+      localStorage.setItem(
+        "permissions",
+        JSON.stringify(action.payload.permissions)
+      );
       console.log("action", action.payload);
       // console.log("loginSuccess");
     },

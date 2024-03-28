@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Link, useParams } from "react-router-dom";
-import FormViewPreviewEmbed from "../../components/form/FormViewPreviewEmbed";
+import FormViewPreviewEmbed from "../../components/formBuilder/FormViewPreviewEmbed";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlassArrowRight } from "@fortawesome/free-solid-svg-icons";
@@ -21,12 +21,12 @@ const FormViewPreviewEmbedPage = () => {
   const [showEmbedModal, setShowEmbedModal] = useState(false);
 
   const handleFormBreadcrumb = () => {
-    navigate("/forms");
+    navigate("/form-builder");
   };
 
-  //   const handleFormBreadcrumb2 = async (id) => {
-  //     navigate(`/forms/view/${id}`);
-  //   };
+  const handleFormBreadcrumb2 = async (id) => {
+    navigate(-1); // Go back to the previous page
+  };
   const handleEmbedFormButton = async () => {
     setShowEmbedModal(true);
   };
@@ -48,9 +48,9 @@ const FormViewPreviewEmbedPage = () => {
         </Button>
         <Breadcrumb style={{ fontSize: "1.3rem" }}>
           <Breadcrumb.Item onClick={handleFormBreadcrumb}>Form</Breadcrumb.Item>
-          {/* <Breadcrumb.Item onClick={handleFormBreadcrumb2}>
+          <Breadcrumb.Item onClick={handleFormBreadcrumb2}>
             View
-          </Breadcrumb.Item> */}
+          </Breadcrumb.Item>
           <Breadcrumb.Item active>Preview Embedded Form</Breadcrumb.Item>
         </Breadcrumb>
       </Container>

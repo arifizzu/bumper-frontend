@@ -18,7 +18,7 @@ import {
   FieldTimePicker,
   FieldEmailInput,
   FieldPasswordInput,
-} from "./field-type/FieldTypeDisabled";
+} from "./fieldType/FieldTypeDisabled";
 
 import {
   Button,
@@ -47,9 +47,9 @@ import {
   //   getfieldsStart,
   //   getfieldsSuccess,
   //   getfieldsFailure,
-  getCreateFieldStart,
-  getCreateFieldSuccess,
-  getCreateFieldFailure,
+  createFieldStart,
+  createFieldSuccess,
+  createFieldFailure,
   getFieldTypeStart,
   getFieldTypeSuccess,
   getFieldTypeFailure,
@@ -110,12 +110,12 @@ const TabsWithFieldTypes = ({
     e.dataTransfer.setData("field", JSON.stringify(field));
   };
 
-  useEffect(() => {
-    console.log(
-      "formLatestId updated in FieldDragAndDrop child:",
-      formLatestId
-    );
-  }, [formLatestId]);
+  // useEffect(() => {
+  //   console.log(
+  //     "formLatestId updated in FieldDragAndDrop child:",
+  //     formLatestId
+  //   );
+  // }, [formLatestId]);
 
   useEffect(() => {
     console.log("fieldLayout updated in FieldDragAndDrop child:", fieldLayout);
@@ -516,11 +516,11 @@ const FieldDragAndDrop = ({
   useEffect(() => {
     const fetchField = async () => {
       try {
-        dispatch(getCreateFieldStart());
+        dispatch(createFieldStart());
         const field = await createField();
-        dispatch(getCreateFieldSuccess(field));
+        dispatch(createFieldSuccess(field));
       } catch (error) {
-        dispatch(getCreateFieldFailure(error));
+        dispatch(createFieldFailure(error));
       }
     };
 

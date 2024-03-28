@@ -13,7 +13,7 @@ import {
   Modal,
 } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSave } from "@fortawesome/free-solid-svg-icons";
+import { faSave, faFileExport } from "@fortawesome/free-solid-svg-icons";
 import {
   FieldTextInput,
   FieldTextarea,
@@ -27,7 +27,7 @@ import {
   FieldTimePicker,
   FieldEmailInput,
   FieldPasswordInput,
-} from "./field-type/FieldType";
+} from "./fieldType/FieldType";
 
 import {
   showFieldStart,
@@ -131,46 +131,48 @@ const FormViewEmbed = ({ id }) => {
   console.log("fields", fields);
   return (
     <React.Fragment>
-      <Card>
-        <Card.Header>
-          <Card.Title className="mb-0 text-center">
-            {fields && fields.length > 0 ? (
-              <>
-                <h3>{fields[0]?.form?.name}</h3>
-              </>
-            ) : (
-              <Col>
-                <h5>Loading...</h5>
-              </Col>
-            )}
-          </Card.Title>
-        </Card.Header>
-        <Card.Body>
-          <div style={{ marginBottom: "20px" }}>
-            <GridLayout
-              className="fieldLayout"
-              layout={fieldLayout}
-              cols={12}
-              rowHeight={30}
-              width={1200}
-            >
-              {generateDOM()}
-            </GridLayout>
-          </div>
-          <div>
-            <Button
-              variant="primary"
-              className="float-end mt-n1 me-2"
-              onClick={() => {
-                //   handleSubmitButton(id);
-                handleSubmitButton();
-              }}
-            >
-              <FontAwesomeIcon icon={faSave} /> Submit
-            </Button>
-          </div>
-        </Card.Body>
-      </Card>
+      <Container id="form-content" fluid className="p-0">
+        <Card>
+          <Card.Header>
+            <Card.Title className="mb-0 text-center">
+              {fields && fields.length > 0 ? (
+                <>
+                  <h3>{fields[0]?.form?.name}</h3>
+                </>
+              ) : (
+                <Col>
+                  <h5>Loading...</h5>
+                </Col>
+              )}
+            </Card.Title>
+          </Card.Header>
+          <Card.Body>
+            <div style={{ marginBottom: "20px" }}>
+              <GridLayout
+                className="fieldLayout"
+                layout={fieldLayout}
+                cols={12}
+                rowHeight={30}
+                width={1200}
+              >
+                {generateDOM()}
+              </GridLayout>
+            </div>
+            <div>
+              <Button
+                variant="primary"
+                className="float-end mt-n1 me-2"
+                onClick={() => {
+                  //   handleSubmitButton(id);
+                  handleSubmitButton();
+                }}
+              >
+                <FontAwesomeIcon icon={faSave} /> Submit
+              </Button>
+            </div>
+          </Card.Body>
+        </Card>
+      </Container>
 
       <Modal show={isValid} onHide={() => setIsValid(false)}>
         <Modal.Header closeButton>Submit Form</Modal.Header>

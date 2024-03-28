@@ -20,7 +20,7 @@ import {
   FieldTimePicker,
   FieldEmailInput,
   FieldPasswordInput,
-} from "./field-type/FieldType";
+} from "./fieldType/FieldType";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX, faGrip } from "@fortawesome/free-solid-svg-icons";

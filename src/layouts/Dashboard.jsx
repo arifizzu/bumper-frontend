@@ -18,8 +18,8 @@ const Dashboard = ({ children }) => {
 
   const roles = JSON.parse(localStorage.getItem("roles"));
   const permissions = JSON.parse(localStorage.getItem("permissions"));
-  console.log("roles", roles);
-  console.log("permissions", permissions);
+  // console.log("roles", roles);
+  // console.log("permissions", permissions);
   return (
     <React.Fragment>
       <Wrapper>

@@ -23,57 +23,57 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import {
-  getFormsStart,
-  getFormsSuccess,
-  getFormsFailure,
-  deleteFormStart,
-  deleteFormSuccess,
-  deleteFormFailure,
-} from "../../redux/slices/formSlice";
+  getProcessesStart,
+  getProcessesSuccess,
+  getProcessesFailure,
+  deleteProcessStart,
+  deleteProcessSuccess,
+  deleteProcessFailure,
+} from "../../redux/slices/processSlice";
 
 import {
-  getForms,
-  deleteForm,
-} from "../../repositories/api/services/formServices";
+  getProcesses,
+  deleteProcess,
+} from "../../repositories/api/services/processServices";
 
-const FormIndex = ({ tableColumns }) => {
+const ProcessIndex = ({ tableColumns }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { forms, loading, error } = useSelector((state) => state.form);
+  const { processes, loading, error } = useSelector((state) => state.process);
   const [updatedColumns, setUpdatedColumns] = useState([]);
 
   const handleViewButton = async (id) => {
     try {
-      navigate(`/forms/view/${id}`);
+      navigate(`/process-builder/view/${id}`);
     } catch (error) {
-      console.error("View form failed:", error);
+      console.error("View process failed:", error);
     }
   };
 
   const handleEditButton = async (id) => {
     try {
-      //   navigate(`/forms/edit/${id}`);
+      navigate(`/process-builder/edit/${id}`);
     } catch (error) {
-      console.error("Edit form failed:", error);
+      console.error("Edit process failed:", error);
     }
   };
 
   const handleDeleteButton = async (id) => {
     try {
-      dispatch(deleteFormStart());
-      console.log("Deleting form with id:", id);
-      await deleteForm(id);
-      dispatch(deleteFormSuccess(id));
+      dispatch(deleteProcessStart());
+      console.log("Deleting process with id:", id);
+      await deleteProcess(id);
+      dispatch(deleteProcessSuccess(id));
     } catch (error) {
-      dispatch(deleteFormFailure());
-      console.error("Delete form failed:", error);
+      dispatch(deleteProcessFailure());
+      console.error("Delete process failed:", error);
     }
   };
 
   const renderActions = (row) => {
     // Initialize an object with all row IDs and set their corresponding showModal values to false
-    const initialModals = forms.reduce((acc, form) => {
-      acc[form.id] = false;
+    const initialModals = processes.reduce((acc, process) => {
+      acc[process.id] = false;
       return acc;
     }, {});
 
@@ -117,9 +117,11 @@ const FormIndex = ({ tableColumns }) => {
             <FontAwesomeIcon icon={faTrash} /> Delete
           </Button>
           <Modal show={showModal[row.id]} onHide={() => toggle(row.id)}>
-            <Modal.Header closeButton>Delete Form</Modal.Header>
+            <Modal.Header closeButton>Delete Process</Modal.Header>
             <Modal.Body className="text-center m-3">
-              <p className="mb-0">Are you sure you want to delete this form?</p>
+              <p className="mb-0">
+                Are you sure you want to delete this process?
+              </p>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={() => toggle(row.id)}>
@@ -141,13 +143,13 @@ const FormIndex = ({ tableColumns }) => {
     );
   };
 
-  const fetchForms = async () => {
+  const fetchProcesses = async () => {
     try {
-      dispatch(getFormsStart());
-      const formData = await getForms();
-      dispatch(getFormsSuccess(formData));
+      dispatch(getProcessesStart());
+      const processData = await getProcesses();
+      dispatch(getProcessesSuccess(processData));
     } catch (error) {
-      dispatch(getFormsFailure(error));
+      dispatch(getProcessesFailure(error));
     }
   };
 
@@ -163,7 +165,7 @@ const FormIndex = ({ tableColumns }) => {
     });
 
     setUpdatedColumns(updatedColumns);
-    fetchForms();
+    fetchProcesses();
   }, [tableColumns]);
 
   const {
@@ -184,7 +186,7 @@ const FormIndex = ({ tableColumns }) => {
   } = useTable(
     {
       columns: updatedColumns,
-      data: forms,
+      data: processes,
       initialState: { pageIndex: 0 },
     },
     usePagination
@@ -193,8 +195,8 @@ const FormIndex = ({ tableColumns }) => {
   return (
     <Card>
       <Card.Header>
-        <Card.Title>Forms</Card.Title>
-        <h6 className="card-subtitle text-muted">Lists of created form</h6>
+        <Card.Title>Processes</Card.Title>
+        <h6 className="card-subtitle text-muted">Lists of created process</h6>
       </Card.Header>
       <Card.Body>
         {loading ? (
@@ -298,4 +300,4 @@ const FormIndex = ({ tableColumns }) => {
   );
 };
 
-export default FormIndex;
+export default ProcessIndex;

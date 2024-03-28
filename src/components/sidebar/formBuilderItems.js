@@ -27,7 +27,7 @@ const formSection = [
 
 const formBuilderSection = [
   {
-    href: "/forms",
+    href: "/form-builder",
     icon: List,
     title: "Existing Forms",
   },

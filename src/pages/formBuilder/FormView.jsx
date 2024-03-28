@@ -11,7 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Link, useParams } from "react-router-dom";
 
-import FormView from "../../components/form/FormView";
+import FormView from "../../components/formBuilder/FormView";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
@@ -26,14 +26,14 @@ const FormViewPage = () => {
 
   const handleEditButton = async (id) => {
     // try {
-    //   navigate(`/forms/edit/${id}`);
+    //   navigate(`/form-builder/edit/${id}`);
     // } catch (error) {
     //   console.error("Edit form failed:", error);
     // }
   };
 
   const handleFormBreadcrumb = () => {
-    navigate("/forms");
+    navigate("/form-builder");
   };
 
   return (
@@ -54,11 +54,6 @@ const FormViewPage = () => {
           <Breadcrumb.Item active>View</Breadcrumb.Item>
         </Breadcrumb>
         <FormView id={id} />
-        {/* <Row>
-          <Col md="5" xl="4">
-            <FormView id={id} />
-          </Col>
-        </Row> */}
       </Container>
     </React.Fragment>
   );

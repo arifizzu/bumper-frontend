@@ -26,17 +26,17 @@ export const processSlice = createSlice({
       state.error = action.payload;
     },
 
-    getCreateProcessStart(state) {
+    createProcessStart(state) {
       state.loading = true;
       state.error = null;
     },
-    getCreateProcessSuccess(state, action) {
+    createProcessSuccess(state, action) {
       state.loading = false;
       state.process = action.payload;
       state.error = null;
       // console.log("action", action);
     },
-    getCreateProcessFailure(state, action) {
+    createProcessFailure(state, action) {
       state.loading = false;
       state.error = action.payload;
     },
@@ -64,9 +64,9 @@ export const {
   getProcessesStart,
   getProcessesSuccess,
   getProcessesFailure,
-  getCreateProcessStart,
-  getCreateProcessSuccess,
-  getCreateProcessFailure,
+  createProcessStart,
+  createProcessSuccess,
+  createProcessFailure,
   deleteProcessStart,
   deleteProcessSuccess,
   deleteProcessFailure,

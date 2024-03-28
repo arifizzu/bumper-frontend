@@ -7,14 +7,14 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-import FormIndex from "../../components/form/FormIndex";
+import FormIndex from "../../components/formBuilder/FormIndex.jsx";
 import { tableColumns } from "./data.js";
 
 const FormIndexPage = () => {
   const navigate = useNavigate();
   const handleCreateNew = async () => {
     try {
-      navigate("/forms/create");
+      navigate("/form-builder/create");
     } catch (error) {
       console.error("Create new form failed:", error);
     }

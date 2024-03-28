@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  forms: [],
-  form: null,
+  forms: [], //used for index form
+  form: null, //used for show form
+  formDetailInput: null, //used for create new form
   loading: false,
   error: null,
 };
@@ -26,17 +27,17 @@ export const formSlice = createSlice({
       state.error = action.payload;
     },
 
-    getCreateFormStart(state) {
+    createFormStart(state) {
       state.loading = true;
       state.error = null;
     },
-    getCreateFormSuccess(state, action) {
+    createFormSuccess(state, action) {
       state.loading = false;
-      state.form = action.payload;
+      state.formDetailInput = action.payload;
       state.error = null;
       // console.log("action", action);
     },
-    getCreateFormFailure(state, action) {
+    createFormFailure(state, action) {
       state.loading = false;
       state.error = action.payload;
     },
@@ -55,6 +56,20 @@ export const formSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+
+    showFormStart(state) {
+      state.loading = true;
+      state.error = null;
+    },
+    showFormSuccess(state, action) {
+      state.loading = false;
+      state.form = action.payload;
+      state.error = null;
+    },
+    showFormFailure(state, action) {
+      state.loading = false;
+      state.error = action.payload;
+    },
   },
 });
 
@@ -62,12 +77,15 @@ export const {
   getFormsStart,
   getFormsSuccess,
   getFormsFailure,
-  getCreateFormStart,
-  getCreateFormSuccess,
-  getCreateFormFailure,
+  createFormStart,
+  createFormSuccess,
+  createFormFailure,
   deleteFormStart,
   deleteFormSuccess,
   deleteFormFailure,
+  showFormStart,
+  showFormSuccess,
+  showFormFailure,
 } = formSlice.actions;
 
 export default formSlice.reducer;

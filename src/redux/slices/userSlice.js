@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  users: [],
-  user: null,
-  form: null,
-  forms: {},
+  users: [], //used for index user
+  user: null, //used for show user
+  form: null, //used for create new user
+  forms: {}, //used for edit user
   loading: false,
   error: null,
 };
