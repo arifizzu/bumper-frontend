@@ -136,6 +136,14 @@ const ProcessNew = lazy(() => import("./pages/processBuilder/ProcessNew"));
 // const ProcessView = lazy(() => import("./pages/process/ProcessView"));
 // const ProcessEdit = lazy(() => import("./pages/process/ProcessEdit"));
 
+// Management Settings
+const RolePermissionIndex = lazy(() =>
+  import("./pages/rolePermission/RolePermissionIndex")
+);
+// const RolePermissionNew = lazy(() => import("./pages/rolePermission/RolePermissionNew"));
+// const RolePermissionView = lazy(() => import("./pages/rolePermission/RolePermissionView"));
+// const RolePermissionEdit = lazy(() => import("./pages/rolePermission/RolePermissionEdit"));
+
 const routes = [
   {
     path: "/",
@@ -626,6 +634,33 @@ const routes = [
       // {
       //   path: "edit/:id",
       //   element: <ProcessEdit />,
+      // },
+    ],
+  },
+
+  {
+    path: "role-permission",
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
+    children: [
+      {
+        path: "",
+        element: <RolePermissionIndex />,
+      },
+      // {
+      //   path: "create",
+      //   element: <RolePermissionNew />,
+      // },
+      // {
+      //   path: "view/:id",
+      //   element: <RolePermissionView />,
+      // },
+      // {
+      //   path: "edit/:id",
+      //   element: <RolePermissionEdit />,
       // },
     ],
   },

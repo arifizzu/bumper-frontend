@@ -407,20 +407,16 @@ const processBuilderSection = [
 
 const managementSettingsSection = [
   {
-    href: "/notifications",
+    href: "/role-permission",
     icon: Key,
     title: "Role & Permission",
     roles: ["admin"],
     // permissions: ["view process"],
     children: [
       {
-        href: "/form-plugins/advanced-inputs",
+        href: "/role-permission",
         title: "Lists",
       },
-      // {
-      //   href: "/form-plugins/formik",
-      //   title: "Create New",
-      // },
       {
         href: "/form-plugins/formik",
         title: "Assign to User",

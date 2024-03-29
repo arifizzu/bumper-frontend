@@ -6,6 +6,8 @@ import formReducer from "./slices/formSlice";
 import dbRetrievalReducer from "./slices/dbRetrievalSlice";
 import fieldReducer from "./slices/fieldSlice";
 import processReducer from "./slices/processSlice";
+import roleReducer from "./slices/roleSlice";
+import permissionReducer from "./slices/permissionSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,5 +18,7 @@ export const store = configureStore({
     dbRetrieval: dbRetrievalReducer,
     field: fieldReducer,
     process: processReducer,
+    role: roleReducer,
+    permission: permissionReducer,
   },
 });
