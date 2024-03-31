@@ -49,8 +49,8 @@ const roleSlice = createSlice({
     },
     editRoleSuccess(state, action) {
       state.loading = false;
-      const { id, formData } = action.payload;
-      state.forms[id] = formData; // Store form data with the corresponding role ID
+      const { id, roleData } = action.payload;
+      state.forms[id] = roleData; // Store form data with the corresponding role ID
       state.error = null;
       // console.log("action", action);
     },

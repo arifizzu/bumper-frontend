@@ -5,23 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Badge, Button, Card, Col, Container, Row } from "react-bootstrap";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGlobe } from "@fortawesome/free-solid-svg-icons";
-import { faHeart } from "@fortawesome/free-regular-svg-icons";
-import {
-  Briefcase,
-  Home,
-  MapPin,
-  MessageSquare,
-  Mail,
-  User,
-} from "react-feather";
-import {
-  faFacebook,
-  faInstagram,
-  faLinkedin,
-  faTwitter,
-} from "@fortawesome/free-brands-svg-icons";
+import { Mail, User } from "react-feather";
 
 import {
   showUserStart,
@@ -31,7 +15,6 @@ import {
 
 import { showUser } from "../../repositories/api/services/userServices";
 
-import avatar4 from "../../assets/img/avatars/avatar-4.jpg";
 import defaultUser from "../../assets/img/avatars/default-user.png";
 
 const UserView = ({ id }) => {

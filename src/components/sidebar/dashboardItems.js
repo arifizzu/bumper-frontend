@@ -412,16 +412,16 @@ const managementSettingsSection = [
     title: "Role & Permission",
     roles: ["admin"],
     // permissions: ["view process"],
-    children: [
-      {
-        href: "/role-permission",
-        title: "Lists",
-      },
-      {
-        href: "/form-plugins/formik",
-        title: "Assign to User",
-      },
-    ],
+    // children: [
+    //   {
+    //     href: "/role-permission",
+    //     title: "Lists",
+    //   },
+    //   {
+    //     href: "/form-plugins/formik",
+    //     title: "Assign to User",
+    //   },
+    // ],
   },
   {
     href: "/users",
