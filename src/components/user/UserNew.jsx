@@ -4,6 +4,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import Select from "react-select";
 
 import {
   Button,
@@ -27,6 +28,14 @@ import {
   createUserFailure,
 } from "../../redux/slices/userSlice";
 
+import {
+  getRolesStart,
+  getRolesSuccess,
+  getRolesFailure,
+} from "../../redux/slices/roleSlice";
+
+import { getRoles } from "../../repositories/api/services/roleServices";
+
 const schema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
@@ -42,6 +51,17 @@ const UserNew = ({}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const form = useSelector((state) => state.user.form);
+  const roles = useSelector((state) => state.role.roles);
+  const [selectedRoles, setSelectedRoles] = React.useState([]);
+
+  const mapRoleOptions = (roles) => {
+    return roles.map((role) => ({
+      value: role.name,
+      label: role.name,
+    }));
+  };
+
+  const roleOptions = mapRoleOptions(roles);
 
   useEffect(() => {
     const fetchUserForm = async () => {
@@ -53,7 +73,18 @@ const UserNew = ({}) => {
         dispatch(createUserFailure(error));
       }
     };
+    const fetchRoles = async () => {
+      try {
+        dispatch(getRolesStart());
+        const rolesData = await getRoles();
+        dispatch(getRolesSuccess(rolesData));
+      } catch (error) {
+        dispatch(getRolesFailure(error));
+      }
+    };
+
     fetchUserForm();
+    fetchRoles();
   }, []);
 
   return (
@@ -67,10 +98,16 @@ const UserNew = ({}) => {
           <Formik
             validationSchema={schema}
             onSubmit={async (values, { setSubmitting, setFieldError }) => {
+              console.log(values);
               try {
                 setSubmitting(true);
-                const { name, email, password } = values; // Destructure name, email, and password from values
-                const result = await storeUser({ name, email, password });
+                const { name, email, password, roles } = values; // Destructure name, email, and password from values
+                const result = await storeUser({
+                  name,
+                  email,
+                  password,
+                  roles,
+                });
                 if (result.success === true) {
                   console.log(values); // Handle form submission
                   console.log("User saved successfully");
@@ -99,6 +136,7 @@ const UserNew = ({}) => {
               email: (form && form.email) || "",
               password: "",
               confirmPassword: "",
+              roles: (form && form.roles) || [],
             }}
           >
             {({
@@ -154,7 +192,7 @@ const UserNew = ({}) => {
                 <Row>
                   <Form.Group
                     as={Col}
-                    md="6"
+                    md="4"
                     controlId="validationFormik18"
                     className="mb-3"
                   >
@@ -174,7 +212,7 @@ const UserNew = ({}) => {
 
                   <Form.Group
                     as={Col}
-                    md="6"
+                    md="4"
                     controlId="validationFormik19"
                     className="mb-3"
                   >
@@ -194,6 +232,33 @@ const UserNew = ({}) => {
                     <Form.Control.Feedback type="invalid">
                       {errors.confirmPassword}
                     </Form.Control.Feedback>
+                  </Form.Group>
+                  <Form.Group
+                    as={Col}
+                    md="4"
+                    controlId="validationFormik21"
+                    className="mb-3"
+                  >
+                    <Form.Label>Roles</Form.Label>
+                    <Select
+                      className="react-select-container"
+                      classNamePrefix="react-select"
+                      name="roles"
+                      value={selectedRoles}
+                      onChange={(selectedOptions) => {
+                        setSelectedRoles(selectedOptions);
+                        handleChange({
+                          target: {
+                            name: "roles",
+                            value: selectedOptions.map(
+                              (option) => option.value
+                            ),
+                          },
+                        });
+                      }}
+                      options={roleOptions}
+                      isMulti
+                    />
                   </Form.Group>
                 </Row>
                 <div className="text-end">

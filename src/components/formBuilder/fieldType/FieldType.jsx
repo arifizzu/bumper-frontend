@@ -9,47 +9,47 @@ import {
   FloatingLabel,
 } from "react-bootstrap";
 
-// export const FieldTextInput = () => (
-//   <React.Fragment>
-//     <FloatingLabel
-//       controlId="input"
-//       label="Text Input"
-//       style={{ color: "grey", marginLeft: "5px", marginRight: "5px" }}
-//     >
-//       <Form.Control type="text" placeholder="" />
-//     </FloatingLabel>
-//   </React.Fragment>
-// );
-
-export const FieldTextInput = ({ fieldLayout }) => (
+export const FieldTextInput = () => (
   <React.Fragment>
-    {Array.isArray(fieldLayout) && fieldLayout.length > 0 ? (
-      (console.log("fieldLayout duluuu", fieldLayout),
-      fieldLayout.map(
-        (field, index) => (
-          console.log("field duluuuuu", field),
-          (
-            <FloatingLabel
-              key={index}
-              controlId={`input-${index}`}
-              label={field.detail.caption} // Use caption from fieldLayout
-              style={{ color: "grey", marginLeft: "5px", marginRight: "5px" }}
-            >
-              <Form.Control
-                type="text"
-                placeholder=""
-                value={field.detail.caption} // Set initial value to caption
-                onChange={(e) => {}}
-              />
-            </FloatingLabel>
-          )
-        )
-      ))
-    ) : (
-      <div>Drag and Drop field first</div>
-    )}
+    <FloatingLabel
+      controlId="input"
+      label="Text Input"
+      style={{ color: "grey", marginLeft: "5px", marginRight: "5px" }}
+    >
+      <Form.Control type="text" placeholder="" />
+    </FloatingLabel>
   </React.Fragment>
 );
+
+// export const FieldTextInput = ({ fieldLayout }) => (
+//   <React.Fragment>
+//     {Array.isArray(fieldLayout) && fieldLayout.length > 0 ? (
+//       (console.log("fieldLayout duluuu", fieldLayout),
+//       fieldLayout.map(
+//         (field, index) => (
+//           console.log("field duluuuuu", field),
+//           (
+//             <FloatingLabel
+//               key={index}
+//               controlId={`input-${index}`}
+//               label={field.detail.caption} // Use caption from fieldLayout
+//               style={{ color: "grey", marginLeft: "5px", marginRight: "5px" }}
+//             >
+//               <Form.Control
+//                 type="text"
+//                 placeholder=""
+//                 value={field.detail.caption} // Set initial value to caption
+//                 onChange={(e) => {}}
+//               />
+//             </FloatingLabel>
+//           )
+//         )
+//       ))
+//     ) : (
+//       <div>Drag and Drop field first</div>
+//     )}
+//   </React.Fragment>
+// );
 
 //cubaan utk dynamic kan input - gagal
 // export const FieldTextInput = ({ fieldLayout, setFieldLayout }) => (

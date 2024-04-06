@@ -4,6 +4,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import Select from "react-select";
 
 import {
   Button,
@@ -27,6 +28,14 @@ import {
   editUserFailure,
 } from "../../redux/slices/userSlice";
 
+import {
+  getRolesStart,
+  getRolesSuccess,
+  getRolesFailure,
+} from "../../redux/slices/roleSlice";
+
+import { getRoles } from "../../repositories/api/services/roleServices";
+
 const schema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
@@ -42,6 +51,17 @@ const UserEdit = ({ id }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const form = useSelector((state) => state.user.forms[id]);
+  const roles = useSelector((state) => state.role.roles);
+  const [selectedRoles, setSelectedRoles] = React.useState([]);
+
+  const mapRoleOptions = (roles) => {
+    return roles.map((role) => ({
+      value: role.name,
+      label: role.name,
+    }));
+  };
+
+  const roleOptions = mapRoleOptions(roles);
 
   useEffect(() => {
     const fetchUserForm = async (id) => {
@@ -53,8 +73,29 @@ const UserEdit = ({ id }) => {
         dispatch(editUserFailure(error));
       }
     };
+    const fetchRoles = async () => {
+      try {
+        dispatch(getRolesStart());
+        const rolesData = await getRoles();
+        dispatch(getRolesSuccess(rolesData));
+      } catch (error) {
+        dispatch(getRolesFailure(error));
+      }
+    };
     fetchUserForm(id);
+    fetchRoles();
   }, [dispatch, id]);
+
+  useEffect(() => {
+    if (form && form.roles) {
+      setSelectedRoles((prevRoles) => {
+        return form.roles.map((role) => ({
+          value: role.name,
+          label: role.name,
+        }));
+      });
+    }
+  }, [form]);
 
   if (!form) {
     return <div>Loading...</div>;
@@ -73,8 +114,13 @@ const UserEdit = ({ id }) => {
             onSubmit={async (values, { setSubmitting, setFieldError }) => {
               try {
                 setSubmitting(true);
-                const { name, email, password } = values; // Destructure name, email, and password from values
-                const result = await updateUser(id, { name, email, password });
+                const { name, email, password, roles } = values; // Destructure name, email, and password from values
+                const result = await updateUser(id, {
+                  name,
+                  email,
+                  password,
+                  roles,
+                });
                 if (result.success === true) {
                   console.log(values); // Handle form submission
                   console.log("User updated successfully");
@@ -103,6 +149,7 @@ const UserEdit = ({ id }) => {
               email: (form && form.email) || "",
               password: "",
               confirmPassword: "",
+              roles: (form && form.roles) || [],
             }}
           >
             {({
@@ -158,7 +205,7 @@ const UserEdit = ({ id }) => {
                 <Row>
                   <Form.Group
                     as={Col}
-                    md="6"
+                    md="4"
                     controlId="validationFormik14"
                     className="mb-3"
                   >
@@ -178,7 +225,7 @@ const UserEdit = ({ id }) => {
 
                   <Form.Group
                     as={Col}
-                    md="6"
+                    md="4"
                     controlId="validationFormik15"
                     className="mb-3"
                   >
@@ -198,6 +245,33 @@ const UserEdit = ({ id }) => {
                     <Form.Control.Feedback type="invalid">
                       {errors.confirmPassword}
                     </Form.Control.Feedback>
+                  </Form.Group>
+                  <Form.Group
+                    as={Col}
+                    md="4"
+                    controlId="validationFormik21"
+                    className="mb-3"
+                  >
+                    <Form.Label>Roles</Form.Label>
+                    <Select
+                      className="react-select-container"
+                      classNamePrefix="react-select"
+                      name="roles"
+                      value={selectedRoles}
+                      onChange={(selectedOptions) => {
+                        setSelectedRoles(selectedOptions);
+                        handleChange({
+                          target: {
+                            name: "roles",
+                            value: selectedOptions.map(
+                              (option) => option.value
+                            ),
+                          },
+                        });
+                      }}
+                      options={roleOptions}
+                      isMulti
+                    />
                   </Form.Group>
                 </Row>
                 <Button type="submit">Save</Button>
