@@ -128,7 +128,7 @@ const FormViewPreviewEmbed = lazy(() =>
   import("./pages/formBuilder/FormViewPreviewEmbed")
 );
 const FormViewEmbed = lazy(() => import("./pages/formBuilder/FormViewEmbed"));
-// const FormEdit = lazy(() => import("./pages/form/FormEdit"));
+const FormEdit = lazy(() => import("./pages/formBuilder/FormEdit"));
 
 // Process Builder
 const ProcessIndex = lazy(() => import("./pages/processBuilder/ProcessIndex"));
@@ -593,10 +593,10 @@ const routes = [
         path: "view/preview/:id",
         element: <FormViewPreviewEmbed />,
       },
-      // {
-      //   path: "edit/:id",
-      //   element: <FormEdit />,
-      // },
+      {
+        path: "edit/:id",
+        element: <FormEdit />,
+      },
       ,
     ],
   },

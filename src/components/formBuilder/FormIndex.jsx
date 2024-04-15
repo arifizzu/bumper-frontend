@@ -52,7 +52,7 @@ const FormIndex = ({ tableColumns }) => {
 
   const handleEditButton = async (id) => {
     try {
-      //   navigate(`/form-builder/edit/${id}`);
+      navigate(`/form-builder/edit/${id}`);
     } catch (error) {
       console.error("Edit form failed:", error);
     }

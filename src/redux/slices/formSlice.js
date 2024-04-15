@@ -6,6 +6,7 @@ const initialState = {
   formDetailInput: null, //used for create new form
   loading: false,
   error: null,
+  formsEdit: {}, //used for edit form including fields
 };
 
 export const formSlice = createSlice({
@@ -70,6 +71,23 @@ export const formSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+
+    editFormStart(state) {
+      state.loading = true;
+      state.error = null;
+    },
+    editFormSuccess(state, action) {
+      state.loading = false;
+      const { id, formData } = action.payload;
+      state.formsEdit[id] = formData; // Store form data with the corresponding user ID
+      state.error = null;
+      // console.log("action", action);
+    },
+    editFormFailure(state, action) {
+      state.loading = false;
+      state.error = action.payload;
+      // console.log("action", action);
+    },
   },
 });
 
@@ -86,6 +104,9 @@ export const {
   showFormStart,
   showFormSuccess,
   showFormFailure,
+  editFormStart,
+  editFormSuccess,
+  editFormFailure,
 } = formSlice.actions;
 
 export default formSlice.reducer;

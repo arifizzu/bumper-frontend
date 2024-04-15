@@ -25,11 +25,11 @@ const FormViewPage = () => {
   const { id } = useParams();
 
   const handleEditButton = async (id) => {
-    // try {
-    //   navigate(`/form-builder/edit/${id}`);
-    // } catch (error) {
-    //   console.error("Edit form failed:", error);
-    // }
+    try {
+      navigate(`/form-builder/edit/${id}`);
+    } catch (error) {
+      console.error("Edit form failed:", error);
+    }
   };
 
   const handleFormBreadcrumb = () => {
