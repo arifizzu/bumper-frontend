@@ -7,6 +7,7 @@ import {
   Row,
   Col,
   Modal,
+  Card,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -143,40 +144,41 @@ const FormNewPage = () => {
           formIsFilled={formIsFilled}
           setFormIsFilled={setFormIsFilled}
         />
+        <Card>
+          <Row>
+            <Col md={isFieldDragAndDropOpen ? 4 : 1}>
+              {isFieldDragAndDropOpen && (
+                <React.Fragment>
+                  <FieldDragAndDrop
+                    toggleFieldDragAndDrop={toggleFieldDragAndDrop}
+                    formDetails={formDetails}
+                    tableData={{ tableName: formDetails.table_name }}
+                    formId={formId}
+                    fieldLayout={fieldLayout}
+                    setFieldLayout={setFieldLayout}
+                    fieldDetails={fieldDetails}
+                    setFieldDetails={setFieldDetails}
+                    fieldIsFilled={fieldIsFilled}
+                    setFieldIsFilled={setFieldIsFilled}
+                  />
+                </React.Fragment>
+              )}
+              {!isFieldDragAndDropOpen && (
+                <Button variant="primary" onClick={toggleFieldDragAndDrop}>
+                  Field <FontAwesomeIcon icon={faAnglesRight} />
+                </Button>
+              )}
+            </Col>
 
-        <Row>
-          <Col md={isFieldDragAndDropOpen ? 4 : 1}>
-            {isFieldDragAndDropOpen && (
-              <React.Fragment>
-                <FieldDragAndDrop
-                  toggleFieldDragAndDrop={toggleFieldDragAndDrop}
-                  formDetails={formDetails}
-                  tableData={{ tableName: formDetails.table_name }}
-                  formId={formId}
-                  fieldLayout={fieldLayout}
-                  setFieldLayout={setFieldLayout}
-                  fieldDetails={fieldDetails}
-                  setFieldDetails={setFieldDetails}
-                  fieldIsFilled={fieldIsFilled}
-                  setFieldIsFilled={setFieldIsFilled}
-                />
-              </React.Fragment>
-            )}
-            {!isFieldDragAndDropOpen && (
-              <Button variant="primary" onClick={toggleFieldDragAndDrop}>
-                Field <FontAwesomeIcon icon={faAnglesRight} />
-              </Button>
-            )}
-          </Col>
-
-          <Col md={isFieldDragAndDropOpen ? 8 : 11}>
-            <FormNewFields
-              setFieldDetails={setFieldDetails}
-              fieldLayout={fieldLayout}
-              setFieldLayout={setFieldLayout}
-            />
-          </Col>
-        </Row>
+            <Col md={isFieldDragAndDropOpen ? 8 : 11}>
+              <FormNewFields
+                setFieldDetails={setFieldDetails}
+                fieldLayout={fieldLayout}
+                setFieldLayout={setFieldLayout}
+              />
+            </Col>
+          </Row>
+        </Card>
       </Container>
     </React.Fragment>
   );
