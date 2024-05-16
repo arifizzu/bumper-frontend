@@ -130,6 +130,16 @@ const FormViewPreviewEmbed = lazy(() =>
 const FormViewEmbed = lazy(() => import("./pages/formBuilder/FormViewEmbed"));
 const FormEdit = lazy(() => import("./pages/formBuilder/FormEdit"));
 
+// Form Builder V2
+const FormIndexV2 = lazy(() => import("./pages/formBuilderV2/FormIndex"));
+// const FormNewV2 = lazy(() => import("./pages/formBuilderV2/FormNew"));
+// const FormViewV2 = lazy(() => import("./pages/formBuilderV2/FormView"));
+// const FormViewPreviewEmbedV2 = lazy(() =>
+//   import("./pages/formBuilderV2/FormViewPreviewEmbed")
+// );
+// const FormViewEmbedV2 = lazy(() => import("./pages/formBuilderV2/FormViewEmbed"));
+const FormEditV2 = lazy(() => import("./pages/formBuilderV2/FormEdit"));
+
 // Process Builder
 const ProcessIndex = lazy(() => import("./pages/processBuilder/ProcessIndex"));
 const ProcessNew = lazy(() => import("./pages/processBuilder/ProcessNew"));
@@ -596,6 +606,39 @@ const routes = [
       {
         path: "edit/:id",
         element: <FormEdit />,
+      },
+      ,
+    ],
+  },
+
+  {
+    path: "form-builder-v2",
+    // element: <DashboardLayout />,
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
+    children: [
+      {
+        path: "",
+        element: <FormIndexV2 />,
+      },
+      // {
+      //   path: "create",
+      //   element: <FormNewV2 />,
+      // },
+      // {
+      //   path: "view/:id",
+      //   element: <FormViewV2 />,
+      // },
+      // {
+      //   path: "view/preview/:id",
+      //   element: <FormViewPreviewEmbedV2 />,
+      // },
+      {
+        path: "edit/:id",
+        element: <FormEditV2 />,
       },
       ,
     ],
