@@ -385,6 +385,21 @@ const formBuilderSection = [
   // },
 ];
 
+const formBuilderSectionV2 = [
+  {
+    href: "/form-builder-v2",
+    icon: CheckSquare,
+    title: "Forms",
+    roles: ["admin"],
+    permissions: ["view form", "create form", "edit form", "delete form"],
+  },
+  // {
+  //   href: "/notifications",
+  //   icon: FilePlus,
+  //   title: "Create New Form",
+  // },
+];
+
 const processBuilderSection = [
   {
     href: "/process-builder",
@@ -450,6 +465,10 @@ const navItems = [
   {
     title: "Form Builder",
     pages: formBuilderSection,
+  },
+  {
+    title: "Form Builder V2",
+    pages: formBuilderSectionV2,
   },
   {
     title: "Process Builder",

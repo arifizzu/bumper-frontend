@@ -62,7 +62,7 @@ const FormNewDetails = ({ setFormDetails, setFormIsFilled, formIsFilled }) => {
       try {
         dispatch(getTablesStart());
         const tableOptions = await getTables();
-        // console.log("tableOptions", tableOptions);
+        console.log("tableOptions", tableOptions);
         dispatch(getTablesSuccess(tableOptions));
       } catch (error) {
         dispatch(getTablesFailure(error));
