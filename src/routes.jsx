@@ -134,10 +134,12 @@ const FormEdit = lazy(() => import("./pages/formBuilder/FormEdit"));
 const FormIndexV2 = lazy(() => import("./pages/formBuilderV2/FormIndex"));
 // const FormNewV2 = lazy(() => import("./pages/formBuilderV2/FormNew"));
 const FormViewV2 = lazy(() => import("./pages/formBuilderV2/FormView"));
-// const FormViewPreviewEmbedV2 = lazy(() =>
-//   import("./pages/formBuilderV2/FormViewPreviewEmbed")
-// );
-// const FormViewEmbedV2 = lazy(() => import("./pages/formBuilderV2/FormViewEmbed"));
+const FormViewPreviewEmbedV2 = lazy(() =>
+  import("./pages/formBuilderV2/FormViewPreviewEmbed")
+);
+const FormViewEmbedV2 = lazy(() =>
+  import("./pages/formBuilderV2/FormViewEmbed")
+);
 const FormEditV2 = lazy(() => import("./pages/formBuilderV2/FormEdit"));
 
 // Process Builder
@@ -632,10 +634,10 @@ const routes = [
         path: "view/:id",
         element: <FormViewV2 />,
       },
-      // {
-      //   path: "view/preview/:id",
-      //   element: <FormViewPreviewEmbedV2 />,
-      // },
+      {
+        path: "view/preview/:id",
+        element: <FormViewPreviewEmbedV2 />,
+      },
       {
         path: "edit/:id",
         element: <FormEditV2 />,
@@ -655,7 +657,8 @@ const routes = [
     children: [
       {
         path: "view/embed/:id",
-        element: <FormViewEmbed />,
+        // element: <FormViewEmbed />,
+        element: <FormViewEmbedV2 />,
       },
     ],
   },

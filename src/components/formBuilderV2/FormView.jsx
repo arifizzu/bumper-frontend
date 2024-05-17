@@ -52,6 +52,8 @@ import {
 
 import { getFields } from "../../repositories/api/services/fieldServices";
 
+import RGL, { WidthProvider } from "react-grid-layout";
+const ReactGridLayout = WidthProvider(RGL);
 import GridLayout from "react-grid-layout";
 import "../../grid-layout/css/styles.css";
 import "../../grid-layout/css/example-styles.css";
@@ -109,9 +111,9 @@ const FormView = ({ id }) => {
 
   const handleViewPreviewButton = async (id) => {
     try {
-      navigate(`/form-builder/view/preview/${id}`);
+      navigate(`/form-builder-v2/view/preview/${id}`);
     } catch (error) {
-      console.error("View form previewfailed:", error);
+      console.error("View form preview failed:", error);
     }
   };
 
@@ -187,9 +189,7 @@ const FormView = ({ id }) => {
               <h5>Short Name: {form ? form.short_name : "Loading..."}</h5>
             </Col>
             <Col md="6" xl="">
-              <h5>
-                Table Name (Database): {form ? form.table_name : "Loading..."}
-              </h5>
+              <h5>Created By: {form ? form.created_by.name : "Loading..."}</h5>
               <h5>Created At: {form ? form.created_at : "Loading..."}</h5>
             </Col>
           </Row>
@@ -232,18 +232,27 @@ const FormView = ({ id }) => {
         </Card.Header>
         <Card.Body>
           <Container id="form-content" fluid className="p-0">
-            <h2 className="mt-3 mb-4 text-center">
-              {form ? form.name : "Loading..."}
-            </h2>
-            <GridLayout
-              className="fieldLayout"
-              layout={fieldLayout}
-              cols={12}
-              rowHeight={30}
-              width={1200}
+            <div
+              style={{
+                border: "1px solid black",
+                // minHeight: "400px",
+                background: "white",
+                marginTop: "10px",
+              }}
             >
-              {generateDOM()}
-            </GridLayout>
+              <h2 className="mt-3 mb-4 text-center">
+                {form ? form.name : "Loading..."}
+              </h2>
+              <ReactGridLayout
+                className="fieldLayout"
+                layout={fieldLayout}
+                cols={12}
+                rowHeight={30}
+                width={1200}
+              >
+                {generateDOM()}
+              </ReactGridLayout>
+            </div>
           </Container>
         </Card.Body>
       </Card>

@@ -10,7 +10,7 @@
 }
 .layoutJSON {
   background: #ddd;
-  border: 1px solid black;
+  border: 1px solid rgb(255, 255, 255);
   margin-top: 10px;
   padding: 10px;
 }
@@ -24,13 +24,14 @@
 }
 .react-grid-item:not(.react-grid-placeholder) {
   background: #ffffff;
-  border: 1px solid black;
+  border: 1px solid black; /*border color of all */
 }
 .react-grid-item.resizing {
   opacity: 0.9;
 }
 .react-grid-item.static {
   background: #ffffff;
+  border: 1px solid white; /*border color of all */
 }
 .react-grid-item .text {
   font-size: 24px;
@@ -87,14 +88,14 @@
   height: 40px;
   padding: 10px;
   margin: 5px;
-  border: 1px solid black;
+  border: 1px solid white;
   background-color: #ddd;
 }
 .droppable-element {
   width: 150px;
   text-align: center;
   background: #ffffff;
-  border: 1px solid black;
+  border: 1px solid white;
   margin: 10px 0;
   padding: 10px;
 }
