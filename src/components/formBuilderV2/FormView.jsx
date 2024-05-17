@@ -283,7 +283,11 @@ const FormView = ({ id }) => {
         </div>
       </Card>
 
-      <Modal show={showEmbedModal} onHide={() => setShowEmbedModal(false)}>
+      <Modal
+        show={showEmbedModal}
+        onHide={() => setShowEmbedModal(false)}
+        centered
+      >
         <Modal.Header closeButton>Embed Form</Modal.Header>
         <Modal.Body className="text-center m-3">
           <p className="mb-0">
