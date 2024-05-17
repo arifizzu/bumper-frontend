@@ -4,6 +4,7 @@ const initialState = {
   fields: [], // fields associated to the form // used for view forms & view embedded
   field: null, //used to create new field
   fieldListInput: [], // used for list of fields created
+  fieldListInputOriginal: [], // used for delete field list
   fieldType: [], // used to display Field Type
   loading: false,
   error: null,
@@ -13,20 +14,21 @@ export const fieldSlice = createSlice({
   name: "field",
   initialState,
   reducers: {
-    // getFieldsStart(state) {
-    //   state.loading = true;
-    //   state.error = null;
-    // },
-    // getFieldsSuccess(state, action) {
-    //   state.loading = false;
-    //   state.fields = action.payload;
-    //   state.error = null;
-    //   // console.log("action", action);
-    // },
-    // getFieldsFailure(state, action) {
-    //   state.loading = false;
-    //   state.error = action.payload;
-    // },
+    getFieldsStart(state) {
+      state.loading = true;
+      state.error = null;
+    },
+    getFieldsSuccess(state, action) {
+      state.loading = false;
+      state.fieldListInput = action.payload;
+      state.fieldListInputOriginal = action.payload;
+      state.error = null;
+      // console.log("action", action);
+    },
+    getFieldsFailure(state, action) {
+      state.loading = false;
+      state.error = action.payload;
+    },
 
     createFieldStart(state) {
       state.loading = true;
@@ -91,21 +93,23 @@ export const fieldSlice = createSlice({
 
     addField: (state, action) => {
       state.fieldListInput.push(action.payload);
+      // state.fieldListInputOriginal.push(action.payload);
     },
 
     removeField: (state, action) => {
       const index = action.payload;
       if (index >= 0 && index < state.fieldListInput.length) {
         state.fieldListInput.splice(index, 1);
+        // state.fieldListInputOriginal.splice(index, 1);
       }
     },
   },
 });
 
 export const {
-  //   getFieldsStart,
-  //   getFieldsSuccess,
-  //   getFieldsFailure,
+  getFieldsStart,
+  getFieldsSuccess,
+  getFieldsFailure,
   createFieldStart,
   createFieldSuccess,
   createFieldFailure,

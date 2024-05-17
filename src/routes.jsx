@@ -133,7 +133,7 @@ const FormEdit = lazy(() => import("./pages/formBuilder/FormEdit"));
 // Form Builder V2
 const FormIndexV2 = lazy(() => import("./pages/formBuilderV2/FormIndex"));
 // const FormNewV2 = lazy(() => import("./pages/formBuilderV2/FormNew"));
-// const FormViewV2 = lazy(() => import("./pages/formBuilderV2/FormView"));
+const FormViewV2 = lazy(() => import("./pages/formBuilderV2/FormView"));
 // const FormViewPreviewEmbedV2 = lazy(() =>
 //   import("./pages/formBuilderV2/FormViewPreviewEmbed")
 // );
@@ -628,10 +628,10 @@ const routes = [
       //   path: "create",
       //   element: <FormNewV2 />,
       // },
-      // {
-      //   path: "view/:id",
-      //   element: <FormViewV2 />,
-      // },
+      {
+        path: "view/:id",
+        element: <FormViewV2 />,
+      },
       // {
       //   path: "view/preview/:id",
       //   element: <FormViewPreviewEmbedV2 />,

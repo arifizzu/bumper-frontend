@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import {
   Container,
@@ -7,25 +7,28 @@ import {
   Row,
   Col,
   Modal,
-  Card,
 } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
-import FormEdit from "../../components/formBuilderV2/FormEdit";
+import FormView from "../../components/formBuilderV2/FormView";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAnglesLeft,
-  faAnglesRight,
-  faMaximize,
-  faSave,
-} from "@fortawesome/free-solid-svg-icons";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
+
 import { useDispatch, useSelector } from "react-redux";
 
-const FormEditPage = () => {
+const FormViewPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+
+  const handleEditButton = async (id) => {
+    try {
+      navigate(`/form-builder-v2/edit/${id}`);
+    } catch (error) {
+      console.error("Edit form failed:", error);
+    }
+  };
 
   const handleFormBreadcrumb = () => {
     navigate("/form-builder-v2");
@@ -35,23 +38,23 @@ const FormEditPage = () => {
     <React.Fragment>
       <Helmet title="Form" />
       <Container fluid className="p-0">
-        {/* <Button
-          variant="success"
+        <Button
+          variant="warning"
           className="float-end mt-n1"
           onClick={() => {
-            navigate("/form-builder-v2");
+            handleEditButton(id);
           }}
         >
-          <FontAwesomeIcon icon={faSave} /> Save Form
-        </Button> */}
+          <FontAwesomeIcon icon={faEdit} /> Edit
+        </Button>
         <Breadcrumb style={{ fontSize: "1.3rem" }}>
           <Breadcrumb.Item onClick={handleFormBreadcrumb}>Form</Breadcrumb.Item>
-          <Breadcrumb.Item active>Edit</Breadcrumb.Item>
+          <Breadcrumb.Item active>View</Breadcrumb.Item>
         </Breadcrumb>
-        <FormEdit id={id} />
+        <FormView id={id} />
       </Container>
     </React.Fragment>
   );
 };
 
-export default FormEditPage;
+export default FormViewPage;

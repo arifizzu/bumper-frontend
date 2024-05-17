@@ -5,7 +5,7 @@
   width: 100%;
 }
 .react-grid-layout {
-  background: #eee;
+  background: #ffffff;
   margin-top: 10px;
 }
 .layoutJSON {
@@ -30,7 +30,7 @@
   opacity: 0.9;
 }
 .react-grid-item.static {
-  background: #cce;
+  background: #ffffff;
 }
 .react-grid-item .text {
   font-size: 24px;

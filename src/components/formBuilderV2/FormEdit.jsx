@@ -22,6 +22,19 @@ import {
   Modal,
 } from "react-bootstrap";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faAnglesLeft,
+  faX,
+  faGrip,
+  faMagnifyingGlass,
+  faEdit,
+  faWindowMinimize,
+  faSave,
+  faPlus,
+  faMinus,
+} from "@fortawesome/free-solid-svg-icons";
+
 import {
   FieldTextInput,
   FieldTextarea,
@@ -35,7 +48,22 @@ import {
   FieldTimePicker,
   FieldEmailInput,
   FieldPasswordInput,
-} from "./fieldType/FieldTypeDisabled";
+} from "./fieldType/FieldTypeExample";
+
+import {
+  FieldTextInputDynamic,
+  FieldTextareaDynamic,
+  FieldNumberInputDynamic,
+  FieldCheckboxDynamic,
+  FieldRadioButtonDynamic,
+  FieldSwitchDynamic,
+  FieldDropdownDynamic,
+  FieldFileUploadDynamic,
+  FieldDatePickerDynamic,
+  FieldTimePickerDynamic,
+  FieldEmailInputDynamic,
+  FieldPasswordInputDynamic,
+} from "./fieldType/FieldTypeDynamic";
 
 import { showForm } from "../../repositories/api/services/formServices";
 import {
@@ -57,15 +85,17 @@ import {
 import {
   createField,
   storeField,
-  //   editField,
-  //   updateField,
+  getFields,
+  // editField,
+  updateField,
   showAllFieldTypes,
+  deleteField,
 } from "../../repositories/api/services/fieldServices";
 
 import {
-  // getFieldsStart,
-  // getFieldsSuccess,
-  // getFieldsFailure,
+  getFieldsStart,
+  getFieldsSuccess,
+  getFieldsFailure,
   createFieldStart,
   createFieldSuccess,
   createFieldFailure,
@@ -77,7 +107,7 @@ import {
 import {
   getTables,
   getColumns,
-  //   getLatestId,
+  // getLatestId,
 } from "../../repositories/api/services/dbRetrievalServices";
 
 import {
@@ -87,20 +117,17 @@ import {
   getColumnsStart,
   getColumnsSuccess,
   getColumnsFailure,
-  //   getLatestIdStart,
-  //   getLatestIdSuccess,
-  //   getLatestIdFailure,
+  // getLatestIdStart,
+  // getLatestIdSuccess,
+  // getLatestIdFailure,
 } from "../../redux/slices/dbRetrievalSlice";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { updateFieldLocation } from "../../repositories/api/services/fieldLocationServices";
+
 import {
-  faAnglesLeft,
-  faX,
-  faGrip,
-  faMagnifyingGlass,
-  faEdit,
-  faWindowMinimize,
-} from "@fortawesome/free-solid-svg-icons";
+  storeFieldListValue,
+  deleteFieldListValue,
+} from "../../repositories/api/services/fieldListValueServices";
 
 import { addField, removeField } from "../../redux/slices/fieldSlice";
 import _ from "lodash";
@@ -118,15 +145,9 @@ const schemaFormDetail = Yup.object().shape({
 
 const schemaField = Yup.object().shape({
   caption: Yup.string().required("Caption is required"),
-  //   form_id: Yup.number().required("Form id is required"),
-  //   type_id: Yup.number().required("Type id is required"),
   is_required: Yup.boolean().required("This field is required"),
-  table_name: Yup.string(),
-  column_name: Yup.string(),
-  //   width: Yup.number().required("Width is required"),
-  //   height: Yup.number().required("Height is required"),
-  //   x_coordinate: Yup.number().required("X-coordinate is required"),
-  //   y_coordinate: Yup.number().required("Y-coordinate is required"),
+  table_name: Yup.string().nullable(),
+  column_name: Yup.string().nullable(),
 });
 
 const FormEdit = ({ id }) => {
@@ -146,7 +167,6 @@ const FormEdit = ({ id }) => {
       try {
         dispatch(showFormStart());
         const form = await showForm(id);
-        console.log("form", form);
         dispatch(showFormSuccess(form));
       } catch (error) {
         dispatch(showFormFailure(error));
@@ -157,7 +177,6 @@ const FormEdit = ({ id }) => {
       try {
         dispatch(getGroupsStart());
         const groupData = await getGroups();
-        console.log("groupData", groupData);
         dispatch(getGroupsSuccess(groupData));
       } catch (error) {
         dispatch(getGroupsFailure(error));
@@ -223,7 +242,7 @@ const FormEdit = ({ id }) => {
                 <hr></hr>
               </Card.Header>
               <Card.Body className="text-left">
-                <h4>Form Layout</h4>
+                {/* <h4>Form Layout</h4> */}
                 <FormLayout formId={id} />
               </Card.Body>
             </Card>
@@ -359,7 +378,7 @@ const FieldList = ({}) => {
       try {
         dispatch(getFieldTypeStart());
         const fieldType = await showAllFieldTypes();
-        console.log("fieldType", fieldType);
+        // console.log("fieldType", fieldType);
         dispatch(getFieldTypeSuccess(fieldType));
       } catch (error) {
         dispatch(getFieldTypeFailure(error));
@@ -404,49 +423,38 @@ const FormLayout = ({ formId }) => {
   const field = useSelector((state) => state.field.field);
   const tableOptions = useSelector((state) => state.dbRetrieval.tableOptions);
   const columnOptions = useSelector((state) => state.dbRetrieval.columnOptions);
-  const [layout, setLayout] = useState([{}]);
-  const [layoutLength, setLayoutLength] = useState(0);
-  const [showModalField, setShowModalField] = useState(false);
+  const [showModalField, setShowModalField] = useState({});
   const [tableNameChosen, setTableNameChosen] = useState("");
+  const fieldListInputOriginal = useSelector(
+    (state) => state.field.fieldListInputOriginal
+  );
+  // const fieldLatestId = useSelector((state) => state.dbRetrieval.latestId);
+  const [fieldOptionsValue, setFieldOptionsValue] = useState([
+    { label: "", value: "" },
+  ]);
+  const handleAddOptionValue = () => {
+    setFieldOptionsValue([...fieldOptionsValue, { label: "", value: "" }]);
+  };
 
-  useEffect(() => {
-    const fetchField = async () => {
-      try {
-        dispatch(createFieldStart());
-        const field = await createField();
-        console.log("field", field);
-        dispatch(createFieldSuccess(field));
-      } catch (error) {
-        dispatch(createFieldSuccess(error));
-      }
-    };
+  const handleRemoveOptionValue = (index) => {
+    const newOptions = fieldOptionsValue.filter((_, i) => i !== index);
+    setFieldOptionsValue(newOptions);
+  };
 
-    const fetchTables = async () => {
-      try {
-        dispatch(getTablesStart());
-        const tableOptions = await getTables();
-        console.log("tableOptions", tableOptions);
-        dispatch(getTablesSuccess(tableOptions));
-      } catch (error) {
-        dispatch(getTablesFailure(error));
-      }
-    };
-
-    fetchField();
-    fetchTables();
-  }, []);
-
-  const toggleModalField = () => {
-    setShowModalField((prevShowModalField) => !prevShowModalField);
+  const handleChangeOptionValue = (index, event) => {
+    const { name, value } = event.target;
+    const newOptions = [...fieldOptionsValue];
+    newOptions[index][name] = value;
+    setFieldOptionsValue(newOptions);
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
-    toggleModalField();
+
     const field = JSON.parse(e.dataTransfer.getData("field"));
 
     const newLayoutItem = {
-      i: field.name + "_" + fieldListInput.length,
+      i: fieldListInput.length,
       x: 0,
       y: Infinity, // puts it at the bottom
       w: 3,
@@ -456,23 +464,60 @@ const FormLayout = ({ formId }) => {
     };
 
     dispatch(addField(field));
-    // setLayout([...layout, newLayoutItem]);
-    setLayout((prevLayout) => [...prevLayout, newLayoutItem]);
-    setLayoutLength(layoutLength + 1);
+    // toggleModalField();
+    toggleModalField(newLayoutItem.i);
     console.log("field dropped", field);
+    console.log("fieldListInput.length", fieldListInput.length);
+  };
+
+  useEffect(() => {
+    const fetchField = async () => {
+      try {
+        dispatch(createFieldStart());
+        const field = await createField();
+        dispatch(createFieldSuccess(field));
+      } catch (error) {
+        dispatch(createFieldFailure(error));
+      }
+    };
+
+    const fetchTables = async () => {
+      try {
+        dispatch(getTablesStart());
+        const tableOptions = await getTables();
+        dispatch(getTablesSuccess(tableOptions));
+      } catch (error) {
+        dispatch(getTablesFailure(error));
+      }
+    };
+
+    const fetchExistingFields = async () => {
+      try {
+        dispatch(getFieldsStart());
+        const fieldListInput = await getFields(formId);
+        console.log("fieldListInput", fieldListInput);
+        dispatch(getFieldsSuccess(fieldListInput));
+      } catch (error) {
+        dispatch(getFieldsFailure(error));
+      }
+    };
+
+    fetchField();
+    fetchTables();
+    fetchExistingFields();
+  }, []);
+
+  const toggleModalField = (id) => {
+    setShowModalField((prevState) => ({
+      ...prevState,
+      [id]: !prevState[id],
+    }));
   };
 
   useEffect(() => {
     console.log("fieldListInput updated:", fieldListInput);
+    console.log("fieldListInputOriginal updated:", fieldListInputOriginal);
   }, [fieldListInput]);
-
-  useEffect(() => {
-    console.log("layout updated:", layout);
-  }, [layout]);
-
-  useEffect(() => {
-    console.log("layoutLength updated:", layoutLength);
-  }, [layoutLength]);
 
   useEffect(() => {
     console.log("fieldLayout updated:", fieldLayout);
@@ -493,25 +538,34 @@ const FormLayout = ({ formId }) => {
 
       fetchColumns();
     }
-  }, [tableNameChosen]);
+  }, [tableNameChosen, dispatch]);
 
   const generateDOM = () => {
-    // console.log("generateDom");
-    return fieldListInput.map((fieldType, index) => (
+    return fieldListInput.map((fieldList, index) => (
       <div
         key={index}
         className="draggable-field"
         style={{ maxWidth: "100%", overflow: "hidden" }}
+        data-grid={{
+          x: fieldList.location?.x_coordinate ?? 0,
+          y: fieldList.location?.y_coordinate ?? 0,
+          w: fieldList.location?.width ?? 4,
+          h: fieldList.location?.height ?? 2,
+        }}
       >
         <div style={{ display: "flex", marginLeft: "3px" }}>
           <span style={{ flex: "1" }}>
-            {/* {fieldType.name} - {index + 1} */}
+            {/* {fieldList.name} - {index + 1} */}
           </span>
           <Button
-            onClick={() => toggleModalField()}
+            // variant="primary"
+            variant={fieldList.field_type ? "success" : "warning"}
+            onClick={() => {
+              toggleModalField(index);
+            }}
             style={{ marginRight: "3px", marginBottom: "5px" }}
           >
-            <FontAwesomeIcon icon={faMagnifyingGlass} />
+            <FontAwesomeIcon icon={faEdit} />
           </Button>
           <Button
             className="react-grid-dragHandleExample"
@@ -528,18 +582,385 @@ const FormLayout = ({ formId }) => {
           </Button>
         </div>
 
-        {fieldType.name === "Text Input" && <FieldTextInput />}
-        {fieldType.name === "Textarea" && <FieldTextarea />}
-        {fieldType.name === "Number Input" && <FieldNumberInput />}
-        {fieldType.name === "Checkbox" && <FieldCheckbox />}
-        {fieldType.name === "Radio Button" && <FieldRadioButton />}
-        {fieldType.name === "Switch" && <FieldSwitch />}
-        {fieldType.name === "Dropdown" && <FieldDropdown />}
-        {fieldType.name === "File Upload" && <FieldFileUpload />}
-        {fieldType.name === "Date Picker" && <FieldDatePicker />}
-        {fieldType.name === "Time Picker" && <FieldTimePicker />}
-        {fieldType.name === "Email Input" && <FieldEmailInput />}
-        {fieldType.name === "Password Input" && <FieldPasswordInput />}
+        {fieldList.field_type ? (
+          <>
+            {fieldList.field_type.name === "Text Input" && (
+              <FieldTextInputDynamic fieldList={fieldList} />
+            )}
+            {fieldList.field_type.name === "Textarea" && (
+              <FieldTextareaDynamic fieldList={fieldList} />
+            )}
+            {fieldList.field_type.name === "Number Input" && (
+              <FieldNumberInputDynamic fieldList={fieldList} />
+            )}
+            {fieldList.field_type.name === "Checkbox" && (
+              <FieldCheckboxDynamic fieldList={fieldList} />
+            )}
+            {fieldList.field_type.name === "Radio Button" && (
+              <FieldRadioButtonDynamic fieldList={fieldList} />
+            )}
+            {fieldList.field_type.name === "Switch" && (
+              <FieldSwitchDynamic fieldList={fieldList} />
+            )}
+            {fieldList.field_type.name === "Dropdown" && (
+              <FieldDropdownDynamic fieldList={fieldList} />
+            )}
+            {fieldList.field_type.name === "File Upload" && (
+              <FieldFileUploadDynamic fieldList={fieldList} />
+            )}
+            {fieldList.field_type.name === "Date Picker" && (
+              <FieldDatePickerDynamic fieldList={fieldList} />
+            )}
+            {fieldList.field_type.name === "Time Picker" && (
+              <FieldTimePickerDynamic fieldList={fieldList} />
+            )}
+            {fieldList.field_type.name === "Email Input" && (
+              <FieldEmailInputDynamic fieldList={fieldList} />
+            )}
+            {fieldList.field_type.name === "Password Input" && (
+              <FieldPasswordInputDynamic fieldList={fieldList} />
+            )}
+          </>
+        ) : (
+          <>
+            {fieldList.name === "Text Input" && <FieldTextInput />}
+            {fieldList.name === "Textarea" && <FieldTextarea />}
+            {fieldList.name === "Number Input" && <FieldNumberInput />}
+            {fieldList.name === "Checkbox" && <FieldCheckbox />}
+            {fieldList.name === "Radio Button" && <FieldRadioButton />}
+            {fieldList.name === "Switch" && <FieldSwitch />}
+            {fieldList.name === "Dropdown" && <FieldDropdown />}
+            {fieldList.name === "File Upload" && <FieldFileUpload />}
+            {fieldList.name === "Date Picker" && <FieldDatePicker />}
+            {fieldList.name === "Time Picker" && <FieldTimePicker />}
+            {fieldList.name === "Email Input" && <FieldEmailInput />}
+            {fieldList.name === "Password Input" && <FieldPasswordInput />}
+          </>
+        )}
+        <Modal
+          key={index}
+          show={showModalField[index]}
+          onHide={() => toggleModalField(index)}
+          centered
+        >
+          <Modal.Header closeButton>Enter Field Detail</Modal.Header>
+          <h1>fieldList.id = {fieldList.id}</h1>
+          <h1>index = {index}</h1>
+          <Modal.Body className="text-center m-3">
+            <Formik
+              onSubmit={async (values, { setSubmitting, setErrors }) => {
+                console.log("values", values);
+                console.log("fieldOptionsValue", fieldOptionsValue);
+                try {
+                  setSubmitting(true);
+                  values.form_id = formId;
+
+                  if (!fieldList.field_type) {
+                    // Creating a new field
+                    const latestFieldLayout =
+                      fieldLayout[fieldLayout.length - 1];
+                    values.type_id = latestFieldLayout.id;
+
+                    console.log("values", values);
+
+                    const result = await storeField(values);
+
+                    if (result.success === true) {
+                      console.log("Field saved successfully");
+
+                      // Check if fieldOptionsValue is not empty or only contains an object with empty label and value
+                      const hasValidOptions = fieldOptionsValue.some(
+                        (option) => option.label !== "" && option.value !== ""
+                      );
+
+                      if (hasValidOptions) {
+                        for (const fieldOptionV of fieldOptionsValue) {
+                          const result2 = await storeFieldListValue(
+                            result.latestFieldId,
+                            fieldOptionV
+                          );
+                          if (result2.success === true) {
+                            console.log("Field value saved successfully");
+                          } else {
+                            console.error("Error saving field value:", result2);
+                          }
+                        }
+                      }
+
+                      window.location.reload();
+                      toggleModalField(index);
+                    } else {
+                      console.error("Error saving field:", result);
+                    }
+                  } else {
+                    // Updating an existing field
+                    console.log("values", values);
+                    console.log("fieldList.id", fieldList.id);
+
+                    const result = await updateField(values, fieldList.id);
+
+                    if (result.success === true) {
+                      console.log("Field updated successfully");
+
+                      // Check if fieldOptionsValue is not empty or only contains an object with empty label and value
+                      const hasValidOptions = fieldOptionsValue.some(
+                        (option) => option.label !== "" && option.value !== ""
+                      );
+
+                      if (hasValidOptions) {
+                        await deleteFieldListValue(result.latestFieldId);
+
+                        for (const fieldOptionV of fieldOptionsValue) {
+                          const result2 = await storeFieldListValue(
+                            result.latestFieldId,
+                            fieldOptionV
+                          );
+                          if (result2.success === true) {
+                            console.log("Field value updated successfully");
+                          } else {
+                            console.error(
+                              "Error updating field value:",
+                              result2
+                            );
+                          }
+                        }
+                      }
+
+                      window.location.reload();
+                      toggleModalField(index);
+                    } else {
+                      console.error("Error updating field:", result);
+                    }
+                  }
+                } catch (error) {
+                  console.error("Unexpected error:", error);
+                } finally {
+                  setSubmitting(false); // Reset form submitting state
+                }
+              }}
+              initialValues={{
+                caption: fieldList.caption || "",
+                is_required: fieldList.is_required || 0,
+                table_name: fieldList.table_name || null,
+                column_name: fieldList.column_name || null,
+              }}
+              enableReinitialize={true}
+            >
+              {({
+                handleSubmit,
+                handleChange,
+                handleBlur,
+                values,
+                touched,
+                isValid,
+                errors,
+              }) => (
+                <Form noValidate onSubmit={handleSubmit}>
+                  <Form.Group as={Row} className="mb-3">
+                    <Form.Label column sm={5} className="text-sm-right">
+                      Caption*
+                    </Form.Label>
+                    <Col sm={7}>
+                      <Form.Control
+                        type="text"
+                        name="caption"
+                        value={values.caption}
+                        onChange={handleChange}
+                        isValid={touched.caption && !errors.caption}
+                        isInvalid={touched.caption && !!errors.caption}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.caption}
+                      </Form.Control.Feedback>
+                    </Col>
+                  </Form.Group>
+                  <Form.Group as={Row} className="mb-3">
+                    <Form.Label column sm={5} className="text-sm-right">
+                      Is Required*
+                    </Form.Label>
+                    <Col sm={7}>
+                      <Form.Select
+                        aria-label="Floating label select example"
+                        name="is_required"
+                        value={values.is_required}
+                        onChange={handleChange}
+                      >
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                      </Form.Select>
+                    </Col>
+                  </Form.Group>
+                  <Form.Group as={Row} className="mb-3">
+                    <Form.Label column sm={5} className="text-sm-right">
+                      Database Table
+                    </Form.Label>
+                    <Col sm={7}>
+                      <Form.Select
+                        name="table_name"
+                        onChange={(e) => {
+                          const selectedTableName = e.target.value;
+                          setTableNameChosen(selectedTableName);
+                          handleChange(e);
+                        }}
+                        value={values.table_name || ""}
+                      >
+                        <option value="">Not chosen</option>
+                        {tableOptions.map((tableName, index) => (
+                          <option key={index} value={tableName}>
+                            {tableName}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Col>
+                  </Form.Group>
+                  {tableNameChosen && (
+                    <Form.Group as={Row} className="mb-3">
+                      <Form.Label column sm={5} className="text-sm-right">
+                        Database Column
+                      </Form.Label>
+                      <Col sm={7}>
+                        <Form.Select
+                          name="column_name"
+                          onChange={handleChange}
+                          value={values.column_name || ""}
+                        >
+                          <option value="">Not chosen</option>
+                          {columnOptions.map((columnName, index) => (
+                            <option key={index} value={columnName}>
+                              {columnName}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </Col>
+                    </Form.Group>
+                  )}
+                  {fieldLayout &&
+                    fieldLayout.length > 0 &&
+                    fieldLayout[index] && (
+                      <>
+                        {fieldLayout[index].name === "Checkbox" ||
+                        fieldLayout[index].name === "Radio Button" ||
+                        fieldLayout[index].name === "Dropdown" ? (
+                          <Form.Group className="mb-3">
+                            <Form.Label>Field Options: </Form.Label>
+                            {fieldOptionsValue.map((option, optIndex) => (
+                              <Row key={optIndex} className="mb-3">
+                                <Col>
+                                  <Form.Control
+                                    type="text"
+                                    name="label"
+                                    placeholder="Label"
+                                    value={option.label}
+                                    onChange={(event) =>
+                                      handleChangeOptionValue(optIndex, event)
+                                    }
+                                  />
+                                </Col>
+                                <Col>
+                                  <Form.Control
+                                    type="text"
+                                    name="value"
+                                    placeholder="Value"
+                                    value={option.value}
+                                    onChange={(event) =>
+                                      handleChangeOptionValue(optIndex, event)
+                                    }
+                                  />
+                                </Col>
+                                <Col xs="auto">
+                                  <Button
+                                    variant="danger"
+                                    onClick={() =>
+                                      handleRemoveOptionValue(optIndex)
+                                    }
+                                  >
+                                    <FontAwesomeIcon icon={faMinus} />
+                                  </Button>
+                                </Col>
+                              </Row>
+                            ))}
+                            <Button
+                              variant="primary"
+                              onClick={handleAddOptionValue}
+                            >
+                              <FontAwesomeIcon icon={faPlus} /> Add Option
+                            </Button>
+                          </Form.Group>
+                        ) : fieldLayout[index].field_type &&
+                          fieldLayout[index].field_type.name &&
+                          (fieldLayout[index].field_type.name === "Checkbox" ||
+                            fieldLayout[index].field_type.name ===
+                              "Radio Button" ||
+                            fieldLayout[index].field_type.name ===
+                              "Dropdown") ? (
+                          <Form.Group className="mb-3">
+                            <Form.Label>Field Options: </Form.Label>
+                            {fieldLayout[index].list_values.map(
+                              (listValue, optIndex) => (
+                                <Row key={listValue.id} className="mb-3">
+                                  <Col>
+                                    <Form.Control
+                                      type="text"
+                                      name="label"
+                                      placeholder="Label"
+                                      value={
+                                        fieldOptionsValue[optIndex]?.label ||
+                                        listValue.label
+                                      }
+                                      onChange={(event) =>
+                                        handleChangeOptionValue(optIndex, event)
+                                      }
+                                    />
+                                  </Col>
+                                  <Col>
+                                    <Form.Control
+                                      type="text"
+                                      name="value"
+                                      placeholder="Value"
+                                      value={
+                                        fieldOptionsValue[optIndex]?.value ||
+                                        listValue.value
+                                      }
+                                      onChange={(event) =>
+                                        handleChangeOptionValue(optIndex, event)
+                                      }
+                                    />
+                                  </Col>
+                                  <Col xs="auto">
+                                    <Button
+                                      variant="danger"
+                                      onClick={() =>
+                                        handleRemoveOptionValue(optIndex)
+                                      }
+                                    >
+                                      <FontAwesomeIcon icon={faMinus} />
+                                    </Button>
+                                  </Col>
+                                </Row>
+                              )
+                            )}
+                            <Button
+                              variant="primary"
+                              onClick={handleAddOptionValue}
+                            >
+                              <FontAwesomeIcon icon={faPlus} /> Add Option
+                            </Button>
+                          </Form.Group>
+                        ) : null}
+                      </>
+                    )}
+                  <Button
+                    type="submit"
+                    variant="success"
+                    className="float-end mt-n1 me-2"
+                  >
+                    Save Field
+                  </Button>
+                </Form>
+              )}
+            </Formik>
+          </Modal.Body>
+        </Modal>
       </div>
     ));
   };
@@ -547,33 +968,20 @@ const FormLayout = ({ formId }) => {
   const onRemoveItem = (index) => {
     console.log("removing", index);
     dispatch(removeField(index));
-    setLayoutLength(layoutLength - 1);
   };
 
   const onLayoutChange = (newLayout) => {
-    setLayout(newLayout);
     console.log("newLayout", newLayout);
-    const updatedFieldLayout = fieldListInput.map((fieldType, index) => ({
-      ...fieldType,
+    const updatedFieldLayout = fieldListInput.map((fieldList, index) => ({
+      ...fieldList,
       layout: newLayout[index], // Assuming layout has the same length as fieldListInput
-      detail: {
-        field_id: "",
-        caption: "",
-        type_id: fieldType.id,
-        is_required: "",
-        column_name: "",
-        width: newLayout[index].w,
-        height: newLayout[index].h,
-        x_coordinate: newLayout[index].x,
-        y_coordinate: newLayout[index].y,
-      },
     }));
 
     // Update the fieldLayout state
     setFieldLayout(updatedFieldLayout);
   };
 
-  const onResize = (layout, oldLayoutItem, layoutItem, placeholder) => {
+  const onResize = (oldLayoutItem, layoutItem, placeholder) => {
     const newWidth = Math.round(
       layoutItem.w + (layoutItem.x - oldLayoutItem.x)
     );
@@ -592,6 +1000,102 @@ const FormLayout = ({ formId }) => {
 
   return (
     <React.Fragment>
+      <Container
+        style={{
+          position: "relative",
+          zIndex: 2,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h4>Form Layout</h4>
+        <Button
+          variant="success"
+          className="float-end mt-n1"
+          onClick={async () => {
+            const fieldListInputFiltered = fieldListInputOriginal.filter(
+              (original) =>
+                !fieldListInput.some((input) => input.id === original.id)
+            );
+            console.log("fieldListInputFiltered", fieldListInputFiltered);
+            console.log("fieldLayout", fieldLayout);
+
+            // Create an array of promises for updating all field locations
+            const updatePromises = fieldLayout.map((field, index) => {
+              const fieldData = {
+                form_id: field.form_id,
+                caption: field.caption,
+                width: field.layout.w,
+                height: field.layout.h,
+                x_coordinate: field.layout.x,
+                y_coordinate: field.layout.y,
+              };
+              console.log(`fieldData for index ${index}`, fieldData);
+              return updateFieldLocation(fieldData)
+                .then((result) => {
+                  console.log(`Update result for index ${index}`, result);
+                  return { index, success: result.success };
+                })
+                .catch((error) => {
+                  console.error(`Error updating index ${index}:`, error);
+                  return { index, success: false, error };
+                });
+            });
+
+            // Create an array of promises for deleting filtered fields
+            const deletePromises = fieldListInputFiltered.map((field) =>
+              deleteField(field.id)
+                .then((result2) => {
+                  console.log(
+                    `Delete result for field ID ${field.id}`,
+                    result2
+                  );
+                  return { id: field.id, success: result2 };
+                })
+                .catch((error) => {
+                  console.error(`Error deleting field ID ${field.id}:`, error);
+                  return { id: field.id, success: false, error };
+                })
+            );
+
+            try {
+              // Wait for all updates and deletions to complete
+              const updateResults = await Promise.all(updatePromises);
+              const deleteResults = await Promise.all(deletePromises);
+
+              // Check if all updates were successful
+              const allUpdatesSuccessful = updateResults.every(
+                (result) => result.success === true
+              );
+
+              // Check if all deletions were successful
+              const allDeletionsSuccessful = deleteResults.every(
+                (result) => result.success === true
+              );
+
+              if (allUpdatesSuccessful && allDeletionsSuccessful) {
+                console.log(
+                  "All field locations updated and fields deleted successfully"
+                );
+                window.location.reload();
+              } else {
+                console.error(
+                  "Error saving some field locations or deleting fields:",
+                  {
+                    updateResults,
+                    deleteResults,
+                  }
+                );
+              }
+            } catch (error) {
+              console.error("Error in updating field locations:", error);
+            }
+          }}
+        >
+          <FontAwesomeIcon icon={faSave} /> Save Form
+        </Button>
+      </Container>
       <div
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}
@@ -599,6 +1103,7 @@ const FormLayout = ({ formId }) => {
           border: "1px solid black",
           minHeight: "400px",
           background: "white",
+          marginTop: "10px",
         }}
       >
         <ReactGridLayout
@@ -616,148 +1121,6 @@ const FormLayout = ({ formId }) => {
           {generateDOM()}
         </ReactGridLayout>
       </div>
-
-      <Modal show={showModalField} onHide={toggleModalField} centered>
-        <Modal.Header closeButton>Enter Field Detail</Modal.Header>
-        <Modal.Body className="text-center m-3">
-          <Formik
-            validationSchema={schemaField}
-            // onSubmit={console.log}
-            onSubmit={async (values, { setSubmitting, setErrors }) => {
-              try {
-                setSubmitting(true);
-                const result = await storeField(values);
-                if (result.success === true) {
-                  console.log("Field saved successfully");
-                  window.location.reload();
-                  toggleModalField();
-                } else {
-                  console.error("Error saving field:", result);
-                }
-              } catch (error) {
-                console.error("Unexpected error:", error);
-              } finally {
-                setSubmitting(false); // Reset form submitting state
-              }
-            }}
-            initialValues={{
-              caption: (field && field.caption) || "",
-              is_required: (field && field.is_required) || 0,
-              table_name: (field && field.table_name) || "",
-              column_name: (field && field.column_name) || "",
-            }}
-          >
-            {({
-              handleSubmit,
-              handleChange,
-              handleBlur,
-              values,
-              touched,
-              isValid,
-              errors,
-            }) => (
-              <Form noValidate onSubmit={handleSubmit}>
-                <Form.Group as={Row} className="mb-3">
-                  <Form.Label column sm={5} className="text-sm-right">
-                    Caption*
-                  </Form.Label>
-                  <Col sm={7}>
-                    <Form.Control
-                      type="text"
-                      name="caption"
-                      value={values.caption}
-                      onChange={handleChange}
-                      isValid={touched.caption && !errors.caption}
-                      isInvalid={touched.caption && !!errors.caption}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {errors.caption}
-                    </Form.Control.Feedback>
-                  </Col>
-                </Form.Group>
-                <Form.Group as={Row} className="mb-3">
-                  <Form.Label column sm={5} className="text-sm-right">
-                    Is Required*
-                  </Form.Label>
-                  <Col sm={7}>
-                    <Form.Select
-                      aria-label="Floating label select example"
-                      name="is_required"
-                      value={values.is_required}
-                      onChange={handleChange}
-                      //   onChange={(e) => {
-                      //     const newValue = e.target.value === "1"; // Convert "1" to true, and "0" to false
-                      //     handleChange({
-                      //       target: {
-                      //         name: e.target.name,
-                      //         value: newValue,
-                      //       },
-                      //     });
-                      //   }}
-                    >
-                      <option value="0">No</option>
-                      <option value="1">Yes</option>
-                    </Form.Select>
-                  </Col>
-                </Form.Group>
-                <Form.Group as={Row} className="mb-3">
-                  <Form.Label column sm={5} className="text-sm-right">
-                    Database Table (Optional)
-                  </Form.Label>
-                  <Col sm={7}>
-                    <Form.Select
-                      name="table_name"
-                      //   onChange={handleChange}
-                      onChange={(e) => {
-                        const selectedTableName = e.target.value;
-                        setTableNameChosen(selectedTableName);
-                        handleChange(e);
-                      }}
-                      value={values.table_name || ""}
-                    >
-                      <option value="">Not chosen</option>
-                      {tableOptions.map((tableName, index) => (
-                        <option key={index} value={tableName}>
-                          {tableName}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Col>
-                </Form.Group>
-                {tableNameChosen && ( // Render the second Form.Select if tableNameChosen is truthy
-                  <Form.Group as={Row} className="mb-3">
-                    <Form.Label column sm={5} className="text-sm-right">
-                      Database Column
-                    </Form.Label>
-                    <Col sm={7}>
-                      <Form.Select
-                        name="column_name"
-                        onChange={handleChange}
-                        value={values.column_name || ""}
-                      >
-                        <option value="">Not chosen</option>
-                        {columnOptions.map((columnName, index) => (
-                          <option key={index} value={columnName}>
-                            {columnName}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </Col>
-                  </Form.Group>
-                )}
-                <Button
-                  type="submit"
-                  variant="success"
-                  className="float-end mt-n1 me-2"
-                >
-                  Save Field
-                </Button>
-              </Form>
-            )}
-          </Formik>
-        </Modal.Body>
-        {/* <Modal.Footer></Modal.Footer> */}
-      </Modal>
     </React.Fragment>
   );
 };

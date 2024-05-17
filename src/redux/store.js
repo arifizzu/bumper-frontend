@@ -9,6 +9,8 @@ import processReducer from "./slices/processSlice";
 import roleReducer from "./slices/roleSlice";
 import permissionReducer from "./slices/permissionSlice";
 import groupReducer from "./slices/groupSlice";
+import fieldLocationReducer from "./slices/fieldLocationSlice";
+import fieldListValueReducer from "./slices/fieldListValueSlice";
 
 export const store = configureStore({
   reducer: {
@@ -22,5 +24,7 @@ export const store = configureStore({
     role: roleReducer,
     permission: permissionReducer,
     group: groupReducer,
+    fieldLocation: fieldLocationReducer,
+    fieldListValue: fieldListValueReducer,
   },
 });

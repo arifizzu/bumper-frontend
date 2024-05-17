@@ -61,7 +61,7 @@ export const editField = async (id) => {
   }
 };
 
-export const updateField = async (id, fieldData) => {
+export const updateField = async (fieldData, id) => {
   try {
     const response = await axios.put(
       `${API_URL}/fields/individual/${id}`,
