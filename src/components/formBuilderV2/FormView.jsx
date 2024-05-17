@@ -106,7 +106,17 @@ const FormView = ({ id }) => {
 
   const handleExportFormButton = () => {
     const element = document.getElementById("form-content"); // Assuming you have a container with id 'form-content' wrapping your form
-    html2pdf(element);
+    //   html2pdf(element);
+
+    const opt = {
+      margin: 0.1,
+      filename: `${form.name}.pdf`,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    };
+
+    html2pdf().from(element).set(opt).save();
   };
 
   const handleViewPreviewButton = async (id) => {
@@ -230,31 +240,47 @@ const FormView = ({ id }) => {
             <FontAwesomeIcon icon={faMagnifyingGlass} /> Preview Embedded Form
           </Button>
         </Card.Header>
-        <Card.Body>
-          <Container id="form-content" fluid className="p-0">
-            <div
-              style={{
-                border: "1px solid black",
-                // minHeight: "400px",
-                background: "white",
-                marginTop: "10px",
-              }}
+        <div
+          style={{
+            border: "1px solid black",
+            background: "white",
+            marginLeft: "30px",
+            marginRight: "30px",
+          }}
+        >
+          <Card.Body>
+            {/* <Container id="form-content" fluid className="p-0"> */}
+            <Container
+              id="form-content"
+              fluid
+              className="p-0"
+              style={{ width: "800px", maxWidth: "100%", overflow: "hidden" }}
             >
-              <h2 className="mt-3 mb-4 text-center">
-                {form ? form.name : "Loading..."}
-              </h2>
-              <ReactGridLayout
-                className="fieldLayout"
-                layout={fieldLayout}
-                cols={12}
-                rowHeight={30}
-                width={1200}
+              <div
+                style={{
+                  //   border: "1px solid black",
+                  // minHeight: "400px",
+                  background: "white",
+                  // marginTop: "10px",
+                  // padding: "10px",
+                }}
               >
-                {generateDOM()}
-              </ReactGridLayout>
-            </div>
-          </Container>
-        </Card.Body>
+                <h3 className="mt-3 mb-4 text-center">
+                  {form ? form.name : "Loading..."}
+                </h3>
+                <ReactGridLayout
+                  className="fieldLayout"
+                  layout={fieldLayout}
+                  cols={12}
+                  rowHeight={30}
+                  width={1200}
+                >
+                  {generateDOM()}
+                </ReactGridLayout>
+              </div>
+            </Container>
+          </Card.Body>
+        </div>
       </Card>
 
       <Modal show={showEmbedModal} onHide={() => setShowEmbedModal(false)}>
