@@ -13,7 +13,12 @@ export const FieldTextInputDynamic = ({ fieldList }) => (
   <React.Fragment>
     <Card>
       <Form.Group as={Row} className="mb-3">
-        <Form.Label column sm={5} className="text-sm-right">
+        <Form.Label
+          column
+          sm={5}
+          className="text-sm-right"
+          style={{ color: "black" }}
+        >
           {fieldList.caption} :
         </Form.Label>
         <Col sm={7}>
@@ -28,7 +33,12 @@ export const FieldTextareaDynamic = ({ fieldList }) => (
   <React.Fragment>
     <Card>
       <Form.Group as={Row} className="mb-3">
-        <Form.Label column sm={5} className="text-sm-right">
+        <Form.Label
+          column
+          sm={5}
+          className="text-sm-right"
+          style={{ color: "black" }}
+        >
           {fieldList.caption} :
         </Form.Label>
         <Col sm={7}>
@@ -50,7 +60,12 @@ export const FieldNumberInputDynamic = ({ fieldList }) => (
   <React.Fragment>
     <Card>
       <Form.Group as={Row} className="mb-3">
-        <Form.Label column sm={5} className="text-sm-right">
+        <Form.Label
+          column
+          sm={5}
+          className="text-sm-right"
+          style={{ color: "black" }}
+        >
           {fieldList.caption} :
         </Form.Label>
         <Col sm={7}>
@@ -72,7 +87,11 @@ export const FieldCheckboxDynamic = ({ fieldList }) => {
     <React.Fragment>
       <Card>
         <Form.Group as={Row} className="mb-3">
-          <Form.Label column className="text-sm-right">
+          <Form.Label
+            column
+            className="text-sm-right"
+            style={{ color: "black" }}
+          >
             {fieldList.caption} :
           </Form.Label>
           <Col sm={7}>
@@ -82,7 +101,7 @@ export const FieldCheckboxDynamic = ({ fieldList }) => {
                 inline
                 label={listValue.label}
                 type="checkbox"
-                style={{ color: "grey" }}
+                style={{ color: "black" }}
                 // disabled={someCondition}
                 // defaultChecked={someCondition}
               />
@@ -100,7 +119,11 @@ export const FieldRadioButtonDynamic = ({ fieldList }) => {
     <React.Fragment>
       <Card>
         <Form.Group as={Row} className="mb-3">
-          <Form.Label column className="text-sm-right">
+          <Form.Label
+            column
+            className="text-sm-right"
+            style={{ color: "black" }}
+          >
             {fieldList.caption} :
           </Form.Label>
           <Col sm={7}>
@@ -111,7 +134,7 @@ export const FieldRadioButtonDynamic = ({ fieldList }) => {
                 name="radios-example"
                 label={listValue.label}
                 type="radio"
-                style={{ color: "grey" }}
+                style={{ color: "black" }}
                 // disabled={someCondition}
                 // defaultChecked={someCondition}
               />
@@ -126,7 +149,7 @@ export const FieldRadioButtonDynamic = ({ fieldList }) => {
 export const FieldSwitchDynamic = ({ fieldList }) => {
   return (
     <React.Fragment>
-      {/* <Form.Label column className="text-sm-right">
+      {/* <Form.Label column className="text-sm-right" style={{ color: 'black' }}>
         {fieldList.caption} :
       </Form.Label> */}
       <Card>
@@ -135,7 +158,7 @@ export const FieldSwitchDynamic = ({ fieldList }) => {
           id="switch-example"
           name="switch-example"
           label={fieldList.caption}
-          style={{ color: "grey" }}
+          style={{ color: "black" }}
           // disabled
         />
       </Card>
@@ -148,7 +171,11 @@ export const FieldDropdownDynamic = ({ fieldList }) => {
     <React.Fragment>
       <Card>
         <Form.Group as={Row} className="mb-3">
-          <Form.Label column className="text-sm-right">
+          <Form.Label
+            column
+            className="text-sm-right"
+            style={{ color: "black" }}
+          >
             {fieldList.caption} :
           </Form.Label>
           <Col sm={7}>
@@ -171,7 +198,7 @@ export const FieldFileUploadDynamic = ({ fieldList }) => (
   <React.Fragment>
     <Card>
       <Form.Group as={Row} className="mb-3">
-        <Form.Label column className="text-sm-right">
+        <Form.Label column className="text-sm-right" style={{ color: "black" }}>
           {fieldList.caption} :
         </Form.Label>
         <Col sm={7}>
@@ -186,7 +213,7 @@ export const FieldDatePickerDynamic = ({ fieldList }) => (
   <React.Fragment>
     <Card>
       <Form.Group as={Row} className="mb-3">
-        <Form.Label column className="text-sm-right">
+        <Form.Label column className="text-sm-right" style={{ color: "black" }}>
           {fieldList.caption} :
         </Form.Label>
         <Col sm={7}>
@@ -201,7 +228,7 @@ export const FieldTimePickerDynamic = ({ fieldList }) => (
   <React.Fragment>
     <Card>
       <Form.Group as={Row} className="mb-3">
-        <Form.Label column className="text-sm-right">
+        <Form.Label column className="text-sm-right" style={{ color: "black" }}>
           {fieldList.caption} :
         </Form.Label>
         <Col sm={7}>
@@ -216,7 +243,7 @@ export const FieldEmailInputDynamic = ({ fieldList }) => (
   <React.Fragment>
     <Card>
       <Form.Group as={Row} className="mb-3">
-        <Form.Label column className="text-sm-right">
+        <Form.Label column className="text-sm-right" style={{ color: "black" }}>
           {fieldList.caption} :
         </Form.Label>
         <Col sm={7}>
@@ -236,7 +263,7 @@ export const FieldPasswordInputDynamic = ({ fieldList }) => (
   <React.Fragment>
     <Card>
       <Form.Group as={Row} className="mb-3">
-        <Form.Label column className="text-sm-right">
+        <Form.Label column className="text-sm-right" style={{ color: "black" }}>
           {fieldList.caption} :
         </Form.Label>
         <Col sm={7}>
