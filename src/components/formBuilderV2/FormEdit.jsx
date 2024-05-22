@@ -65,14 +65,15 @@ import {
   FieldPasswordInputDynamic,
 } from "./fieldType/FieldTypeDynamic";
 
-import { showForm } from "../../repositories/api/services/formServices";
+import {
+  showForm,
+  updateForm,
+} from "../../repositories/api/services/formServices";
 import {
   showFormStart,
   showFormSuccess,
   showFormFailure,
 } from "../../redux/slices/formSlice";
-
-import { updateForm } from "../../repositories/api/services/formServices";
 
 import { getGroups } from "../../repositories/api/services/groupServices";
 
@@ -223,7 +224,8 @@ const FormEdit = ({ id }) => {
                     </Button>
                   </Col>
                 </Row>
-
+              </Card.Header>
+              <Card.Body className="text-left">
                 <Row>
                   <Col md="6" xl="">
                     <h5>Name: {form ? form.name : "Loading..."}</h5>
@@ -239,10 +241,13 @@ const FormEdit = ({ id }) => {
                     <h5>Created At: {form ? form.created_at : "Loading..."}</h5>
                   </Col>
                 </Row>
-                <hr></hr>
-              </Card.Header>
-              <Card.Body className="text-left">
                 {/* <h4>Form Layout</h4> */}
+                {/* <FormLayout formId={id} /> */}
+              </Card.Body>
+            </Card>
+            <Card>
+              <Card.Header>{/* <h4>Form Layout</h4> */}</Card.Header>
+              <Card.Body>
                 <FormLayout formId={id} />
               </Card.Body>
             </Card>

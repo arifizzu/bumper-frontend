@@ -15,12 +15,7 @@ import { Link } from "react-router-dom";
 import FormEdit from "../../components/formBuilderV2/FormEdit";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAnglesLeft,
-  faAnglesRight,
-  faMaximize,
-  faSave,
-} from "@fortawesome/free-solid-svg-icons";
+import { faSave } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 
 const FormEditPage = () => {
@@ -35,15 +30,6 @@ const FormEditPage = () => {
     <React.Fragment>
       <Helmet title="Form" />
       <Container fluid className="p-0">
-        {/* <Button
-          variant="success"
-          className="float-end mt-n1"
-          onClick={() => {
-            navigate("/form-builder-v2");
-          }}
-        >
-          <FontAwesomeIcon icon={faSave} /> Save Form
-        </Button> */}
         <Breadcrumb style={{ fontSize: "1.3rem" }}>
           <Breadcrumb.Item onClick={handleFormBreadcrumb}>Form</Breadcrumb.Item>
           <Breadcrumb.Item active>Edit</Breadcrumb.Item>

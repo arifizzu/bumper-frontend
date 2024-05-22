@@ -66,7 +66,7 @@ const FormIndexPage = () => {
   const [showModalGroup, setShowModalGroup] = useState(false);
   const [showModalForm, setShowModalForm] = useState(false);
   const formGroup = useSelector((state) => state.group.form);
-  const formDetail = useSelector((state) => state.group.formDetailInput);
+  const formDetail = useSelector((state) => state.form.formDetailInput);
   const { groups } = useSelector((state) => state.group);
 
   useEffect(() => {
@@ -101,14 +101,6 @@ const FormIndexPage = () => {
 
   const toggleModalForm = () => {
     setShowModalForm((prevShowModalForm) => !prevShowModalForm);
-  };
-
-  const handleCreateNewForm = async () => {
-    try {
-      navigate("/form-builder-v2/create");
-    } catch (error) {
-      console.error("Create new form failed:", error);
-    }
   };
 
   return (
