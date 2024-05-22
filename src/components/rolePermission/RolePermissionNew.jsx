@@ -128,6 +128,7 @@ const RolePermissionNew = ({}) => {
     "role",
     "permission",
     "user",
+    "datalist",
   ];
 
   const permissionSections = {
@@ -136,6 +137,7 @@ const RolePermissionNew = ({}) => {
     role: ["view", "create", "edit", "delete"],
     permission: ["view", "create", "edit", "delete"],
     user: ["view", "create", "edit", "delete"],
+    datalist: ["view", "create", "edit", "delete"],
   };
 
   const generateCheckboxes = (sectionName) => {
@@ -292,6 +294,62 @@ const RolePermissionNew = ({}) => {
                     <Button
                       variant="secondary"
                       onClick={() => handleSelectAllButtonClick("form")}
+                    >
+                      Select All
+                    </Button>
+                  </Col>
+                </Row>
+              </Form.Group>
+
+              <hr></hr>
+
+              <Row>
+                <Col>
+                  <h6 className="card-subtitle ">Datalist Builder</h6>
+                </Col>
+              </Row>
+              <Form.Group className="mb-2">
+                <Row className="mt-2">
+                  <Col>
+                    <Form.Check
+                      inline
+                      label="view datalist"
+                      type="checkbox"
+                      name="view datalist"
+                      onChange={handleCheckboxChange}
+                    />
+                  </Col>
+                  <Col>
+                    <Form.Check
+                      inline
+                      label="create datalist"
+                      type="checkbox"
+                      name="create datalist"
+                      onChange={handleCheckboxChange}
+                    />
+                  </Col>
+                  <Col>
+                    <Form.Check
+                      inline
+                      label="edit datalist"
+                      type="checkbox"
+                      name="edit datalist"
+                      onChange={handleCheckboxChange}
+                    />
+                  </Col>
+                  <Col>
+                    <Form.Check
+                      inline
+                      label="delete datalist"
+                      type="checkbox"
+                      name="delete datalist"
+                      onChange={handleCheckboxChange}
+                    />
+                  </Col>
+                  <Col className="text-end">
+                    <Button
+                      variant="secondary"
+                      onClick={() => handleSelectAllButtonClick("datalist")}
                     >
                       Select All
                     </Button>

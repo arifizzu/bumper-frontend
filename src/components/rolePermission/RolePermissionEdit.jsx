@@ -267,6 +267,78 @@ const RolePermissionEdit = ({ id }) => {
 
               <Row>
                 <Col>
+                  <h6 className="card-subtitle ">Datalist Builder</h6>
+                </Col>
+              </Row>
+              <Form.Group className="mb-2">
+                <Row className="mt-2">
+                  <Col>
+                    <Form.Check
+                      inline
+                      label="view datalist"
+                      type="checkbox"
+                      name="view datalist"
+                      onChange={handleCheckboxChange}
+                      checked={
+                        selectedPermissions &&
+                        selectedPermissions.includes("view datalist")
+                      }
+                    />
+                  </Col>
+                  <Col>
+                    <Form.Check
+                      inline
+                      label="create datalist"
+                      type="checkbox"
+                      name="create datalist"
+                      onChange={handleCheckboxChange}
+                      checked={
+                        selectedPermissions &&
+                        selectedPermissions.includes("create datalist")
+                      }
+                    />
+                  </Col>
+                  <Col>
+                    <Form.Check
+                      inline
+                      label="edit datalist"
+                      type="checkbox"
+                      name="edit datalist"
+                      onChange={handleCheckboxChange}
+                      checked={
+                        selectedPermissions &&
+                        selectedPermissions.includes("edit datalist")
+                      }
+                    />
+                  </Col>
+                  <Col>
+                    <Form.Check
+                      inline
+                      label="delete datalist"
+                      type="checkbox"
+                      name="delete datalist"
+                      onChange={handleCheckboxChange}
+                      checked={
+                        selectedPermissions &&
+                        selectedPermissions.includes("delete datalist")
+                      }
+                    />
+                  </Col>
+                  <Col className="text-end">
+                    <Button
+                      variant="secondary"
+                      onClick={() => handleSelectAllButtonClick("datalist")}
+                    >
+                      Select All
+                    </Button>
+                  </Col>
+                </Row>
+              </Form.Group>
+
+              <hr></hr>
+
+              <Row>
+                <Col>
                   <h6 className="card-subtitle ">Process Builder</h6>
                 </Col>
               </Row>

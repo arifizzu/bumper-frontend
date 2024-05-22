@@ -161,6 +161,58 @@ const RolePermissionView = ({ id }) => {
 
               <Row>
                 <Col>
+                  <h6 className="card-subtitle ">Datalist Builder</h6>
+                </Col>
+              </Row>
+              <Form.Group className="mb-2">
+                <Row className="mt-2">
+                  <Col>
+                    <Form.Check
+                      inline
+                      label="view datalist"
+                      type="checkbox"
+                      name="view datalist"
+                      checked={checkedPermissions["view datalist"] || false}
+                      disabled
+                    />
+                  </Col>
+                  <Col>
+                    <Form.Check
+                      inline
+                      label="create datalist"
+                      type="checkbox"
+                      name="create datalist"
+                      checked={checkedPermissions["create datalist"] || false}
+                      disabled
+                    />
+                  </Col>
+                  <Col>
+                    <Form.Check
+                      inline
+                      label="edit datalist"
+                      type="checkbox"
+                      name="edit datalist"
+                      checked={checkedPermissions["edit datalist"] || false}
+                      disabled
+                    />
+                  </Col>
+                  <Col>
+                    <Form.Check
+                      inline
+                      label="delete datalist"
+                      type="checkbox"
+                      name="delete datalist"
+                      checked={checkedPermissions["delete datalist"] || false}
+                      disabled
+                    />
+                  </Col>
+                </Row>
+              </Form.Group>
+
+              <hr></hr>
+
+              <Row>
+                <Col>
                   <h6 className="card-subtitle ">Process Builder</h6>
                 </Col>
               </Row>
