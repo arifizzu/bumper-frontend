@@ -13,6 +13,7 @@ import {
   Users,
   Share,
   Key,
+  Table,
   FilePlus,
   FolderPlus,
   Trello,
@@ -393,11 +394,21 @@ const formBuilderSectionV2 = [
     roles: ["admin"],
     permissions: ["view form", "create form", "edit form", "delete form"],
   },
-  // {
-  //   href: "/notifications",
-  //   icon: FilePlus,
-  //   title: "Create New Form",
-  // },
+];
+
+const datalistBuilderSection = [
+  {
+    href: "/datalist-builder",
+    icon: Table,
+    title: "Datalist",
+    roles: ["admin"],
+    permissions: [
+      "view datalist",
+      "create datalist",
+      "edit datalist",
+      "delete datalist",
+    ],
+  },
 ];
 
 const processBuilderSection = [
@@ -465,6 +476,10 @@ const navItems = [
   {
     title: "Form Builder",
     pages: formBuilderSection,
+  },
+  {
+    title: "Datalist Builder",
+    pages: datalistBuilderSection,
   },
   {
     title: "Form Builder V2",

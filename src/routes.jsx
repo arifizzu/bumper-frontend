@@ -142,11 +142,19 @@ const FormViewEmbedV2 = lazy(() =>
 );
 const FormEditV2 = lazy(() => import("./pages/formBuilderV2/FormEdit"));
 
+// Datalist Builder
+const DatalistIndex = lazy(() =>
+  import("./pages/datalistBuilder/DatalistIndex")
+);
+// const DatalistNew = lazy(() => import("./pages/datalistBuilder/DatalistNew"));
+// const DatalistView = lazy(() => import("./pages/datalistBuilder/DatalistView"));
+const DatalistEdit = lazy(() => import("./pages/datalistBuilder/DatalistEdit"));
+
 // Process Builder
 const ProcessIndex = lazy(() => import("./pages/processBuilder/ProcessIndex"));
-const ProcessNew = lazy(() => import("./pages/processBuilder/ProcessNew"));
-// const ProcessView = lazy(() => import("./pages/process/ProcessView"));
-// const ProcessEdit = lazy(() => import("./pages/process/ProcessEdit"));
+// const ProcessNew = lazy(() => import("./pages/processBuilder/ProcessNew"));
+// const ProcessView = lazy(() => import("./pages/processBuilder/ProcessView"));
+const ProcessEdit = lazy(() => import("./pages/processBuilder/ProcessEdit"));
 
 // Management Settings
 const RolePermissionIndex = lazy(() =>
@@ -614,6 +622,31 @@ const routes = [
   },
 
   {
+    path: "datalist-builder",
+    // element: <DashboardLayout />,
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
+    children: [
+      {
+        path: "",
+        element: <DatalistIndex />,
+      },
+      // {
+      //   path: "view/:id",
+      //   element: <DatalistView />,
+      // },
+      {
+        path: "edit/:id",
+        element: <DatalistEdit />,
+      },
+      ,
+    ],
+  },
+
+  {
     path: "form-builder-v2",
     // element: <DashboardLayout />,
     element: (
@@ -626,10 +659,6 @@ const routes = [
         path: "",
         element: <FormIndexV2 />,
       },
-      // {
-      //   path: "create",
-      //   element: <FormNewV2 />,
-      // },
       {
         path: "view/:id",
         element: <FormViewV2 />,
@@ -675,18 +704,18 @@ const routes = [
         path: "",
         element: <ProcessIndex />,
       },
-      {
-        path: "create",
-        element: <ProcessNew />,
-      },
+      // {
+      //   path: "create",
+      //   element: <ProcessNew />,
+      // },
       // {
       //   path: "view/:id",
       //   element: <ProcessView />,
       // },
-      // {
-      //   path: "edit/:id",
-      //   element: <ProcessEdit />,
-      // },
+      {
+        path: "edit/:id",
+        element: <ProcessEdit />,
+      },
     ],
   },
 
