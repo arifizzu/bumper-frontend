@@ -465,7 +465,9 @@ const DatalistIndex = ({ datalistTableColumns }) => {
                         handleDeleteGroupButton(group.id);
                       }
                     }}
-                    disabled={group.data_lists.length > 0 || group.forms > 0}
+                    disabled={
+                      group.data_lists.length > 0 || group.forms.length > 0
+                    }
                   >
                     Delete Group
                   </Button>
