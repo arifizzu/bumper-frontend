@@ -381,7 +381,7 @@ const DatalistIndex = ({ datalistTableColumns }) => {
           </Accordion>
         </Card.Body>
       </Card>
-      {datalists.map((group) => (
+      {groups.map((group) => (
         <Modal
           key={group.id}
           show={showModalGroupEdit[group.id] || false}
