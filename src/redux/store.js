@@ -11,6 +11,8 @@ import permissionReducer from "./slices/permissionSlice";
 import groupReducer from "./slices/groupSlice";
 import fieldLocationReducer from "./slices/fieldLocationSlice";
 import fieldListValueReducer from "./slices/fieldListValueSlice";
+import datalistReducer from "./slices/datalistSlice";
+import datalistFilterReducer from "./slices/datalistFilterSlice";
 
 export const store = configureStore({
   reducer: {
@@ -26,5 +28,7 @@ export const store = configureStore({
     group: groupReducer,
     fieldLocation: fieldLocationReducer,
     fieldListValue: fieldListValueReducer,
+    datalist: datalistReducer,
+    datalistFilter: datalistFilterReducer,
   },
 });
