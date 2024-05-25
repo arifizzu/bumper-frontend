@@ -17,7 +17,6 @@ import {
   Modal,
 } from "react-bootstrap";
 import dragula from "react-dragula";
-import "dragula/dist/dragula.css";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -26,9 +25,29 @@ import {
   faPlus,
   faSave,
   faX,
+  faTag,
+  faDatabase,
+  faTableColumns,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { useDispatch, useSelector } from "react-redux";
+
+import {
+  createDatalistFilter,
+  storeDatalistFilter,
+  deleteDatalistFilter,
+  getDatalistFilters,
+  updateDatalistFilter,
+  updateDatalistFilterOrder,
+} from "../../repositories/api/services/datalistFilterServices";
+import {
+  getDatalistFiltersStart,
+  getDatalistFiltersSuccess,
+  getDatalistFiltersFailure,
+  createDatalistFilterStart,
+  createDatalistFilterSuccess,
+  createDatalistFilterFailure,
+} from "../../redux/slices/datalistFilterSlice";
 
 import {
   showDatalist,
@@ -330,6 +349,10 @@ const DatalistEdit = ({ id }) => {
 
 // Dummy unique ID generator
 let idCounter = 100;
+let filterOrder = 0;
+let columnOrder = 0;
+let rowActionOrder = 0;
+let actionOrder = 0;
 
 const DatalistLayout = ({ datalist }) => {
   const dispatch = useDispatch();
@@ -341,46 +364,126 @@ const DatalistLayout = ({ datalist }) => {
   const [showModal, setShowModal] = useState(false);
   const [currentType, setCurrentType] = useState("");
   const [currentSetter, setCurrentSetter] = useState(() => {});
-  const tableOptions = useSelector((state) => state.dbRetrieval.tableOptions);
-  const columnOptions = useSelector((state) => state.dbRetrieval.columnOptions);
-  const [tableNameChosen, setTableNameChosen] = useState("");
+  const [currentItem, setCurrentItem] = useState(null);
+  const [storeOrUpdate, setStoreOrUpdate] = useState("store");
+
+  useEffect(() => {
+    if (datalist && datalist.filters) {
+      const mappedFilters = datalist.filters.map((filter, index) => {
+        filterOrder++;
+        return {
+          id: idCounter++,
+          itemData: filter,
+        };
+      });
+      setDatalistFilters([]);
+      setDatalistFilters(mappedFilters);
+    }
+  }, [datalist]);
 
   const columnsRef = useRef(null);
   const filtersRef = useRef(null);
   const rowActionsRef = useRef(null);
   const actionsRef = useRef(null);
 
-  const handleClose = () => setShowModal(false);
-  const handleShow = (type, setter) => {
-    setCurrentType(type);
-    setCurrentSetter(() => setter);
-    setShowModal(true);
+  const handleClose = () => {
+    setShowModal(false);
+    setCurrentItem(null); // Reset the current item on close
   };
 
-  const handleAddItem = () => {
-    currentSetter((prevItems) => [
-      ...prevItems,
-      { id: ++idCounter, text: `New ${currentType} Item ${idCounter}` },
-    ]);
+  const handleShow = (type, setter, item = null) => {
+    setCurrentType(type);
+    setCurrentSetter(() => setter);
+    setCurrentItem(item); // Set the current item for editing
+    setShowModal(true);
+    console.log("currentType dalam handleShow", currentType);
+    console.log("item dalam handleShow", item);
+  };
+
+  const handleAddItem = (itemData) => {
+    if (currentItem) {
+      // Edit existing item
+      currentSetter((prevItems) =>
+        prevItems.map((item) =>
+          item.id === currentItem.id ? { ...item, itemData } : item
+        )
+      );
+    } else {
+      // Add new item
+      currentSetter((prevItems) => [
+        ...prevItems,
+        {
+          id: ++idCounter,
+          itemData: itemData,
+        },
+      ]);
+    }
     handleClose();
   };
 
-  const deleteItem = (setter, id) => {
-    setter((prevItems) => prevItems.filter((item) => item.id !== id));
+  const deleteItem = async (setter, id) => {
+    try {
+      const deletedItem = datalistFilters.find((item) => item.id === id);
+      await deleteDatalistFilter(deletedItem.itemData.id);
+      setter((prevItems) => prevItems.filter((item) => item.id !== id));
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  };
+
+  const onEdit = (item, type, setter) => {
+    setStoreOrUpdate("update");
+    setCurrentItem(item);
+    handleShow(type, setter, item);
+    console.log("item", item);
+    console.log("type", type);
+  };
+
+  const getOrder = (container, items) => {
+    const order = [];
+    container.querySelectorAll(".item").forEach((item) => {
+      const itemId = item.dataset.id;
+      const itemData = items.find((i) => i.id.toString() === itemId).itemData;
+      order.push({ id: itemId, itemData });
+    });
+    return order;
   };
 
   useEffect(() => {
     const drakeColumns = dragula([columnsRef.current], {
       direction: "horizontal",
+    }).on("dragend", () => {
+      console.log(
+        "Columns order:",
+        getOrder(columnsRef.current, datalistColumns)
+      );
     });
+
     const drakeFilters = dragula([filtersRef.current], {
       direction: "horizontal",
+    }).on("dragend", () => {
+      console.log(
+        "Filters order:",
+        getOrder(filtersRef.current, datalistFilters)
+      );
     });
+
     const drakeRowActions = dragula([rowActionsRef.current], {
       direction: "horizontal",
+    }).on("dragend", () => {
+      console.log(
+        "Row Actions order:",
+        getOrder(rowActionsRef.current, datalistRowActions)
+      );
     });
+
     const drakeActions = dragula([actionsRef.current], {
       direction: "horizontal",
+    }).on("dragend", () => {
+      console.log(
+        "Actions order:",
+        getOrder(actionsRef.current, datalistActions)
+      );
     });
 
     return () => {
@@ -392,20 +495,20 @@ const DatalistLayout = ({ datalist }) => {
   }, [datalistColumns, datalistFilters, datalistRowActions, datalistActions]);
 
   useEffect(() => {
-    if (tableNameChosen !== "") {
-      const fetchColumns = async () => {
-        try {
-          dispatch(getColumnsStart());
-          const columnOptions = await getColumns(tableNameChosen);
-          dispatch(getColumnsSuccess(columnOptions));
-        } catch (error) {
-          dispatch(getColumnsFailure(error));
-        }
-      };
+    console.log("datalistColumns", datalistColumns);
+  }, [datalistColumns]);
 
-      fetchColumns();
-    }
-  }, [tableNameChosen, dispatch]);
+  useEffect(() => {
+    console.log("datalistFilters", datalistFilters);
+  }, [datalistFilters]);
+
+  useEffect(() => {
+    console.log("datalistRowActions", datalistRowActions);
+  }, [datalistRowActions]);
+
+  useEffect(() => {
+    console.log("datalistActions", datalistActions);
+  }, [datalistActions]);
 
   useEffect(() => {
     const fetchTables = async () => {
@@ -427,11 +530,35 @@ const DatalistLayout = ({ datalist }) => {
         <Button
           variant="success"
           className="float-end mt-n1"
-          onClick={() => {
+          onClick={async () => {
             console.log(datalistFilters, "datalistFilters");
             console.log(datalistColumns, "datalistColumns");
             console.log(datalistRowActions, "datalistRowActions");
             console.log(datalistActions, "datalistActions");
+
+            const newOrder = getOrder(filtersRef.current, datalistFilters);
+
+            for (let index = 0; index < newOrder.length; index++) {
+              const item = newOrder[index];
+              try {
+                const result = await updateDatalistFilterOrder(
+                  item.itemData.id,
+                  { order: index + 1 }
+                );
+                if (result.success === true) {
+                  console.log("Datalist Filter Order updated successfully");
+                } else {
+                  console.error(
+                    "Error updating datalist filter order:",
+                    result
+                  );
+                }
+              } catch (error) {
+                console.error("Error updating datalist filter order:", error);
+              }
+            }
+
+            console.log("hehe", newOrder);
           }}
         >
           <FontAwesomeIcon icon={faSave} /> Save Datalist
@@ -447,6 +574,8 @@ const DatalistLayout = ({ datalist }) => {
                 onDelete={(id) => deleteItem(setDatalistFilters, id)}
                 containerRef={filtersRef}
                 borderStyle={{ border: "2px solid blue" }}
+                onEdit={onEdit}
+                setStoreOrUpdate={setStoreOrUpdate}
               />
             </Col>
           </Row>
@@ -459,6 +588,8 @@ const DatalistLayout = ({ datalist }) => {
                 onDelete={(id) => deleteItem(setDatalistColumns, id)}
                 containerRef={columnsRef}
                 borderStyle={{ border: "2px solid blue" }}
+                onEdit={onEdit}
+                setStoreOrUpdate={setStoreOrUpdate}
               />
             </Col>
             <Col lg="3" xl="3">
@@ -469,6 +600,8 @@ const DatalistLayout = ({ datalist }) => {
                 onDelete={(id) => deleteItem(setDatalistRowActions, id)}
                 containerRef={rowActionsRef}
                 borderStyle={{ border: "2px solid blue" }}
+                onEdit={onEdit}
+                setStoreOrUpdate={setStoreOrUpdate}
               />
             </Col>
           </Row>
@@ -481,6 +614,8 @@ const DatalistLayout = ({ datalist }) => {
                 onDelete={(id) => deleteItem(setDatalistActions, id)}
                 containerRef={actionsRef}
                 borderStyle={{ border: "2px solid blue" }}
+                onEdit={onEdit}
+                setStoreOrUpdate={setStoreOrUpdate}
               />
             </Col>
           </Row>
@@ -493,135 +628,14 @@ const DatalistLayout = ({ datalist }) => {
         </Modal.Header>
         <Modal.Body>
           {currentType === "Filter" && (
-            <Formik
-              validationSchema={schemaDatalistFilter}
-              onSubmit={async (values, { setSubmitting, setErrors }) => {
-                console.log("values", values);
-                handleAddItem();
-              }}
-              // onSubmit={async (values, { setSubmitting, setErrors }) => {
-              //   try {
-              //     setSubmitting(true);
-              //     const result = await updateGroup(group.id, values);
-              //     if (result.success === true) {
-              //       console.log("Group saved successfully");
-              //       window.location.reload();
-              //       toggleModal();
-              //     } else if (result.name && result.name.length > 0) {
-              //       setErrors({ name: result.name[0] }); // Set the error for the name field
-              //     } else {
-              //       console.error("Error saving group:", result);
-              //     }
-              //   } catch (error) {
-              //     console.error("Unexpected error:", error);
-              //     setErrors({ name: error.name[0] });
-              //   } finally {
-              //     setSubmitting(false); // Reset form submitting state
-              //   }
-              // }}
-              initialValues={{
-                label: datalist.label || "",
-                table_name: datalist.table_name || null,
-                column_name: datalist.column_name || null,
-              }}
-            >
-              {({
-                handleSubmit,
-                handleChange,
-                handleBlur,
-                values,
-                touched,
-                isValid,
-                errors,
-              }) => (
-                <Form noValidate onSubmit={handleSubmit}>
-                  <Form.Group as={Row} className="mb-3">
-                    <Form.Label column sm={3} className="text-sm-right">
-                      Label
-                    </Form.Label>
-                    <Col sm={9}>
-                      <Form.Control
-                        type="text"
-                        name="label"
-                        value={values.label}
-                        onChange={handleChange}
-                        isValid={touched.label && !errors.label}
-                        isInvalid={touched.label && !!errors.label}
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.label}
-                      </Form.Control.Feedback>
-                    </Col>
-                  </Form.Group>
-                  <Form.Group as={Row} className="mb-3">
-                    <Form.Label column sm={3} className="text-sm-right">
-                      Table Name*
-                    </Form.Label>
-                    <Col sm={9}>
-                      <Form.Select
-                        name="table_name"
-                        onChange={(e) => {
-                          const selectedTableName = e.target.value;
-                          setTableNameChosen(selectedTableName);
-                          handleChange(e);
-                        }}
-                        value={values.table_name || ""}
-                      >
-                        <option value="">Not chosen</option>
-                        {tableOptions.map((tableName, index) => (
-                          <option key={index} value={tableName}>
-                            {tableName}
-                          </option>
-                        ))}
-                      </Form.Select>
-                      <Form.Control.Feedback type="invalid">
-                        {errors.table_name}
-                      </Form.Control.Feedback>
-                    </Col>
-                  </Form.Group>
-                  {tableNameChosen && (
-                    <Form.Group as={Row} className="mb-3">
-                      <Form.Label column sm={3} className="text-sm-right">
-                        Table Column*
-                      </Form.Label>
-                      <Col sm={9}>
-                        <Form.Select
-                          name="column_name"
-                          onChange={handleChange}
-                          value={values.column_name || ""}
-                        >
-                          <option value="">Not chosen</option>
-                          {columnOptions.map((columnName, index) => (
-                            <option key={index} value={columnName}>
-                              {columnName}
-                            </option>
-                          ))}
-                        </Form.Select>
-                        <Form.Control.Feedback type="invalid">
-                          {errors.column_name}
-                        </Form.Control.Feedback>
-                      </Col>
-                    </Form.Group>
-                  )}
-
-                  <Button
-                    type="submit"
-                    variant="success"
-                    className="float-end mt-n1 me-2"
-                    // onClick={handleAddItem}
-                  >
-                    Save Changes
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    className="float-end mt-n1 me-2"
-                    onClick={handleClose}
-                  >
-                    Close
-                  </Button>
-                </Form>
-              )}
-            </Formik>
+            <DatalistFilterForm
+              datalist={datalist}
+              handleAddItem={handleAddItem}
+              handleClose={handleClose}
+              storeOrUpdate={storeOrUpdate}
+              setStoreOrUpdate={setStoreOrUpdate}
+              currentItem={currentItem}
+            />
           )}
           {currentType === "Column" && (
             <Form>
@@ -677,6 +691,8 @@ const Segment = ({
   onDelete,
   containerRef,
   borderStyle,
+  onEdit,
+  setStoreOrUpdate,
 }) => {
   const getColumnSizes = () => {
     if (name === "Filter" || name === "Column" || name === "Action") {
@@ -693,7 +709,14 @@ const Segment = ({
       <Card.Header>
         <Card.Title>
           {name}
-          <Button variant="primary" className="float-end mt-n1" onClick={onAdd}>
+          <Button
+            variant="primary"
+            className="float-end mt-n1"
+            onClick={() => {
+              onAdd();
+              setStoreOrUpdate("store");
+            }}
+          >
             <FontAwesomeIcon icon={faPlus} /> Add {name}
           </Button>
         </Card.Title>
@@ -711,32 +734,21 @@ const Segment = ({
           }}
         >
           {items.map((item) => (
-            <Col key={item.id} {...columnSizes}>
+            <Col
+              key={item.id}
+              {...columnSizes}
+              className="item"
+              data-id={item.id}
+            >
               <div style={{ marginRight: "10px", flex: "0 0 auto" }}>
                 {name === "Filter" && (
                   <DatalistFilter
                     {...item}
                     onDelete={() => onDelete(item.id)}
+                    onEdit={() => onEdit(item, "Filter")}
                   />
                 )}
-                {name === "Column" && (
-                  <DatalistColumn
-                    {...item}
-                    onDelete={() => onDelete(item.id)}
-                  />
-                )}
-                {name === "Row Action" && (
-                  <DatalistRowAction
-                    {...item}
-                    onDelete={() => onDelete(item.id)}
-                  />
-                )}
-                {name === "Action" && (
-                  <DatalistAction
-                    {...item}
-                    onDelete={() => onDelete(item.id)}
-                  />
-                )}
+                {/* Similar updates for other item types */}
               </div>
             </Col>
           ))}
@@ -746,7 +758,7 @@ const Segment = ({
   );
 };
 
-const DatalistFilter = ({ id, text, onDelete }) => (
+const DatalistFilter = ({ id, onDelete, onEdit, itemData }) => (
   <Card className="mb-3 bg-light cursor-grab border">
     <Card.Body className="p-3">
       <div className="float-end">
@@ -758,16 +770,223 @@ const DatalistFilter = ({ id, text, onDelete }) => (
         >
           <FontAwesomeIcon icon={faX} />
         </Button>
-        <Button variant="warning" className="float-end mt-n1 me-2" size="sm">
+        <Button
+          variant="warning"
+          className="float-end mt-n1 me-2"
+          size="sm"
+          onClick={onEdit}
+        >
           <FontAwesomeIcon icon={faEdit} />
         </Button>
       </div>
-      <p>{text} - Filter</p>
+      <p>Filter - {id}</p>
+      <hr />
+      <p style={{ color: "blue" }}>
+        <FontAwesomeIcon icon={faTag} /> Label: {itemData.label}
+      </p>
+      <p style={{ color: "blue" }}>
+        <FontAwesomeIcon icon={faDatabase} /> Table Name: {itemData.table_name}
+      </p>
+      <p style={{ color: "blue" }}>
+        <FontAwesomeIcon icon={faTableColumns} /> Column Name:{" "}
+        {itemData.column_name}
+      </p>
     </Card.Body>
   </Card>
 );
 
-const DatalistColumn = ({ id, text, onDelete }) => (
+const DatalistFilterForm = ({
+  datalist,
+  handleAddItem,
+  handleClose,
+  currentItem,
+  storeOrUpdate,
+  setStoreOrUpdate,
+}) => {
+  const dispatch = useDispatch();
+  const tableOptions = useSelector((state) => state.dbRetrieval.tableOptions);
+  const columnOptions = useSelector((state) => state.dbRetrieval.columnOptions);
+  const [tableNameChosen, setTableNameChosen] = useState(
+    currentItem?.itemData?.table_name || ""
+  );
+
+  useEffect(() => {
+    if (tableNameChosen !== "") {
+      const fetchColumns = async () => {
+        try {
+          dispatch(getColumnsStart());
+          const columnOptions = await getColumns(tableNameChosen);
+          dispatch(getColumnsSuccess(columnOptions));
+        } catch (error) {
+          dispatch(getColumnsFailure(error));
+        }
+      };
+
+      fetchColumns();
+    }
+  }, [tableNameChosen, dispatch]);
+
+  console.log("currentItem", currentItem);
+
+  return (
+    <Formik
+      validationSchema={schemaDatalistFilter}
+      // onSubmit={async (values, { setSubmitting, setErrors }) => {
+      //   console.log("values", values);
+      //   handleAddItem();
+      // }}
+      initialValues={{
+        label: currentItem?.itemData?.label || "",
+        table_name: currentItem?.itemData?.table_name || "",
+        column_name: currentItem?.itemData?.column_name || "",
+      }}
+      onSubmit={async (values, { setSubmitting, setErrors }) => {
+        const updatedValues = {
+          ...values,
+          list_id: datalist.id,
+          order: currentItem ? currentItem.itemData.order : ++filterOrder,
+        };
+
+        try {
+          console.log("updatedValues", updatedValues);
+          setSubmitting(true);
+          console.log("storeOrUpdate", storeOrUpdate);
+          if (storeOrUpdate === "store") {
+            const result = await storeDatalistFilter(updatedValues);
+            if (result.success === true) {
+              console.log("Datalist Filter saved successfully");
+              handleAddItem(result.data);
+            } else if (result.label && result.label.length > 0) {
+              setErrors({ label: result.label[0] }); // Set the error for the label field
+            } else {
+              console.error("Error saving datalist filter:", result);
+            }
+          } else {
+            console.log("currenITEM in the submit button", currentItem);
+            const result = await updateDatalistFilter(
+              currentItem.itemData.id,
+              updatedValues
+            );
+            if (result.success === true) {
+              console.log("Datalist Filter updated successfully");
+              handleAddItem(result.data);
+            } else if (result.label && result.label.length > 0) {
+              setErrors({ label: result.label[0] }); // Set the error for the label field
+            } else {
+              console.error("Error saving datalist filter:", result);
+            }
+          }
+        } catch (error) {
+          console.error("Unexpected error:", error);
+          setErrors({ label: error.label[0] });
+        } finally {
+          setSubmitting(false); // Reset form submitting state
+        }
+      }}
+    >
+      {({
+        handleSubmit,
+        handleChange,
+        handleBlur,
+        values,
+        touched,
+        isValid,
+        errors,
+      }) => (
+        <Form noValidate onSubmit={handleSubmit}>
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={3} className="text-sm-right">
+              Label
+            </Form.Label>
+            <Col sm={9}>
+              <Form.Control
+                type="text"
+                name="label"
+                value={values.label}
+                onChange={handleChange}
+                isValid={touched.label && !errors.label}
+                isInvalid={touched.label && !!errors.label}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.label}
+              </Form.Control.Feedback>
+            </Col>
+          </Form.Group>
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={3} className="text-sm-right">
+              Table Name*
+            </Form.Label>
+            <Col sm={9}>
+              <Form.Select
+                name="table_name"
+                onChange={(e) => {
+                  const selectedTableName = e.target.value;
+                  setTableNameChosen(selectedTableName);
+                  handleChange(e);
+                }}
+                value={values.table_name || ""}
+                isValid={touched.table_name && !errors.table_name}
+                isInvalid={touched.table_name && !!errors.table_name}
+              >
+                <option value="">Not chosen</option>
+                {tableOptions.map((tableName, index) => (
+                  <option key={index} value={tableName}>
+                    {tableName}
+                  </option>
+                ))}
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                {errors.table_name}
+              </Form.Control.Feedback>
+            </Col>
+          </Form.Group>
+          {tableNameChosen && (
+            <Form.Group as={Row} className="mb-3">
+              <Form.Label column sm={3} className="text-sm-right">
+                Table Column*
+              </Form.Label>
+              <Col sm={9}>
+                <Form.Select
+                  name="column_name"
+                  onChange={handleChange}
+                  value={values.column_name || ""}
+                >
+                  <option value="">Not chosen</option>
+                  {columnOptions.map((columnName, index) => (
+                    <option key={index} value={columnName}>
+                      {columnName}
+                    </option>
+                  ))}
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">
+                  {errors.column_name}
+                </Form.Control.Feedback>
+              </Col>
+            </Form.Group>
+          )}
+
+          <Button
+            type="submit"
+            variant="success"
+            className="float-end mt-n1 me-2"
+            // onClick={handleAddItem}
+          >
+            Save Changes
+          </Button>
+          <Button
+            variant="secondary"
+            className="float-end mt-n1 me-2"
+            onClick={handleClose}
+          >
+            Close
+          </Button>
+        </Form>
+      )}
+    </Formik>
+  );
+};
+
+const DatalistColumn = ({ id, onDelete, itemData }) => (
   <Card className="mb-3 bg-light cursor-grab border">
     <Card.Body className="p-3">
       <div className="float-end">
@@ -783,12 +1002,12 @@ const DatalistColumn = ({ id, text, onDelete }) => (
           <FontAwesomeIcon icon={faEdit} />
         </Button>
       </div>
-      <p>{text}</p>
+      <p>Column {id}</p>
     </Card.Body>
   </Card>
 );
 
-const DatalistRowAction = ({ id, text, onDelete }) => (
+const DatalistRowAction = ({ id, onDelete, itemData }) => (
   <Card className="mb-3 bg-light cursor-grab border">
     <Card.Body className="p-3">
       <div className="float-end">
@@ -804,12 +1023,12 @@ const DatalistRowAction = ({ id, text, onDelete }) => (
           <FontAwesomeIcon icon={faEdit} />
         </Button>
       </div>
-      <p>{text} - Row Action</p>
+      <p>Row Action - {id}</p>
     </Card.Body>
   </Card>
 );
 
-const DatalistAction = ({ id, text, onDelete }) => (
+const DatalistAction = ({ id, onDelete, itemData }) => (
   <Card className="mb-3 bg-light cursor-grab border">
     <Card.Body className="p-3">
       <div className="float-end">
@@ -825,7 +1044,7 @@ const DatalistAction = ({ id, text, onDelete }) => (
           <FontAwesomeIcon icon={faEdit} />
         </Button>
       </div>
-      <p>{text} - Action</p>
+      <p>Action - {id}</p>
     </Card.Body>
   </Card>
 );

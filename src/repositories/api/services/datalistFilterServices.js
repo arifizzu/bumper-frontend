@@ -76,6 +76,21 @@ export const updateDatalistFilter = async (id, datalistData) => {
   }
 };
 
+export const updateDatalistFilterOrder = async (id, datalistDataOrder) => {
+  try {
+    const response = await axios.put(
+      `${API_URL}/datalist-filter/order/${id}`,
+      datalistDataOrder,
+      {
+        headers: authHeader(),
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response.data.errors;
+  }
+};
+
 export const deleteDatalistFilter = async (id) => {
   try {
     await axios.delete(`${API_URL}/datalist-filter/${id}`, {
