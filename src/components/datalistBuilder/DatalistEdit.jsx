@@ -28,6 +28,9 @@ import {
   faTag,
   faDatabase,
   faTableColumns,
+  faKey,
+  faEyeSlash,
+  faGear,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -40,14 +43,24 @@ import {
   updateDatalistFilter,
   updateDatalistFilterOrder,
 } from "../../repositories/api/services/datalistFilterServices";
+
 import {
-  getDatalistFiltersStart,
-  getDatalistFiltersSuccess,
-  getDatalistFiltersFailure,
-  createDatalistFilterStart,
-  createDatalistFilterSuccess,
-  createDatalistFilterFailure,
-} from "../../redux/slices/datalistFilterSlice";
+  createDatalistColumn,
+  storeDatalistColumn,
+  deleteDatalistColumn,
+  getDatalistColumns,
+  updateDatalistColumn,
+  updateDatalistColumnOrder,
+} from "../../repositories/api/services/datalistColumnServices";
+
+import {
+  createDatalistAction,
+  storeDatalistAction,
+  deleteDatalistAction,
+  getDatalistActions,
+  updateDatalistAction,
+  updateDatalistActionOrder,
+} from "../../repositories/api/services/datalistActionServices";
 
 import {
   showDatalist,
@@ -98,6 +111,19 @@ const schemaDatalistFilter = Yup.object().shape({
   label: Yup.string().required("Label is required"),
   table_name: Yup.string().required("Table Name is required"),
   column_name: Yup.string().required("Column Name is required"),
+});
+
+const schemaDatalistColumn = Yup.object().shape({
+  label: Yup.string().required("Label is required"),
+  table_name: Yup.string().required("Table Name is required"),
+  column_name: Yup.string().required("Column Name is required"),
+  column_key: Yup.string().required("Column Key is required"),
+  is_hidden: Yup.boolean(),
+});
+
+const schemaDatalistAction = Yup.object().shape({
+  label: Yup.string().required("Label is required"),
+  type: Yup.string().required("Type is required"),
 });
 
 const DatalistEdit = ({ id }) => {
@@ -348,7 +374,7 @@ const DatalistEdit = ({ id }) => {
 };
 
 // Dummy unique ID generator
-let idCounter = 100;
+let idCounter = 1;
 let filterOrder = 0;
 let columnOrder = 0;
 let rowActionOrder = 0;
@@ -363,7 +389,7 @@ const DatalistLayout = ({ datalist }) => {
   const [datalistActions, setDatalistActions] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [currentType, setCurrentType] = useState("");
-  const [currentSetter, setCurrentSetter] = useState(() => {});
+  const [currentSetter, setCurrentSetter] = useState([]);
   const [currentItem, setCurrentItem] = useState(null);
   const [storeOrUpdate, setStoreOrUpdate] = useState("store");
 
@@ -379,6 +405,53 @@ const DatalistLayout = ({ datalist }) => {
       setDatalistFilters([]);
       setDatalistFilters(mappedFilters);
     }
+
+    if (datalist && datalist.items) {
+      const mappedItems = datalist.items.map((item, index) => {
+        columnOrder++;
+        return {
+          id: idCounter++,
+          itemData: item,
+        };
+      });
+      setDatalistColumns([]);
+      setDatalistColumns(mappedItems);
+    }
+
+    if (datalist && datalist.actions) {
+      const mappedAction = datalist.actions.map((item, index) => {
+        actionOrder++;
+        if (item.segment === "Action") {
+          return {
+            id: idCounter++,
+            itemData: item,
+          };
+        }
+      });
+      const filteredMappedAction = mappedAction.filter(
+        (item) => item !== undefined
+      );
+
+      const mappedRowAction = datalist.actions.map((item, index) => {
+        rowActionOrder++;
+        if (item.segment === "Row Action") {
+          return {
+            id: idCounter++,
+            itemData: item,
+          };
+        }
+      });
+      const filteredMappedRowAction = mappedRowAction.filter(
+        (item) => item !== undefined
+      );
+
+      console.log("filteredMappedAction", filteredMappedAction);
+      console.log("filteredMappedRowAction", filteredMappedRowAction);
+      setDatalistActions([]);
+      setDatalistActions(filteredMappedAction);
+      setDatalistRowActions([]);
+      setDatalistRowActions(filteredMappedRowAction);
+    }
   }, [datalist]);
 
   const columnsRef = useRef(null);
@@ -392,6 +465,10 @@ const DatalistLayout = ({ datalist }) => {
   };
 
   const handleShow = (type, setter, item = null) => {
+    // if (typeof setter !== "function") {
+    //   console.error("setter is not a function", setter);
+    //   return;
+    // }
     setCurrentType(type);
     setCurrentSetter(() => setter);
     setCurrentItem(item); // Set the current item for editing
@@ -400,17 +477,20 @@ const DatalistLayout = ({ datalist }) => {
     console.log("item dalam handleShow", item);
   };
 
-  const handleAddItem = (itemData) => {
+  const handleAddItem = (setter, currentItem, itemData) => {
+    // if (typeof currentSetter !== "function") {
+    //   console.error("currentSetter is not a function", currentSetter);
+    //   return;
+    // }
+    console.log("currentItem before run handleAddItem", currentItem);
     if (currentItem) {
-      // Edit existing item
-      currentSetter((prevItems) =>
+      setter((prevItems) =>
         prevItems.map((item) =>
           item.id === currentItem.id ? { ...item, itemData } : item
         )
       );
     } else {
-      // Add new item
-      currentSetter((prevItems) => [
+      setter((prevItems) => [
         ...prevItems,
         {
           id: ++idCounter,
@@ -419,12 +499,14 @@ const DatalistLayout = ({ datalist }) => {
       ]);
     }
     handleClose();
+    console.log("currentItem after run handleAddItem", currentItem);
+    window.location.reload();
   };
 
-  const deleteItem = async (setter, id) => {
+  const deleteItem = async (setter, id, deleteFunction, items) => {
     try {
-      const deletedItem = datalistFilters.find((item) => item.id === id);
-      await deleteDatalistFilter(deletedItem.itemData.id);
+      const deletedItem = items.find((item) => item.id === id);
+      await deleteFunction(deletedItem.itemData.id);
       setter((prevItems) => prevItems.filter((item) => item.id !== id));
     } catch (error) {
       console.error("Error deleting item:", error);
@@ -536,13 +618,15 @@ const DatalistLayout = ({ datalist }) => {
             console.log(datalistRowActions, "datalistRowActions");
             console.log(datalistActions, "datalistActions");
 
-            const newOrder = getOrder(filtersRef.current, datalistFilters);
-
-            for (let index = 0; index < newOrder.length; index++) {
-              const item = newOrder[index];
+            const newFilterOrder = getOrder(
+              filtersRef.current,
+              datalistFilters
+            );
+            for (let index = 0; index < newFilterOrder.length; index++) {
+              const itemFilter = newFilterOrder[index];
               try {
                 const result = await updateDatalistFilterOrder(
-                  item.itemData.id,
+                  itemFilter.itemData.id,
                   { order: index + 1 }
                 );
                 if (result.success === true) {
@@ -558,7 +642,83 @@ const DatalistLayout = ({ datalist }) => {
               }
             }
 
-            console.log("hehe", newOrder);
+            const newColumnOrder = getOrder(
+              columnsRef.current,
+              datalistColumns
+            );
+            for (let index = 0; index < newColumnOrder.length; index++) {
+              const itemColumn = newColumnOrder[index];
+              try {
+                const result = await updateDatalistColumnOrder(
+                  itemColumn.itemData.id,
+                  { order: index + 1 }
+                );
+                if (result.success === true) {
+                  console.log("Datalist Column Order updated successfully");
+                } else {
+                  console.error(
+                    "Error updating datalist column order:",
+                    result
+                  );
+                }
+              } catch (error) {
+                console.error("Error updating datalist column order:", error);
+              }
+            }
+
+            const newRowActionOrder = getOrder(
+              rowActionsRef.current,
+              datalistRowActions
+            );
+            for (let index = 0; index < newRowActionOrder.length; index++) {
+              const itemRowAction = newRowActionOrder[index];
+              try {
+                const result = await updateDatalistActionOrder(
+                  itemRowAction.itemData.id,
+                  { order: index + 1 }
+                );
+                if (result.success === true) {
+                  console.log("Datalist Row Action updated successfully");
+                } else {
+                  console.error(
+                    "Error updating datalist row action order:",
+                    result
+                  );
+                }
+              } catch (error) {
+                console.error(
+                  "Error updating datalist row action order:",
+                  error
+                );
+              }
+            }
+
+            const newActionOrder = getOrder(
+              actionsRef.current,
+              datalistActions
+            );
+            for (let index = 0; index < newActionOrder.length; index++) {
+              const itemAction = newActionOrder[index];
+              try {
+                const result = await updateDatalistActionOrder(
+                  itemAction.itemData.id,
+                  { order: index + 1 }
+                );
+                if (result.success === true) {
+                  console.log("Datalist Action updated successfully");
+                } else {
+                  console.error(
+                    "Error updating datalist action order:",
+                    result
+                  );
+                }
+              } catch (error) {
+                console.error(
+                  "Error updating datalist row action order:",
+                  error
+                );
+              }
+            }
           }}
         >
           <FontAwesomeIcon icon={faSave} /> Save Datalist
@@ -570,12 +730,22 @@ const DatalistLayout = ({ datalist }) => {
               <Segment
                 name="Filter"
                 items={datalistFilters}
-                onAdd={() => handleShow("Filter", setDatalistFilters)}
-                onDelete={(id) => deleteItem(setDatalistFilters, id)}
+                onAdd={() =>
+                  handleShow("Filter", setDatalistFilters, datalistFilters)
+                }
+                onDelete={(id) =>
+                  deleteItem(
+                    setDatalistFilters,
+                    id,
+                    deleteDatalistFilter,
+                    datalistFilters
+                  )
+                }
                 containerRef={filtersRef}
                 borderStyle={{ border: "2px solid blue" }}
                 onEdit={onEdit}
                 setStoreOrUpdate={setStoreOrUpdate}
+                setter={setDatalistFilters}
               />
             </Col>
           </Row>
@@ -584,24 +754,48 @@ const DatalistLayout = ({ datalist }) => {
               <Segment
                 name="Column"
                 items={datalistColumns}
-                onAdd={() => handleShow("Column", setDatalistColumns)}
-                onDelete={(id) => deleteItem(setDatalistColumns, id)}
+                onAdd={() =>
+                  handleShow("Column", setDatalistColumns, datalistColumns)
+                }
+                onDelete={(id) =>
+                  deleteItem(
+                    setDatalistColumns,
+                    id,
+                    deleteDatalistColumn,
+                    datalistColumns
+                  )
+                }
                 containerRef={columnsRef}
                 borderStyle={{ border: "2px solid blue" }}
                 onEdit={onEdit}
                 setStoreOrUpdate={setStoreOrUpdate}
+                setter={setDatalistColumns}
               />
             </Col>
             <Col lg="3" xl="3">
               <Segment
                 name="Row Action"
                 items={datalistRowActions}
-                onAdd={() => handleShow("Row Action", setDatalistRowActions)}
-                onDelete={(id) => deleteItem(setDatalistRowActions, id)}
+                onAdd={() =>
+                  handleShow(
+                    "Row Action",
+                    setDatalistRowActions,
+                    datalistRowActions
+                  )
+                }
+                onDelete={(id) =>
+                  deleteItem(
+                    setDatalistRowActions,
+                    id,
+                    deleteDatalistAction,
+                    datalistRowActions
+                  )
+                }
                 containerRef={rowActionsRef}
                 borderStyle={{ border: "2px solid blue" }}
                 onEdit={onEdit}
                 setStoreOrUpdate={setStoreOrUpdate}
+                setter={setDatalistRowActions}
               />
             </Col>
           </Row>
@@ -610,12 +804,22 @@ const DatalistLayout = ({ datalist }) => {
               <Segment
                 name="Action"
                 items={datalistActions}
-                onAdd={() => handleShow("Action", setDatalistActions)}
-                onDelete={(id) => deleteItem(setDatalistActions, id)}
+                onAdd={() =>
+                  handleShow("Action", setDatalistActions, datalistActions)
+                }
+                onDelete={(id) =>
+                  deleteItem(
+                    setDatalistActions,
+                    id,
+                    deleteDatalistAction,
+                    datalistActions
+                  )
+                }
                 containerRef={actionsRef}
                 borderStyle={{ border: "2px solid blue" }}
                 onEdit={onEdit}
                 setStoreOrUpdate={setStoreOrUpdate}
+                setter={setDatalistActions}
               />
             </Col>
           </Row>
@@ -635,50 +839,43 @@ const DatalistLayout = ({ datalist }) => {
               storeOrUpdate={storeOrUpdate}
               setStoreOrUpdate={setStoreOrUpdate}
               currentItem={currentItem}
+              setDatalistFilters={setDatalistFilters}
             />
           )}
           {currentType === "Column" && (
-            <Form>
-              <Form.Group>
-                <Form.Label>hehe</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder={`Enter ${currentType} item text`}
-                />
-              </Form.Group>
-            </Form>
+            <DatalistColumnForm
+              datalist={datalist}
+              handleAddItem={handleAddItem}
+              handleClose={handleClose}
+              storeOrUpdate={storeOrUpdate}
+              setStoreOrUpdate={setStoreOrUpdate}
+              currentItem={currentItem}
+              setDatalistColumns={setDatalistColumns}
+            />
           )}
           {currentType === "Row Action" && (
-            <Form>
-              <Form.Group>
-                <Form.Label>ayam</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder={`Enter ${currentType} item text`}
-                />
-              </Form.Group>
-            </Form>
+            <DatalistRowActionForm
+              datalist={datalist}
+              handleAddItem={handleAddItem}
+              handleClose={handleClose}
+              storeOrUpdate={storeOrUpdate}
+              setStoreOrUpdate={setStoreOrUpdate}
+              currentItem={currentItem}
+              setDatalistRowActions={setDatalistRowActions}
+            />
           )}
           {currentType === "Action" && (
-            <Form>
-              <Form.Group>
-                <Form.Label>itik</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder={`Enter ${currentType} item text`}
-                />
-              </Form.Group>
-            </Form>
+            <DatalistActionForm
+              datalist={datalist}
+              handleAddItem={handleAddItem}
+              handleClose={handleClose}
+              storeOrUpdate={storeOrUpdate}
+              setStoreOrUpdate={setStoreOrUpdate}
+              currentItem={currentItem}
+              setDatalistActions={setDatalistActions}
+            />
           )}
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleAddItem}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
       </Modal>
     </React.Fragment>
   );
@@ -693,6 +890,7 @@ const Segment = ({
   borderStyle,
   onEdit,
   setStoreOrUpdate,
+  setter,
 }) => {
   const getColumnSizes = () => {
     if (name === "Filter" || name === "Column" || name === "Action") {
@@ -728,6 +926,7 @@ const Segment = ({
             display: "flex",
             flexDirection: "row",
             flexWrap: "nowrap",
+            minHeight: "300px",
             maxHeight: "300px",
             maxWidth: "1500px",
             overflowX: "auto",
@@ -745,10 +944,30 @@ const Segment = ({
                   <DatalistFilter
                     {...item}
                     onDelete={() => onDelete(item.id)}
-                    onEdit={() => onEdit(item, "Filter")}
+                    onEdit={() => onEdit(item, "Filter", setter)}
                   />
                 )}
-                {/* Similar updates for other item types */}
+                {name === "Column" && (
+                  <DatalistColumn
+                    {...item}
+                    onDelete={() => onDelete(item.id)}
+                    onEdit={() => onEdit(item, "Column", setter)}
+                  />
+                )}
+                {name === "Row Action" && (
+                  <DatalistRowAction
+                    {...item}
+                    onDelete={() => onDelete(item.id)}
+                    onEdit={() => onEdit(item, "Row Action", setter)}
+                  />
+                )}
+                {name === "Action" && (
+                  <DatalistAction
+                    {...item}
+                    onDelete={() => onDelete(item.id)}
+                    onEdit={() => onEdit(item, "Action", setter)}
+                  />
+                )}
               </div>
             </Col>
           ))}
@@ -802,6 +1021,7 @@ const DatalistFilterForm = ({
   currentItem,
   storeOrUpdate,
   setStoreOrUpdate,
+  setDatalistFilters,
 }) => {
   const dispatch = useDispatch();
   const tableOptions = useSelector((state) => state.dbRetrieval.tableOptions);
@@ -844,7 +1064,10 @@ const DatalistFilterForm = ({
         const updatedValues = {
           ...values,
           list_id: datalist.id,
-          order: currentItem ? currentItem.itemData.order : ++filterOrder,
+          order:
+            currentItem && currentItem.itemData
+              ? currentItem.itemData.order
+              : ++filterOrder,
         };
 
         try {
@@ -855,7 +1078,7 @@ const DatalistFilterForm = ({
             const result = await storeDatalistFilter(updatedValues);
             if (result.success === true) {
               console.log("Datalist Filter saved successfully");
-              handleAddItem(result.data);
+              handleAddItem(setDatalistFilters, currentItem, result.data);
             } else if (result.label && result.label.length > 0) {
               setErrors({ label: result.label[0] }); // Set the error for the label field
             } else {
@@ -869,7 +1092,7 @@ const DatalistFilterForm = ({
             );
             if (result.success === true) {
               console.log("Datalist Filter updated successfully");
-              handleAddItem(result.data);
+              handleAddItem(setDatalistFilters, currentItem, result.data);
             } else if (result.label && result.label.length > 0) {
               setErrors({ label: result.label[0] }); // Set the error for the label field
             } else {
@@ -878,7 +1101,6 @@ const DatalistFilterForm = ({
           }
         } catch (error) {
           console.error("Unexpected error:", error);
-          setErrors({ label: error.label[0] });
         } finally {
           setSubmitting(false); // Reset form submitting state
         }
@@ -896,7 +1118,7 @@ const DatalistFilterForm = ({
         <Form noValidate onSubmit={handleSubmit}>
           <Form.Group as={Row} className="mb-3">
             <Form.Label column sm={3} className="text-sm-right">
-              Label
+              Label*
             </Form.Label>
             <Col sm={9}>
               <Form.Control
@@ -986,7 +1208,7 @@ const DatalistFilterForm = ({
   );
 };
 
-const DatalistColumn = ({ id, onDelete, itemData }) => (
+const DatalistColumn = ({ id, onDelete, onEdit, itemData }) => (
   <Card className="mb-3 bg-light cursor-grab border">
     <Card.Body className="p-3">
       <div className="float-end">
@@ -998,16 +1220,279 @@ const DatalistColumn = ({ id, onDelete, itemData }) => (
         >
           <FontAwesomeIcon icon={faX} />
         </Button>
-        <Button variant="warning" className="float-end mt-n1 me-2" size="sm">
+        <Button
+          variant="warning"
+          className="float-end mt-n1 me-2"
+          size="sm"
+          onClick={onEdit}
+        >
           <FontAwesomeIcon icon={faEdit} />
         </Button>
       </div>
-      <p>Column {id}</p>
+      <p>Column - {id}</p>
+      <hr />
+      <p style={{ color: "blue" }}>
+        <FontAwesomeIcon icon={faTag} /> Label: {itemData.label}
+      </p>
+      <p style={{ color: "blue" }}>
+        <FontAwesomeIcon icon={faDatabase} /> Table Name: {itemData.table_name}
+      </p>
+      <p style={{ color: "blue" }}>
+        <FontAwesomeIcon icon={faTableColumns} /> Column Name:{" "}
+        {itemData.column_name}
+      </p>
+      <p style={{ color: "blue" }}>
+        <FontAwesomeIcon icon={faKey} /> Column Key: {itemData.column_key}
+      </p>
+      <p style={{ color: "blue" }}>
+        <FontAwesomeIcon icon={faEyeSlash} /> Is Hidden:{" "}
+        {itemData.is_hidden ? "Yes" : "No"}
+      </p>
     </Card.Body>
   </Card>
 );
 
-const DatalistRowAction = ({ id, onDelete, itemData }) => (
+const DatalistColumnForm = ({
+  datalist,
+  handleAddItem,
+  handleClose,
+  currentItem,
+  storeOrUpdate,
+  setStoreOrUpdate,
+  setDatalistColumns,
+}) => {
+  const dispatch = useDispatch();
+  const tableOptions = useSelector((state) => state.dbRetrieval.tableOptions);
+  const columnOptions = useSelector((state) => state.dbRetrieval.columnOptions);
+  const [tableNameChosen, setTableNameChosen] = useState(
+    currentItem?.itemData?.table_name || ""
+  );
+
+  useEffect(() => {
+    if (tableNameChosen !== "") {
+      const fetchColumns = async () => {
+        try {
+          dispatch(getColumnsStart());
+          const columnOptions = await getColumns(tableNameChosen);
+          dispatch(getColumnsSuccess(columnOptions));
+        } catch (error) {
+          dispatch(getColumnsFailure(error));
+        }
+      };
+
+      fetchColumns();
+    }
+  }, [tableNameChosen, dispatch]);
+
+  console.log("currentItem", currentItem);
+
+  return (
+    <Formik
+      validationSchema={schemaDatalistColumn}
+      // onSubmit={async (values, { setSubmitting, setErrors }) => {
+      //   console.log("values", values);
+      //   handleAddItem();
+      // }}
+      initialValues={{
+        label: currentItem?.itemData?.label || "",
+        table_name: currentItem?.itemData?.table_name || "",
+        column_name: currentItem?.itemData?.column_name || "",
+        column_key: currentItem?.itemData?.column_key || "",
+        is_hidden: currentItem?.itemData?.is_hidden || 0,
+      }}
+      onSubmit={async (values, { setSubmitting, setErrors }) => {
+        const updatedValues = {
+          ...values,
+          list_id: datalist.id,
+          order:
+            currentItem && currentItem.itemData
+              ? currentItem.itemData.order
+              : ++columnOrder,
+        };
+
+        try {
+          console.log("updatedValues", updatedValues);
+          setSubmitting(true);
+          console.log("storeOrUpdate", storeOrUpdate);
+          if (storeOrUpdate === "store") {
+            const result = await storeDatalistColumn(updatedValues);
+            if (result.success === true) {
+              console.log("Datalist Column saved successfully");
+              handleAddItem(setDatalistColumns, currentItem, result.data);
+            } else if (result.label && result.label.length > 0) {
+              setErrors({ label: result.label[0] }); // Set the error for the label field
+            } else {
+              console.error("Error saving datalist column:", result);
+            }
+          } else {
+            console.log("currenITEM in the submit button", currentItem);
+            const result = await updateDatalistColumn(
+              currentItem.itemData.id,
+              updatedValues
+            );
+            if (result.success === true) {
+              console.log("Datalist Column updated successfully");
+              handleAddItem(setDatalistColumns, currentItem, result.data);
+            } else if (result.label && result.label.length > 0) {
+              setErrors({ label: result.label[0] }); // Set the error for the label field
+            } else {
+              console.error("Error saving datalist column:", result);
+            }
+          }
+        } catch (error) {
+          console.error("Unexpected error:", error);
+        } finally {
+          setSubmitting(false); // Reset form submitting state
+        }
+      }}
+    >
+      {({
+        handleSubmit,
+        handleChange,
+        handleBlur,
+        values,
+        touched,
+        isValid,
+        errors,
+      }) => (
+        <Form noValidate onSubmit={handleSubmit}>
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={3} className="text-sm-right">
+              Label*
+            </Form.Label>
+            <Col sm={9}>
+              <Form.Control
+                type="text"
+                name="label"
+                value={values.label}
+                onChange={handleChange}
+                isValid={touched.label && !errors.label}
+                isInvalid={touched.label && !!errors.label}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.label}
+              </Form.Control.Feedback>
+            </Col>
+          </Form.Group>
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={3} className="text-sm-right">
+              Table Name*
+            </Form.Label>
+            <Col sm={9}>
+              <Form.Select
+                name="table_name"
+                onChange={(e) => {
+                  const selectedTableName = e.target.value;
+                  setTableNameChosen(selectedTableName);
+                  handleChange(e);
+                }}
+                value={values.table_name || ""}
+                isValid={touched.table_name && !errors.table_name}
+                isInvalid={touched.table_name && !!errors.table_name}
+              >
+                <option value="">Not chosen</option>
+                {tableOptions.map((tableName, index) => (
+                  <option key={index} value={tableName}>
+                    {tableName}
+                  </option>
+                ))}
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                {errors.table_name}
+              </Form.Control.Feedback>
+            </Col>
+          </Form.Group>
+          {tableNameChosen && (
+            <React.Fragment>
+              <Form.Group as={Row} className="mb-3">
+                <Form.Label column sm={3} className="text-sm-right">
+                  Table Column*
+                </Form.Label>
+                <Col sm={9}>
+                  <Form.Select
+                    name="column_name"
+                    onChange={handleChange}
+                    value={values.column_name || ""}
+                  >
+                    <option value="">Not chosen</option>
+                    {columnOptions.map((columnName, index) => (
+                      <option key={index} value={columnName}>
+                        {columnName}
+                      </option>
+                    ))}
+                  </Form.Select>
+                  <Form.Control.Feedback type="invalid">
+                    {errors.column_name}
+                  </Form.Control.Feedback>
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row} className="mb-3">
+                <Form.Label column sm={3} className="text-sm-right">
+                  Column Key*
+                </Form.Label>
+                <Col sm={9}>
+                  <Form.Select
+                    name="column_key"
+                    onChange={handleChange}
+                    value={values.column_key || ""}
+                  >
+                    <option value="">Not chosen</option>
+                    {columnOptions.map((columnName, index) => (
+                      <option key={index} value={columnName}>
+                        {columnName}
+                      </option>
+                    ))}
+                  </Form.Select>
+                  <Form.Control.Feedback type="invalid">
+                    {errors.column_key}
+                  </Form.Control.Feedback>
+                </Col>
+              </Form.Group>
+            </React.Fragment>
+          )}
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={3} className="text-sm-right">
+              Is Hidden*
+            </Form.Label>
+            <Col sm={9}>
+              <Form.Select
+                name="is_hidden"
+                onChange={handleChange}
+                value={values.is_hidden || 0}
+                isValid={touched.is_hidden && !errors.is_hidden}
+                isInvalid={touched.is_hidden && !!errors.is_hidden}
+              >
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                {errors.is_hidden}
+              </Form.Control.Feedback>
+            </Col>
+          </Form.Group>
+
+          <Button
+            type="submit"
+            variant="success"
+            className="float-end mt-n1 me-2"
+            // onClick={handleAddItem}
+          >
+            Save Changes
+          </Button>
+          <Button
+            variant="secondary"
+            className="float-end mt-n1 me-2"
+            onClick={handleClose}
+          >
+            Close
+          </Button>
+        </Form>
+      )}
+    </Formik>
+  );
+};
+
+const DatalistRowAction = ({ id, onDelete, onEdit, itemData }) => (
   <Card className="mb-3 bg-light cursor-grab border">
     <Card.Body className="p-3">
       <div className="float-end">
@@ -1019,16 +1504,169 @@ const DatalistRowAction = ({ id, onDelete, itemData }) => (
         >
           <FontAwesomeIcon icon={faX} />
         </Button>
-        <Button variant="warning" className="float-end mt-n1 me-2" size="sm">
+        <Button
+          variant="warning"
+          className="float-end mt-n1 me-2"
+          size="sm"
+          onClick={onEdit}
+        >
           <FontAwesomeIcon icon={faEdit} />
         </Button>
       </div>
       <p>Row Action - {id}</p>
+      <hr />
+      <p style={{ color: "blue" }}>
+        <FontAwesomeIcon icon={faTag} /> Label: {itemData.label}
+      </p>
+      <p style={{ color: "blue" }}>
+        <FontAwesomeIcon icon={faGear} /> Type: {itemData.type}
+      </p>
     </Card.Body>
   </Card>
 );
 
-const DatalistAction = ({ id, onDelete, itemData }) => (
+const DatalistRowActionForm = ({
+  datalist,
+  handleAddItem,
+  handleClose,
+  currentItem,
+  storeOrUpdate,
+  setStoreOrUpdate,
+  setDatalistRowActions,
+}) => {
+  const dispatch = useDispatch();
+
+  console.log("currentItem", currentItem);
+
+  return (
+    <Formik
+      validationSchema={schemaDatalistAction}
+      // onSubmit={async (values, { setSubmitting, setErrors }) => {
+      //   console.log("values", values);
+      //   handleAddItem();
+      // }}
+      initialValues={{
+        label: currentItem?.itemData?.label || "",
+        type: currentItem?.itemData?.type || "Edit",
+      }}
+      onSubmit={async (values, { setSubmitting, setErrors }) => {
+        const updatedValues = {
+          ...values,
+          list_id: datalist.id,
+          segment: "Row Action",
+          order:
+            currentItem && currentItem.itemData
+              ? currentItem.itemData.order
+              : ++rowActionOrder,
+        };
+
+        try {
+          console.log("updatedValues", updatedValues);
+          setSubmitting(true);
+          console.log("storeOrUpdate", storeOrUpdate);
+          if (storeOrUpdate === "store") {
+            const result = await storeDatalistAction(updatedValues);
+            if (result.success === true) {
+              console.log("Datalist Row Action saved successfully");
+              handleAddItem(setDatalistRowActions, currentItem, result.data);
+            } else if (result.label && result.label.length > 0) {
+              setErrors({ label: result.label[0] }); // Set the error for the label field
+            } else {
+              console.error("Error saving datalist row action:", result);
+            }
+          } else {
+            console.log("currenITEM in the submit button", currentItem);
+            const result = await updateDatalistAction(
+              currentItem.itemData.id,
+              updatedValues
+            );
+            if (result.success === true) {
+              console.log("Datalist Row Action updated successfully");
+              handleAddItem(setDatalistRowActions, currentItem, result.data);
+            } else if (result.label && result.label.length > 0) {
+              setErrors({ label: result.label[0] }); // Set the error for the label field
+            } else {
+              console.error("Error saving datalist row action:", result);
+            }
+          }
+        } catch (error) {
+          console.error("Unexpected error:", error);
+        } finally {
+          setSubmitting(false); // Reset form submitting state
+        }
+      }}
+    >
+      {({
+        handleSubmit,
+        handleChange,
+        handleBlur,
+        values,
+        touched,
+        isValid,
+        errors,
+      }) => (
+        <Form noValidate onSubmit={handleSubmit}>
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={3} className="text-sm-right">
+              Label*
+            </Form.Label>
+            <Col sm={9}>
+              <Form.Control
+                type="text"
+                name="label"
+                value={values.label}
+                onChange={handleChange}
+                isValid={touched.label && !errors.label}
+                isInvalid={touched.label && !!errors.label}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.label}
+              </Form.Control.Feedback>
+            </Col>
+          </Form.Group>
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={3} className="text-sm-right">
+              Action Type*
+            </Form.Label>
+            <Col sm={9}>
+              <Form.Select
+                name="type"
+                onChange={handleChange}
+                value={values.type || "Edit"}
+                isValid={touched.type && !errors.type}
+                isInvalid={touched.type && !!errors.type}
+              >
+                <option value="Edit">Edit</option>
+                <option value="Delete">Delete</option>
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                {errors.type}
+              </Form.Control.Feedback>
+            </Col>
+          </Form.Group>
+
+          <Button
+            type="submit"
+            variant="success"
+            className="float-end mt-n1 me-2"
+            // onClick={handleAddItem}
+          >
+            Save Changes
+          </Button>
+          <Button
+            variant="secondary"
+            className="float-end mt-n1 me-2"
+            onClick={handleClose}
+          >
+            Close
+          </Button>
+        </Form>
+      )}
+    </Formik>
+  );
+};
+
+const DatalistAction = ({ id, onDelete, onEdit, itemData }) => (
   <Card className="mb-3 bg-light cursor-grab border">
     <Card.Body className="p-3">
       <div className="float-end">
@@ -1040,13 +1678,166 @@ const DatalistAction = ({ id, onDelete, itemData }) => (
         >
           <FontAwesomeIcon icon={faX} />
         </Button>
-        <Button variant="warning" className="float-end mt-n1 me-2" size="sm">
+        <Button
+          variant="warning"
+          className="float-end mt-n1 me-2"
+          size="sm"
+          onClick={onEdit}
+        >
           <FontAwesomeIcon icon={faEdit} />
         </Button>
       </div>
       <p>Action - {id}</p>
+      <hr />
+      <p style={{ color: "blue" }}>
+        <FontAwesomeIcon icon={faTag} /> Label: {itemData.label}
+      </p>
+      <p style={{ color: "blue" }}>
+        <FontAwesomeIcon icon={faGear} /> Type: {itemData.type}
+      </p>
     </Card.Body>
   </Card>
 );
+
+const DatalistActionForm = ({
+  datalist,
+  handleAddItem,
+  handleClose,
+  currentItem,
+  storeOrUpdate,
+  setStoreOrUpdate,
+  setDatalistActions,
+}) => {
+  const dispatch = useDispatch();
+
+  console.log("currentItem", currentItem);
+
+  return (
+    <Formik
+      validationSchema={schemaDatalistAction}
+      // onSubmit={async (values, { setSubmitting, setErrors }) => {
+      //   console.log("values", values);
+      //   handleAddItem();
+      // }}
+      initialValues={{
+        label: currentItem?.itemData?.label || "",
+        type: currentItem?.itemData?.type || "Edit",
+      }}
+      onSubmit={async (values, { setSubmitting, setErrors }) => {
+        const updatedValues = {
+          ...values,
+          list_id: datalist.id,
+          segment: "Action",
+          order:
+            currentItem && currentItem.itemData
+              ? currentItem.itemData.order
+              : ++rowActionOrder,
+        };
+
+        try {
+          console.log("updatedValues", updatedValues);
+          setSubmitting(true);
+          console.log("storeOrUpdate", storeOrUpdate);
+          if (storeOrUpdate === "store") {
+            const result = await storeDatalistAction(updatedValues);
+            if (result.success === true) {
+              console.log("Datalist Action saved successfully");
+              handleAddItem(setDatalistActions, currentItem, result.data);
+            } else if (result.label && result.label.length > 0) {
+              setErrors({ label: result.label[0] }); // Set the error for the label field
+            } else {
+              console.error("Error saving datalist action:", result);
+            }
+          } else {
+            console.log("currenITEM in the submit button", currentItem);
+            const result = await updateDatalistAction(
+              currentItem.itemData.id,
+              updatedValues
+            );
+            if (result.success === true) {
+              console.log("Datalist Action updated successfully");
+              handleAddItem(setDatalistActions, currentItem, result.data);
+            } else if (result.label && result.label.length > 0) {
+              setErrors({ label: result.label[0] }); // Set the error for the label field
+            } else {
+              console.error("Error saving datalist action:", result);
+            }
+          }
+        } catch (error) {
+          console.error("Unexpected error:", error);
+        } finally {
+          setSubmitting(false); // Reset form submitting state
+        }
+      }}
+    >
+      {({
+        handleSubmit,
+        handleChange,
+        handleBlur,
+        values,
+        touched,
+        isValid,
+        errors,
+      }) => (
+        <Form noValidate onSubmit={handleSubmit}>
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={3} className="text-sm-right">
+              Label*
+            </Form.Label>
+            <Col sm={9}>
+              <Form.Control
+                type="text"
+                name="label"
+                value={values.label}
+                onChange={handleChange}
+                isValid={touched.label && !errors.label}
+                isInvalid={touched.label && !!errors.label}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.label}
+              </Form.Control.Feedback>
+            </Col>
+          </Form.Group>
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={3} className="text-sm-right">
+              Action Type*
+            </Form.Label>
+            <Col sm={9}>
+              <Form.Select
+                name="type"
+                onChange={handleChange}
+                value={values.type || "Create"}
+                isValid={touched.type && !errors.type}
+                isInvalid={touched.type && !!errors.type}
+              >
+                <option value="Create">Create</option>
+                {/* <option value="Delete">Delete</option> */}
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                {errors.type}
+              </Form.Control.Feedback>
+            </Col>
+          </Form.Group>
+
+          <Button
+            type="submit"
+            variant="success"
+            className="float-end mt-n1 me-2"
+            // onClick={handleAddItem}
+          >
+            Save Changes
+          </Button>
+          <Button
+            variant="secondary"
+            className="float-end mt-n1 me-2"
+            onClick={handleClose}
+          >
+            Close
+          </Button>
+        </Form>
+      )}
+    </Formik>
+  );
+};
 
 export default DatalistEdit;

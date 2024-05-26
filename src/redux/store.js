@@ -13,6 +13,8 @@ import fieldLocationReducer from "./slices/fieldLocationSlice";
 import fieldListValueReducer from "./slices/fieldListValueSlice";
 import datalistReducer from "./slices/datalistSlice";
 import datalistFilterReducer from "./slices/datalistFilterSlice";
+import datalistColumnReducer from "./slices/datalistColumnSlice";
+import datalistActionReducer from "./slices/datalistActionSlice";
 
 export const store = configureStore({
   reducer: {
@@ -30,5 +32,7 @@ export const store = configureStore({
     fieldListValue: fieldListValueReducer,
     datalist: datalistReducer,
     datalistFilter: datalistFilterReducer,
+    datalistColumn: datalistColumnReducer,
+    datalistAction: datalistActionReducer,
   },
 });
