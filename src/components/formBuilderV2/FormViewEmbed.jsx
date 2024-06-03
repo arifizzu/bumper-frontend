@@ -35,7 +35,10 @@ import {
   showFieldFailure,
 } from "../../redux/slices/fieldSlice";
 
-import { getFields } from "../../repositories/api/services/fieldServices";
+import {
+  getFields,
+  storeDataInDatabase,
+} from "../../repositories/api/services/fieldServices";
 
 import RGL, { WidthProvider } from "react-grid-layout";
 const ReactGridLayout = WidthProvider(RGL);
@@ -48,6 +51,7 @@ const FormViewEmbed = ({ id }) => {
   const dispatch = useDispatch();
   const [isValid, setIsValid] = useState(false);
   const fields = useSelector((state) => state.field.fields);
+  const [enteredData, setEnteredData] = useState({}); // State to store entered data
 
   // console.log("user", user);
   // console.log("id in userview", id);
@@ -78,9 +82,33 @@ const FormViewEmbed = ({ id }) => {
 
   const handleSubmitButton = async () => {
     setIsValid(true);
+    console.log("enteredData in handleSubmit", enteredData);
+
+    // Transform enteredData into the required array format
+    const transformedData = Object.values(enteredData).map((item) => ({
+      table_name: item.tableName,
+      column_name: item.columnName,
+      data: item.value,
+    }));
+
+    const result = await storeDataInDatabase(transformedData);
+    if (result.success === true) {
+      console.log("Data inserted successfully");
+      // window.location.reload();
+    } else {
+      console.error("Error inserting data:", result);
+    }
   };
 
   console.log("fieldLayout", fieldLayout);
+
+  // Update the entered data state when a field's value changes
+  const handleFieldChange = (fieldName, tableName, columnName, value) => {
+    setEnteredData((prevData) => ({
+      ...prevData,
+      [fieldName]: { tableName, columnName, value },
+    }));
+  };
 
   const generateDOM = () => {
     return fieldLayout.map((field, index) => (
@@ -98,40 +126,76 @@ const FormViewEmbed = ({ id }) => {
         {/* Render the content of each field */}
         <div>
           {field.detail.field_type.name === "Text Input" && (
-            <FieldTextInputDynamic fieldList={field.detail} />
+            <FieldTextInputDynamic
+              fieldList={field.detail}
+              onChange={handleFieldChange}
+            />
           )}
           {field.detail.field_type.name === "Textarea" && (
-            <FieldTextareaDynamic fieldList={field.detail} />
+            <FieldTextareaDynamic
+              fieldList={field.detail}
+              onChange={handleFieldChange}
+            />
           )}
           {field.detail.field_type.name === "Number Input" && (
-            <FieldNumberInputDynamic fieldList={field.detail} />
+            <FieldNumberInputDynamic
+              fieldList={field.detail}
+              onChange={handleFieldChange}
+            />
           )}
           {field.detail.field_type.name === "Checkbox" && (
-            <FieldCheckboxDynamic fieldList={field.detail} />
+            <FieldCheckboxDynamic
+              fieldList={field.detail}
+              onChange={handleFieldChange}
+            />
           )}
           {field.detail.field_type.name === "Radio Button" && (
-            <FieldRadioButtonDynamic fieldList={field.detail} />
+            <FieldRadioButtonDynamic
+              fieldList={field.detail}
+              onChange={handleFieldChange}
+            />
           )}
           {field.detail.field_type.name === "Switch" && (
-            <FieldSwitchDynamic fieldList={field.detail} />
+            <FieldSwitchDynamic
+              fieldList={field.detail}
+              onChange={handleFieldChange}
+            />
           )}
           {field.detail.field_type.name === "Dropdown" && (
-            <FieldDropdownDynamic fieldList={field.detail} />
+            <FieldDropdownDynamic
+              fieldList={field.detail}
+              onChange={handleFieldChange}
+            />
           )}
           {field.detail.field_type.name === "File Upload" && (
-            <FieldFileUploadDynamic fieldList={field.detail} />
+            <FieldFileUploadDynamic
+              fieldList={field.detail}
+              onChange={handleFieldChange}
+            />
           )}
           {field.detail.field_type.name === "Date Picker" && (
-            <FieldDatePickerDynamic fieldList={field.detail} />
+            <FieldDatePickerDynamic
+              fieldList={field.detail}
+              onChange={handleFieldChange}
+            />
           )}
           {field.detail.field_type.name === "Time Picker" && (
-            <FieldTimePickerDynamic fieldList={field.detail} />
+            <FieldTimePickerDynamic
+              fieldList={field.detail}
+              onChange={handleFieldChange}
+            />
           )}
           {field.detail.field_type.name === "Email Input" && (
-            <FieldEmailInputDynamic fieldList={field.detail} />
+            <FieldEmailInputDynamic
+              fieldList={field.detail}
+              onChange={handleFieldChange}
+            />
           )}
           {field.detail.field_type.name === "Password Input" && (
-            <FieldPasswordInputDynamic fieldList={field.detail} />
+            <FieldPasswordInputDynamic
+              fieldList={field.detail}
+              onChange={handleFieldChange}
+            />
           )}
         </div>
       </div>
@@ -143,19 +207,6 @@ const FormViewEmbed = ({ id }) => {
     <React.Fragment>
       <Container id="form-content" fluid className="p-0">
         <Card>
-          <Card.Header>
-            {/* <Card.Title className="mb-0 text-center">
-              {fields && fields.length > 0 ? (
-                <>
-                  <h3>{fields[0]?.form?.name}</h3>
-                </>
-              ) : (
-                <Col>
-                  <h5>Loading...</h5>
-                </Col>
-              )}
-            </Card.Title> */}
-          </Card.Header>
           <Card.Body>
             <div style={{ marginBottom: "20px" }}>
               <div
@@ -193,7 +244,6 @@ const FormViewEmbed = ({ id }) => {
                 variant="primary"
                 className="float-end mt-n1 me-2"
                 onClick={() => {
-                  //   handleSubmitButton(id);
                   handleSubmitButton();
                 }}
               >
@@ -204,7 +254,7 @@ const FormViewEmbed = ({ id }) => {
         </Card>
       </Container>
 
-      <Modal show={isValid} onHide={() => setIsValid(false)} centered>
+      {/* <Modal show={isValid} onHide={() => setIsValid(false)} centered>
         <Modal.Header closeButton>Submit Form</Modal.Header>
         <Modal.Body className="text-center m-3">
           <p className="mb-0">This is just a form preview</p>
@@ -213,6 +263,26 @@ const FormViewEmbed = ({ id }) => {
           <Button variant="secondary" onClick={() => setIsValid(false)}>
             Close
           </Button>{" "}
+        </Modal.Footer>
+      </Modal> */}
+      <Modal show={isValid} onHide={() => setIsValid(false)} centered>
+        <Modal.Header closeButton>Submit Form</Modal.Header>
+        <Modal.Body className="text-center m-3">
+          <h5>Entered Data:</h5>
+          <ul>
+            {/* Render the entered data */}
+            {Object.entries(enteredData).map(([fieldName, data], index) => (
+              <li key={index}>
+                <strong>{fieldName}:</strong> {data.value} (Table:{" "}
+                {data.tableName}, Column: {data.columnName})
+              </li>
+            ))}
+          </ul>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setIsValid(false)}>
+            Close
+          </Button>
         </Modal.Footer>
       </Modal>
     </React.Fragment>

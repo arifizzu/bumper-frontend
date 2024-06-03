@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import {
   Card,
@@ -9,9 +9,19 @@ import {
   FloatingLabel,
 } from "react-bootstrap";
 
-export const FieldTextInputDynamic = ({ fieldList }) => (
-  <React.Fragment>
-    <Card>
+export const FieldTextInputDynamic = ({ fieldList, onChange }) => {
+  const handleInputChange = (e) => {
+    const fieldName = e.target.name;
+    const value = e.target.value;
+    const tableName = fieldList.table_name;
+    const columnName = fieldList.column_name;
+    onChange(fieldName, tableName, columnName, value);
+  };
+
+  console.log("fieldList in dynamic", fieldList);
+
+  return (
+    <React.Fragment>
       <Form.Group as={Row} className="mb-3">
         <Form.Label
           column
@@ -22,16 +32,29 @@ export const FieldTextInputDynamic = ({ fieldList }) => (
           {fieldList.caption} :
         </Form.Label>
         <Col sm={7}>
-          <Form.Control type="text" name="" placeholder="" defaultValue={""} />
+          <Form.Control
+            type="text"
+            name={fieldList.caption} // Use field caption as the input name
+            placeholder=""
+            defaultValue={""}
+            onChange={handleInputChange} // Call handleInputChange on input change
+          />
         </Col>
       </Form.Group>
-    </Card>
-  </React.Fragment>
-);
+    </React.Fragment>
+  );
+};
 
-export const FieldTextareaDynamic = ({ fieldList }) => (
-  <React.Fragment>
-    <Card>
+export const FieldTextareaDynamic = ({ fieldList, onChange }) => {
+  const handleInputChange = (e) => {
+    const fieldName = e.target.name;
+    const value = e.target.value;
+    const tableName = fieldList.table_name;
+    const columnName = fieldList.column_name;
+    onChange(fieldName, tableName, columnName, value);
+  };
+  return (
+    <React.Fragment>
       <Form.Group as={Row} className="mb-3">
         <Form.Label
           column
@@ -44,21 +67,27 @@ export const FieldTextareaDynamic = ({ fieldList }) => (
         <Col sm={7}>
           <Form.Control
             type="textarea"
-            as="textarea"
-            name="textarea"
+            name={fieldList.caption} // Use field caption as the input name
             placeholder=""
             defaultValue={""}
-            // disabled
+            onChange={handleInputChange} // Call handleInputChange on input change
           />
         </Col>
       </Form.Group>
-    </Card>
-  </React.Fragment>
-);
+    </React.Fragment>
+  );
+};
 
-export const FieldNumberInputDynamic = ({ fieldList }) => (
-  <React.Fragment>
-    <Card>
+export const FieldNumberInputDynamic = ({ fieldList, onChange }) => {
+  const handleInputChange = (e) => {
+    const fieldName = e.target.name;
+    const value = e.target.value;
+    const tableName = fieldList.table_name;
+    const columnName = fieldList.column_name;
+    onChange(fieldName, tableName, columnName, value);
+  };
+  return (
+    <React.Fragment>
       <Form.Group as={Row} className="mb-3">
         <Form.Label
           column
@@ -71,177 +100,252 @@ export const FieldNumberInputDynamic = ({ fieldList }) => (
         <Col sm={7}>
           <Form.Control
             type="number"
-            name=""
+            name={fieldList.caption} // Use field caption as the input name
             placeholder=""
             defaultValue={""}
+            onChange={handleInputChange} // Call handleInputChange on input change
           />
         </Col>
       </Form.Group>
-    </Card>
-  </React.Fragment>
-);
+    </React.Fragment>
+  );
+};
 
-export const FieldCheckboxDynamic = ({ fieldList }) => {
-  // console.log("fieldList in dynamic", fieldList);
+export const FieldCheckboxDynamic = ({ fieldList, onChange }) => {
+  const [selectedValues, setSelectedValues] = useState([]);
+
+  const handleInputChange = (e) => {
+    const fieldName = e.target.name;
+    const value = e.target.value;
+    const tableName = fieldList.table_name;
+    const columnName = fieldList.column_name;
+
+    let updatedValues;
+    if (e.target.checked) {
+      // Add the value to the array if it's checked
+      updatedValues = [...selectedValues, value];
+    } else {
+      // Remove the value from the array if it's unchecked
+      updatedValues = selectedValues.filter((val) => val !== value);
+    }
+
+    setSelectedValues(updatedValues);
+    const valueString = updatedValues.join(","); // Create a comma-separated string
+    onChange(fieldName, tableName, columnName, valueString);
+  };
+
   return (
     <React.Fragment>
-      <Card>
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label
-            column
-            className="text-sm-right"
-            style={{ color: "black" }}
+      <Form.Group as={Row} className="mb-3">
+        <Form.Label column className="text-sm-right" style={{ color: "black" }}>
+          {fieldList.caption} :
+        </Form.Label>
+        <Col sm={7}>
+          {fieldList.list_values.map((listValue, index) => (
+            <Form.Check
+              key={index}
+              inline
+              name={fieldList.caption}
+              label={listValue.label}
+              value={listValue.value} // Set value to listValue.value
+              type="checkbox"
+              style={{ color: "black" }}
+              onChange={handleInputChange}
+            />
+          ))}
+        </Col>
+      </Form.Group>
+    </React.Fragment>
+  );
+};
+
+export const FieldRadioButtonDynamic = ({ fieldList, onChange }) => {
+  const handleInputChange = (e) => {
+    const fieldName = e.target.name;
+    const value = e.target.checked ? e.target.value : ""; // Use checked value or empty string if unchecked
+    const tableName = fieldList.table_name;
+    const columnName = fieldList.column_name;
+    onChange(fieldName, tableName, columnName, value);
+  };
+
+  return (
+    <React.Fragment>
+      <Form.Group as={Row} className="mb-3">
+        <Form.Label column className="text-sm-right" style={{ color: "black" }}>
+          {fieldList.caption} :
+        </Form.Label>
+        <Col sm={7}>
+          {fieldList.list_values.map((listValue, index) => (
+            <Form.Check
+              key={index}
+              inline
+              name={fieldList.caption} // Use field caption as the input name
+              label={listValue.label}
+              value={listValue.value} // Set value to listValue.value
+              type="radio"
+              style={{ color: "black" }}
+              onChange={handleInputChange}
+            />
+          ))}
+        </Col>
+      </Form.Group>
+    </React.Fragment>
+  );
+};
+
+export const FieldSwitchDynamic = ({ fieldList, onChange }) => {
+  const handleInputChange = (e) => {
+    const fieldName = e.target.name;
+    const value = e.target.checked ? "1" : "0"; // Convert to 1 if checked, 0 if unchecked
+    const tableName = fieldList.table_name;
+    const columnName = fieldList.column_name;
+    onChange(fieldName, tableName, columnName, value);
+  };
+
+  return (
+    <React.Fragment>
+      <Form.Check
+        type="switch"
+        id={fieldList.caption}
+        name={fieldList.caption} // Use field caption as the input name
+        label={fieldList.caption}
+        style={{ color: "black" }}
+        onChange={handleInputChange}
+      />
+    </React.Fragment>
+  );
+};
+
+export const FieldDropdownDynamic = ({ fieldList, onChange }) => {
+  const handleInputChange = (e) => {
+    const fieldName = e.target.name;
+    const value = e.target.value === "" ? null : e.target.value;
+    const tableName = fieldList.table_name;
+    const columnName = fieldList.column_name;
+    onChange(fieldName, tableName, columnName, value);
+  };
+
+  return (
+    <React.Fragment>
+      <Form.Group as={Row} className="mb-3">
+        <Form.Label column className="text-sm-right" style={{ color: "black" }}>
+          {fieldList.caption} :
+        </Form.Label>
+        <Col sm={7}>
+          <Form.Select
+            name={fieldList.caption} // Use field caption as the input name
+            aria-label="Floating label select example"
+            onChange={handleInputChange}
           >
-            {fieldList.caption} :
-          </Form.Label>
-          <Col sm={7}>
+            <option value="">Not chosen</option>
             {fieldList.list_values.map((listValue, index) => (
-              <Form.Check
-                key={index}
-                inline
-                label={listValue.label}
-                type="checkbox"
-                style={{ color: "black" }}
-                // disabled={someCondition}
-                // defaultChecked={someCondition}
-              />
+              <option key={index} value={listValue.value}>
+                {listValue.label}
+              </option>
             ))}
-          </Col>
-        </Form.Group>
-      </Card>
+          </Form.Select>
+        </Col>
+      </Form.Group>
     </React.Fragment>
   );
 };
 
-export const FieldRadioButtonDynamic = ({ fieldList }) => {
-  // console.log("fieldList in dynamic", fieldList);
+export const FieldFileUploadDynamic = ({ fieldList, onChange }) => {
+  const handleInputChange = (e) => {
+    const fieldName = e.target.name;
+    const value = e.target.files[0]; // For file input, get the first selected file
+    const tableName = fieldList.table_name;
+    const columnName = fieldList.column_name;
+    onChange(fieldName, tableName, columnName, value);
+  };
+
   return (
     <React.Fragment>
-      <Card>
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label
-            column
-            className="text-sm-right"
-            style={{ color: "black" }}
-          >
-            {fieldList.caption} :
-          </Form.Label>
-          <Col sm={7}>
-            {fieldList.list_values.map((listValue, index) => (
-              <Form.Check
-                key={index}
-                inline
-                name="radios-example"
-                label={listValue.label}
-                type="radio"
-                style={{ color: "black" }}
-                // disabled={someCondition}
-                // defaultChecked={someCondition}
-              />
-            ))}
-          </Col>
-        </Form.Group>
-      </Card>
-    </React.Fragment>
-  );
-};
-
-export const FieldSwitchDynamic = ({ fieldList }) => {
-  return (
-    <React.Fragment>
-      {/* <Form.Label column className="text-sm-right" style={{ color: 'black' }}>
-        {fieldList.caption} :
-      </Form.Label> */}
-      <Card>
-        <Form.Check
-          type="switch"
-          id="switch-example"
-          name="switch-example"
-          label={fieldList.caption}
-          style={{ color: "black" }}
-          // disabled
-        />
-      </Card>
-    </React.Fragment>
-  );
-};
-
-export const FieldDropdownDynamic = ({ fieldList }) => {
-  return (
-    <React.Fragment>
-      <Card>
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label
-            column
-            className="text-sm-right"
-            style={{ color: "black" }}
-          >
-            {fieldList.caption} :
-          </Form.Label>
-          <Col sm={7}>
-            <Form.Select aria-label="Floating label select example">
-              <option>Not chosen</option>
-              {fieldList.list_values.map((listValue, index) => (
-                <option key={index} value={listValue.value}>
-                  {listValue.label}
-                </option>
-              ))}
-            </Form.Select>
-          </Col>
-        </Form.Group>
-      </Card>
-    </React.Fragment>
-  );
-};
-
-export const FieldFileUploadDynamic = ({ fieldList }) => (
-  <React.Fragment>
-    <Card>
       <Form.Group as={Row} className="mb-3">
         <Form.Label column className="text-sm-right" style={{ color: "black" }}>
           {fieldList.caption} :
         </Form.Label>
         <Col sm={7}>
-          <Form.Control type="file" name="file" />
+          <Form.Control
+            type="file"
+            name={fieldList.caption} // Use field caption as the input name
+            onChange={handleInputChange}
+          />
         </Col>
       </Form.Group>
-    </Card>
-  </React.Fragment>
-);
+    </React.Fragment>
+  );
+};
 
-export const FieldDatePickerDynamic = ({ fieldList }) => (
-  <React.Fragment>
-    <Card>
+export const FieldDatePickerDynamic = ({ fieldList, onChange }) => {
+  const handleInputChange = (e) => {
+    const fieldName = e.target.name;
+    const value = e.target.value;
+    const tableName = fieldList.table_name;
+    const columnName = fieldList.column_name;
+    onChange(fieldName, tableName, columnName, value);
+  };
+
+  return (
+    <React.Fragment>
       <Form.Group as={Row} className="mb-3">
         <Form.Label column className="text-sm-right" style={{ color: "black" }}>
           {fieldList.caption} :
         </Form.Label>
         <Col sm={7}>
-          <Form.Control type="date" placeholder="" defaultValue={""} />
+          <Form.Control
+            type="date"
+            name={fieldList.caption} // Use field caption as the input name
+            placeholder=""
+            defaultValue={""}
+            onChange={handleInputChange}
+          />
         </Col>
       </Form.Group>
-    </Card>
-  </React.Fragment>
-);
+    </React.Fragment>
+  );
+};
 
-export const FieldTimePickerDynamic = ({ fieldList }) => (
-  <React.Fragment>
-    <Card>
+export const FieldTimePickerDynamic = ({ fieldList, onChange }) => {
+  const handleInputChange = (e) => {
+    const fieldName = e.target.name;
+    const value = e.target.value;
+    const tableName = fieldList.table_name;
+    const columnName = fieldList.column_name;
+    onChange(fieldName, tableName, columnName, value);
+  };
+
+  return (
+    <React.Fragment>
       <Form.Group as={Row} className="mb-3">
         <Form.Label column className="text-sm-right" style={{ color: "black" }}>
           {fieldList.caption} :
         </Form.Label>
         <Col sm={7}>
-          <Form.Control type="time" placeholder="" defaultValue={""} />
+          <Form.Control
+            type="time"
+            name={fieldList.caption} // Use field caption as the input name
+            placeholder=""
+            defaultValue={""}
+            onChange={handleInputChange}
+          />
         </Col>
       </Form.Group>
-    </Card>
-  </React.Fragment>
-);
+    </React.Fragment>
+  );
+};
 
-export const FieldEmailInputDynamic = ({ fieldList }) => (
-  <React.Fragment>
-    <Card>
+export const FieldEmailInputDynamic = ({ fieldList, onChange }) => {
+  const handleInputChange = (e) => {
+    const fieldName = e.target.name;
+    const value = e.target.value;
+    const tableName = fieldList.table_name;
+    const columnName = fieldList.column_name;
+    onChange(fieldName, tableName, columnName, value);
+  };
+
+  return (
+    <React.Fragment>
       <Form.Group as={Row} className="mb-3">
         <Form.Label column className="text-sm-right" style={{ color: "black" }}>
           {fieldList.caption} :
@@ -249,19 +353,28 @@ export const FieldEmailInputDynamic = ({ fieldList }) => (
         <Col sm={7}>
           <Form.Control
             type="email"
+            name={fieldList.caption} // Use field caption as the input name
             placeholder=""
-            // disabled
             defaultValue={""}
+            onChange={handleInputChange}
           />
         </Col>
       </Form.Group>
-    </Card>
-  </React.Fragment>
-);
+    </React.Fragment>
+  );
+};
 
-export const FieldPasswordInputDynamic = ({ fieldList }) => (
-  <React.Fragment>
-    <Card>
+export const FieldPasswordInputDynamic = ({ fieldList, onChange }) => {
+  const handleInputChange = (e) => {
+    const fieldName = e.target.name;
+    const value = e.target.value;
+    const tableName = fieldList.table_name;
+    const columnName = fieldList.column_name;
+    onChange(fieldName, tableName, columnName, value);
+  };
+
+  return (
+    <React.Fragment>
       <Form.Group as={Row} className="mb-3">
         <Form.Label column className="text-sm-right" style={{ color: "black" }}>
           {fieldList.caption} :
@@ -269,12 +382,13 @@ export const FieldPasswordInputDynamic = ({ fieldList }) => (
         <Col sm={7}>
           <Form.Control
             type="password"
+            name={fieldList.caption} // Use field caption as the input name
             placeholder=""
-            // disabled
             defaultValue={""}
+            onChange={handleInputChange}
           />
         </Col>
       </Form.Group>
-    </Card>
-  </React.Fragment>
-);
+    </React.Fragment>
+  );
+};

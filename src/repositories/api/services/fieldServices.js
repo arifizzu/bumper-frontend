@@ -97,3 +97,18 @@ export const showAllFieldTypes = async () => {
     throw error.response.data.error;
   }
 };
+
+export const storeDataInDatabase = async (inputData) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/fields/insertData`,
+      inputData,
+      {
+        headers: authHeader(),
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response.data.errors;
+  }
+};
