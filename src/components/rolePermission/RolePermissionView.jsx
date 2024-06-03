@@ -117,6 +117,16 @@ const RolePermissionView = ({ id }) => {
                   <Col>
                     <Form.Check
                       inline
+                      label="use form"
+                      type="checkbox"
+                      name="use form"
+                      checked={checkedPermissions["use form"] || false}
+                      disabled
+                    />
+                  </Col>
+                  <Col>
+                    <Form.Check
+                      inline
                       label="view form"
                       type="checkbox"
                       name="view form"
@@ -166,6 +176,16 @@ const RolePermissionView = ({ id }) => {
               </Row>
               <Form.Group className="mb-2">
                 <Row className="mt-2">
+                  <Col>
+                    <Form.Check
+                      inline
+                      label="use datalist"
+                      type="checkbox"
+                      name="use datalist"
+                      checked={checkedPermissions["use datalist"] || false}
+                      disabled
+                    />
+                  </Col>
                   <Col>
                     <Form.Check
                       inline

@@ -203,6 +203,19 @@ const RolePermissionEdit = ({ id }) => {
                   <Col>
                     <Form.Check
                       inline
+                      label="use form"
+                      type="checkbox"
+                      name="use form"
+                      onChange={handleCheckboxChange}
+                      checked={
+                        selectedPermissions &&
+                        selectedPermissions.includes("use form")
+                      }
+                    />
+                  </Col>
+                  <Col>
+                    <Form.Check
+                      inline
                       label="view form"
                       type="checkbox"
                       name="view form"
@@ -272,6 +285,19 @@ const RolePermissionEdit = ({ id }) => {
               </Row>
               <Form.Group className="mb-2">
                 <Row className="mt-2">
+                  <Col>
+                    <Form.Check
+                      inline
+                      label="use datalist"
+                      type="checkbox"
+                      name="use datalist"
+                      onChange={handleCheckboxChange}
+                      checked={
+                        selectedPermissions &&
+                        selectedPermissions.includes("use datalist")
+                      }
+                    />
+                  </Col>
                   <Col>
                     <Form.Check
                       inline

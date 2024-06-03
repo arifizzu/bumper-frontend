@@ -132,12 +132,12 @@ const RolePermissionNew = ({}) => {
   ];
 
   const permissionSections = {
-    form: ["view", "create", "edit", "delete"],
+    form: ["use", "view", "create", "edit", "delete"],
     process: ["view", "create", "edit", "delete"],
     role: ["view", "create", "edit", "delete"],
     permission: ["view", "create", "edit", "delete"],
     user: ["view", "create", "edit", "delete"],
-    datalist: ["view", "create", "edit", "delete"],
+    datalist: ["use", "view", "create", "edit", "delete"],
   };
 
   const generateCheckboxes = (sectionName) => {
@@ -257,6 +257,15 @@ const RolePermissionNew = ({}) => {
                   <Col>
                     <Form.Check
                       inline
+                      label="use form"
+                      type="checkbox"
+                      name="use form"
+                      onChange={handleCheckboxChange}
+                    />
+                  </Col>
+                  <Col>
+                    <Form.Check
+                      inline
                       label="view form"
                       type="checkbox"
                       name="view form"
@@ -310,6 +319,15 @@ const RolePermissionNew = ({}) => {
               </Row>
               <Form.Group className="mb-2">
                 <Row className="mt-2">
+                  <Col>
+                    <Form.Check
+                      inline
+                      label="use datalist"
+                      type="checkbox"
+                      name="use datalist"
+                      onChange={handleCheckboxChange}
+                    />
+                  </Col>
                   <Col>
                     <Form.Check
                       inline
