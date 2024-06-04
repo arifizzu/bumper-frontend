@@ -394,33 +394,98 @@ const DatalistLayout = ({ datalist }) => {
   const [storeOrUpdate, setStoreOrUpdate] = useState("store");
 
   useEffect(() => {
-    if (datalist && datalist.filters) {
-      const mappedFilters = datalist.filters.map((filter, index) => {
-        filterOrder++;
-        return {
-          id: idCounter++,
-          itemData: filter,
-        };
-      });
-      setDatalistFilters([]);
-      setDatalistFilters(mappedFilters);
-    }
+    // if (datalist && datalist.filters) {
+    //   const mappedFilters = datalist.filters.map((filter, index) => {
+    //     filterOrder++;
+    //     return {
+    //       id: idCounter++,
+    //       itemData: filter,
+    //     };
+    //   });
+    //   setDatalistFilters([]);
+    //   setDatalistFilters(mappedFilters);
+    // }
 
-    if (datalist && datalist.items) {
-      const mappedItems = datalist.items.map((item, index) => {
-        columnOrder++;
+    if (datalist && datalist.filters) {
+      const itemsCopy = datalist.filters.slice();
+      const sortedItems = itemsCopy.sort((a, b) => a.order - b.order);
+      const mappedItems = sortedItems.map((item) => {
+        filterOrder++;
         return {
           id: idCounter++,
           itemData: item,
         };
       });
+
+      setDatalistFilters([]);
+      setDatalistFilters(mappedItems);
+    }
+
+    // if (datalist && datalist.items) {
+    //   const mappedItems = datalist.items.map((item, index) => {
+    //     columnOrder++;
+    //     return {
+    //       id: idCounter++,
+    //       itemData: item,
+    //     };
+    //   });
+    //   setDatalistColumns([]);
+    //   setDatalistColumns(mappedItems);
+    // }
+
+    if (datalist && datalist.items) {
+      const itemsCopy = datalist.items.slice();
+      const sortedItems = itemsCopy.sort((a, b) => a.order - b.order);
+      const mappedItems = sortedItems.map((item) => {
+        return {
+          id: idCounter++,
+          itemData: item,
+        };
+      });
+
       setDatalistColumns([]);
       setDatalistColumns(mappedItems);
     }
 
+    // if (datalist && datalist.actions) {
+    //   const mappedAction = datalist.actions.map((item, index) => {
+    //     actionOrder++;
+    //     if (item.segment === "Action") {
+    //       return {
+    //         id: idCounter++,
+    //         itemData: item,
+    //       };
+    //     }
+    //   });
+    //   const filteredMappedAction = mappedAction.filter(
+    //     (item) => item !== undefined
+    //   );
+
+    //   const mappedRowAction = datalist.actions.map((item, index) => {
+    //     rowActionOrder++;
+    //     if (item.segment === "Row Action") {
+    //       return {
+    //         id: idCounter++,
+    //         itemData: item,
+    //       };
+    //     }
+    //   });
+    //   const filteredMappedRowAction = mappedRowAction.filter(
+    //     (item) => item !== undefined
+    //   );
+
+    //   console.log("filteredMappedAction", filteredMappedAction);
+    //   console.log("filteredMappedRowAction", filteredMappedRowAction);
+    //   setDatalistActions([]);
+    //   setDatalistActions(filteredMappedAction);
+    //   setDatalistRowActions([]);
+    //   setDatalistRowActions(filteredMappedRowAction);
+    // }
+
     if (datalist && datalist.actions) {
-      const mappedAction = datalist.actions.map((item, index) => {
-        actionOrder++;
+      const actionsCopy = datalist.actions.slice();
+      const sortedActions = actionsCopy.sort((a, b) => a.order - b.order);
+      const mappedAction = sortedActions.map((item) => {
         if (item.segment === "Action") {
           return {
             id: idCounter++,
@@ -431,9 +496,7 @@ const DatalistLayout = ({ datalist }) => {
       const filteredMappedAction = mappedAction.filter(
         (item) => item !== undefined
       );
-
-      const mappedRowAction = datalist.actions.map((item, index) => {
-        rowActionOrder++;
+      const mappedRowAction = sortedActions.map((item) => {
         if (item.segment === "Row Action") {
           return {
             id: idCounter++,
@@ -444,7 +507,6 @@ const DatalistLayout = ({ datalist }) => {
       const filteredMappedRowAction = mappedRowAction.filter(
         (item) => item !== undefined
       );
-
       console.log("filteredMappedAction", filteredMappedAction);
       console.log("filteredMappedRowAction", filteredMappedRowAction);
       setDatalistActions([]);
