@@ -392,6 +392,7 @@ const DatalistLayout = ({ datalist }) => {
   const [currentSetter, setCurrentSetter] = useState([]);
   const [currentItem, setCurrentItem] = useState(null);
   const [storeOrUpdate, setStoreOrUpdate] = useState("store");
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     // if (datalist && datalist.filters) {
@@ -674,7 +675,9 @@ const DatalistLayout = ({ datalist }) => {
         <Button
           variant="success"
           className="float-end mt-n1"
+          disabled={isSaving}
           onClick={async () => {
+            setIsSaving(true);
             console.log(datalistFilters, "datalistFilters");
             console.log(datalistColumns, "datalistColumns");
             console.log(datalistRowActions, "datalistRowActions");
@@ -781,9 +784,11 @@ const DatalistLayout = ({ datalist }) => {
                 );
               }
             }
+            window.location.reload();
           }}
         >
-          <FontAwesomeIcon icon={faSave} /> Save Datalist
+          <FontAwesomeIcon icon={faSave} />{" "}
+          {isSaving ? "Saving..." : "Save Datalist"}
         </Button>
         <h1 className="h3 mb-3">Datalist Layout</h1>
         <Card>
@@ -808,6 +813,7 @@ const DatalistLayout = ({ datalist }) => {
                 onEdit={onEdit}
                 setStoreOrUpdate={setStoreOrUpdate}
                 setter={setDatalistFilters}
+                isSaving={isSaving}
               />
             </Col>
           </Row>
@@ -832,6 +838,7 @@ const DatalistLayout = ({ datalist }) => {
                 onEdit={onEdit}
                 setStoreOrUpdate={setStoreOrUpdate}
                 setter={setDatalistColumns}
+                isSaving={isSaving}
               />
             </Col>
             <Col lg="3" xl="3">
@@ -858,6 +865,7 @@ const DatalistLayout = ({ datalist }) => {
                 onEdit={onEdit}
                 setStoreOrUpdate={setStoreOrUpdate}
                 setter={setDatalistRowActions}
+                isSaving={isSaving}
               />
             </Col>
           </Row>
@@ -882,6 +890,7 @@ const DatalistLayout = ({ datalist }) => {
                 onEdit={onEdit}
                 setStoreOrUpdate={setStoreOrUpdate}
                 setter={setDatalistActions}
+                isSaving={isSaving}
               />
             </Col>
           </Row>
@@ -953,6 +962,7 @@ const Segment = ({
   onEdit,
   setStoreOrUpdate,
   setter,
+  isSaving,
 }) => {
   const getColumnSizes = () => {
     if (name === "Filter" || name === "Column" || name === "Action") {
@@ -972,6 +982,7 @@ const Segment = ({
           <Button
             variant="primary"
             className="float-end mt-n1"
+            disabled={isSaving}
             onClick={() => {
               onAdd();
               setStoreOrUpdate("store");
@@ -1873,7 +1884,7 @@ const DatalistActionForm = ({
                 isInvalid={touched.type && !!errors.type}
               >
                 <option value="Create">Create</option>
-                {/* <option value="Delete">Delete</option> */}
+                <option value="Export">Export</option>
               </Form.Select>
               <Form.Control.Feedback type="invalid">
                 {errors.type}

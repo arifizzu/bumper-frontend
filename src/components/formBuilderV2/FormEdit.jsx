@@ -428,6 +428,7 @@ const FormLayout = ({ formId }) => {
   const field = useSelector((state) => state.field.field);
   const tableOptions = useSelector((state) => state.dbRetrieval.tableOptions);
   const columnOptions = useSelector((state) => state.dbRetrieval.columnOptions);
+  const [isSaving, setIsSaving] = useState(false);
   const [showModalField, setShowModalField] = useState({});
   const [tableNameChosen, setTableNameChosen] = useState("");
   const fieldListInputOriginal = useSelector(
@@ -1018,7 +1019,9 @@ const FormLayout = ({ formId }) => {
         <Button
           variant="success"
           className="float-end mt-n1"
+          disabled={isSaving}
           onClick={async () => {
+            setIsSaving(true);
             const fieldListInputFiltered = fieldListInputOriginal.filter(
               (original) =>
                 !fieldListInput.some((input) => input.id === original.id)
@@ -1098,7 +1101,8 @@ const FormLayout = ({ formId }) => {
             }
           }}
         >
-          <FontAwesomeIcon icon={faSave} /> Save Form
+          <FontAwesomeIcon icon={faSave} />{" "}
+          {isSaving ? "Saving..." : "Save Form"}
         </Button>
       </Container>
       <div
