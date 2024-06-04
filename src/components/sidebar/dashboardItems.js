@@ -365,7 +365,7 @@ const formSection = [
   {
     href: "/forms",
     icon: List,
-    title: "Forms",
+    title: "Dashboard",
     roles: ["admin", "user"],
     permissions: ["view form"],
   },
@@ -470,41 +470,41 @@ const managementSettingsSection = [
 
 const navItems = [
   {
-    title: "Form",
+    title: "Dashboard",
     pages: formSection,
   },
-  {
-    title: "Form Builder",
-    pages: formBuilderSection,
-  },
+  // {
+  //   title: "Form Builder",
+  //   pages: formBuilderSection,
+  // },
   {
     title: "Datalist Builder",
     pages: datalistBuilderSection,
   },
   {
-    title: "Form Builder V2",
+    title: "Form Builder",
     pages: formBuilderSectionV2,
   },
-  {
-    title: "Process Builder",
-    pages: processBuilderSection,
-  },
+  // {
+  //   title: "Process Builder",
+  //   pages: processBuilderSection,
+  // },
   {
     title: "Management Settings",
     pages: managementSettingsSection,
   },
-  {
-    title: "Pages",
-    pages: pagesSection,
-  },
-  {
-    title: "Tools & Components",
-    pages: componentsSection,
-  },
-  {
-    title: "Plugins & Addons",
-    pages: pluginsSection,
-  },
+  // {
+  //   title: "Pages",
+  //   pages: pagesSection,
+  // },
+  // {
+  //   title: "Tools & Components",
+  //   pages: componentsSection,
+  // },
+  // {
+  //   title: "Plugins & Addons",
+  //   pages: pluginsSection,
+  // },
 ];
 
 export default navItems;

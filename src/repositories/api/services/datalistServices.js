@@ -82,3 +82,18 @@ export const deleteDatalist = async (id) => {
     throw error;
   }
 };
+
+export const retrieveDataFromDatabase = async (dataInformation) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/datalist/retrieveData`,
+      dataInformation,
+      {
+        headers: authHeader(),
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response.data.errors;
+  }
+};

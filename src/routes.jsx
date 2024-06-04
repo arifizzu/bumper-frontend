@@ -147,7 +147,7 @@ const DatalistIndex = lazy(() =>
   import("./pages/datalistBuilder/DatalistIndex")
 );
 // const DatalistNew = lazy(() => import("./pages/datalistBuilder/DatalistNew"));
-// const DatalistView = lazy(() => import("./pages/datalistBuilder/DatalistView"));
+const DatalistView = lazy(() => import("./pages/datalistBuilder/DatalistView"));
 const DatalistEdit = lazy(() => import("./pages/datalistBuilder/DatalistEdit"));
 
 // Process Builder
@@ -634,10 +634,10 @@ const routes = [
         path: "",
         element: <DatalistIndex />,
       },
-      // {
-      //   path: "view/:id",
-      //   element: <DatalistView />,
-      // },
+      {
+        path: "view/:id",
+        element: <DatalistView />,
+      },
       {
         path: "edit/:id",
         element: <DatalistEdit />,
