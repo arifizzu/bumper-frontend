@@ -41,6 +41,8 @@ import {
   storeDataInDatabase,
 } from "../../repositories/api/services/fieldServices";
 
+import { insertFormLog } from "../../repositories/api/services/logServices";
+
 import RGL, { WidthProvider } from "react-grid-layout";
 const ReactGridLayout = WidthProvider(RGL);
 import GridLayout from "react-grid-layout";
@@ -53,6 +55,7 @@ const FormViewEmbed = ({ id }) => {
   const [isValid, setIsValid] = useState(false);
   const fields = useSelector((state) => state.field.fields);
   const [enteredData, setEnteredData] = useState({}); // State to store entered data
+  const currentUser = JSON.parse(localStorage.getItem("user"));
 
   // console.log("user", user);
   // console.log("id in userview", id);
@@ -92,9 +95,15 @@ const FormViewEmbed = ({ id }) => {
       data: item.value,
     }));
 
+    const formLog = {
+      user_id: currentUser.id,
+      form_id: id,
+    };
+
     const result = await storeDataInDatabase(transformedData);
     if (result.success === true) {
       console.log("Data inserted successfully");
+      const result = await insertFormLog(formLog);
       // window.location.reload();
     } else {
       console.error("Error inserting data:", result);

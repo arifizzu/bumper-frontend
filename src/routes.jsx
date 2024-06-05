@@ -170,6 +170,9 @@ const RolePermissionEdit = lazy(() =>
   import("./pages/rolePermission/RolePermissionEdit")
 );
 
+// Dashboard
+const Dashboard = lazy(() => import("./pages/dashboard/Dashboard"));
+
 const routes = [
   {
     path: "/",
@@ -183,8 +186,16 @@ const routes = [
   },
   {
     path: "dashboard",
-    element: <DashboardLayout />,
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
     children: [
+      {
+        path: "",
+        element: <Dashboard />,
+      },
       {
         path: "default",
         element: <Default />,

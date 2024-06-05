@@ -41,7 +41,7 @@ const Sidebar = ({ items, showFooter = true, roles, permissions }) => {
     <nav className={`sidebar ${!isOpen ? "collapsed" : ""}`}>
       <div className="sidebar-content">
         <PerfectScrollbar>
-          <a className="sidebar-brand" href="/">
+          <a className="sidebar-brand" href="/dashboard">
             <Logo /> <span className="align-middle me-3">BUMPER</span>
           </a>
 

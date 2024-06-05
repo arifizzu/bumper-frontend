@@ -94,18 +94,18 @@ const NavbarComponent = () => {
         <i className="hamburger align-self-center" />
       </span>
 
-      <Form inline="true" className="d-none d-sm-inline-block">
+      {/* <Form inline="true" className="d-none d-sm-inline-block">
         <InputGroup className="input-group-navbar">
           <Form.Control placeholder={t("Search")} aria-label="Search" />
           <Button variant="">
             <Search className="feather" />
           </Button>
         </InputGroup>
-      </Form>
+      </Form> */}
 
       <Navbar.Collapse>
         <Nav className="navbar-align">
-          <NavbarDropdown
+          {/* <NavbarDropdown
             header="New Messages"
             footer="Show all messages"
             icon={MessageCircle}
@@ -163,9 +163,9 @@ const NavbarComponent = () => {
                 />
               );
             })}
-          </NavbarDropdown>
+          </NavbarDropdown> */}
 
-          <NavbarLanguages />
+          {/* <NavbarLanguages /> */}
           <NavbarUser />
         </Nav>
       </Navbar.Collapse>
