@@ -7,7 +7,7 @@ import DashboardLayout from "./layouts/Dashboard";
 import DocLayout from "./layouts/Doc";
 import LandingLayout from "./layouts/Landing";
 import FormBuilderLayout from "./layouts/FormBuilder";
-import FormViewEmbedExport from "./layouts/FormViewEmbedExport";
+import ViewEmbedExport from "./layouts/ViewEmbedExport";
 
 // Guards
 import AuthGuard from "./components/guards/AuthGuard";
@@ -132,7 +132,6 @@ const FormEdit = lazy(() => import("./pages/formBuilder/FormEdit"));
 
 // Form Builder V2
 const FormIndexV2 = lazy(() => import("./pages/formBuilderV2/FormIndex"));
-// const FormNewV2 = lazy(() => import("./pages/formBuilderV2/FormNew"));
 const FormViewV2 = lazy(() => import("./pages/formBuilderV2/FormView"));
 const FormViewPreviewEmbedV2 = lazy(() =>
   import("./pages/formBuilderV2/FormViewPreviewEmbed")
@@ -149,6 +148,12 @@ const DatalistIndex = lazy(() =>
 // const DatalistNew = lazy(() => import("./pages/datalistBuilder/DatalistNew"));
 const DatalistView = lazy(() => import("./pages/datalistBuilder/DatalistView"));
 const DatalistEdit = lazy(() => import("./pages/datalistBuilder/DatalistEdit"));
+const DatalistViewEmbed = lazy(() =>
+  import("./pages/datalistBuilder/DatalistViewEmbed")
+);
+const DatalistViewPreviewEmbed = lazy(() =>
+  import("./pages/datalistBuilder/DatalistViewPreviewEmbed")
+);
 
 // Process Builder
 const ProcessIndex = lazy(() => import("./pages/processBuilder/ProcessIndex"));
@@ -650,10 +655,28 @@ const routes = [
         element: <DatalistView />,
       },
       {
+        path: "view/preview/:id",
+        element: <DatalistViewPreviewEmbed />,
+      },
+      {
         path: "edit/:id",
         element: <DatalistEdit />,
       },
       ,
+    ],
+  },
+  {
+    path: "datalists",
+    element: (
+      <AuthGuard>
+        <ViewEmbedExport />
+      </AuthGuard>
+    ),
+    children: [
+      {
+        path: "view/embed/:id",
+        element: <DatalistViewEmbed />,
+      },
     ],
   },
 
@@ -690,7 +713,7 @@ const routes = [
     path: "forms",
     element: (
       <AuthGuard>
-        <FormViewEmbedExport />
+        <ViewEmbedExport />
       </AuthGuard>
     ),
     // element: <AuthGuard></AuthGuard>,

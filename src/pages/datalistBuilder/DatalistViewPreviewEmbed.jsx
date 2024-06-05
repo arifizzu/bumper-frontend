@@ -2,101 +2,69 @@ import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import {
   Container,
-  Button,
-  Breadcrumb,
-  Row,
   Col,
+  Row,
+  Breadcrumb,
+  Button,
   Modal,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Link, useParams } from "react-router-dom";
-
-import DatalistView from "../../components/datalistBuilder/DatalistView";
+import DatalistViewPreviewEmbed from "../../components/datalistBuilder/DatalistViewPreviewEmbed";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faEdit,
-  faMagnifyingGlassArrowRight,
-  faMagnifyingGlass,
-} from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlassArrowRight } from "@fortawesome/free-solid-svg-icons";
 
-import { useDispatch, useSelector } from "react-redux";
-
-const DatalistViewPage = () => {
+const DatalistViewPreviewEmbedPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [showEmbedModal, setShowEmbedModal] = useState(false);
-  const url = window.location.origin;
-
-  const handleEditButton = async (id) => {
-    try {
-      navigate(`/datalist-builder/edit/${id}`);
-    } catch (error) {
-      console.error("Edit datalist failed:", error);
-    }
-  };
-
-  const handleEmbedDatalistButton = async () => {
-    setShowEmbedModal(true);
-  };
-
-  const handleViewPreviewButton = async (id) => {
-    try {
-      navigate(`/datalist-builder/view/preview/${id}`);
-    } catch (error) {
-      console.error("View datalist preview failed:", error);
-    }
-  };
 
   const handleDatalistBreadcrumb = () => {
     navigate("/datalist-builder");
   };
+
+  const handleDatalistBreadcrumb2 = async (id) => {
+    navigate(-1); // Go back to the previous page
+  };
+  const handleEmbedDatalistButton = async () => {
+    setShowEmbedModal(true);
+  };
+
+  const url = window.location.origin;
 
   return (
     <React.Fragment>
       <Helmet title="Datalist" />
       <Container fluid className="p-0">
         <Button
-          variant="warning"
-          className="float-end mt-n1 me-2"
-          onClick={() => {
-            handleEditButton(id);
-          }}
-        >
-          <FontAwesomeIcon icon={faEdit} /> Edit
-        </Button>
-        <Button
           variant="info"
-          className="float-end mt-n1 me-2"
+          className="float-end mt-n1"
           onClick={() => {
-            handleEmbedDatalistButton();
+            handleEmbedDatalistButton(id);
           }}
         >
           <FontAwesomeIcon icon={faMagnifyingGlassArrowRight} /> Embed Datalist
-        </Button>
-        <Button
-          variant="info"
-          className="float-end mt-n1 me-2"
-          onClick={() => {
-            handleViewPreviewButton(id);
-          }}
-        >
-          <FontAwesomeIcon icon={faMagnifyingGlass} /> Preview Embedded Datalist
         </Button>
         <Breadcrumb style={{ fontSize: "1.3rem" }}>
           <Breadcrumb.Item onClick={handleDatalistBreadcrumb}>
             Datalist
           </Breadcrumb.Item>
-          <Breadcrumb.Item active>View</Breadcrumb.Item>
+          <Breadcrumb.Item onClick={handleDatalistBreadcrumb2}>
+            View
+          </Breadcrumb.Item>
+          <Breadcrumb.Item active>Preview Embedded Datalist</Breadcrumb.Item>
         </Breadcrumb>
-        <DatalistView id={id} />
+      </Container>
+      <Container fluid className="p-0">
+        <Row className="justify-content-center">
+          <Col lg="9">
+            <DatalistViewPreviewEmbed id={id} />
+          </Col>
+        </Row>
       </Container>
 
-      <Modal
-        show={showEmbedModal}
-        onHide={() => setShowEmbedModal(false)}
-        centered
-      >
+      <Modal show={showEmbedModal} onHide={() => setShowEmbedModal(false)}>
         <Modal.Header closeButton>Embed Datalist</Modal.Header>
         <Modal.Body className="text-center m-3">
           <p className="mb-0">
@@ -121,4 +89,4 @@ const DatalistViewPage = () => {
   );
 };
 
-export default DatalistViewPage;
+export default DatalistViewPreviewEmbedPage;

@@ -13,7 +13,7 @@ import Loader from "../components/Loader";
 
 import formBuilderItems from "../components/sidebar/formBuilderItems";
 
-const FormViewEmbedExport = ({ children }) => (
+const ViewEmbedExport = ({ children }) => (
   <React.Fragment>
     <Wrapper>
       {/* <Sidebar items={formBuilderItems} /> */}
@@ -33,4 +33,4 @@ const FormViewEmbedExport = ({ children }) => (
   </React.Fragment>
 );
 
-export default FormViewEmbedExport;
+export default ViewEmbedExport;
