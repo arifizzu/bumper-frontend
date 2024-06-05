@@ -415,7 +415,6 @@ const TopFormUsage = ({ formLogs }) => {
               </tr>
             </thead>
             <tbody>
-              {" "}
               {topForms.map((form, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
