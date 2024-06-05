@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import html2pdf from "html2pdf.js";
 import { useTable, usePagination } from "react-table";
 import {
   Card,
@@ -12,6 +13,7 @@ import {
   Form,
   Button,
   Modal,
+  Container,
 } from "react-bootstrap";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -20,6 +22,7 @@ import {
   faEye,
   faEdit,
   faTrash,
+  faFileExport,
 } from "@fortawesome/free-solid-svg-icons";
 
 import {
@@ -83,7 +86,6 @@ const DatalistView = ({ id }) => {
         console.log("requestData", requestData);
         try {
           const response = await retrieveDataFromDatabase(requestData);
-          console.log("response", response);
           if (response.success) {
             const formattedData = formatResponseData(
               response.data,
@@ -110,6 +112,36 @@ const DatalistView = ({ id }) => {
       });
       return formattedRow;
     });
+  };
+
+  const handleExportFormButton = (datalist) => {
+    // Create a new div element
+    const exportContent = document.createElement("div");
+
+    // Create the title element
+    const titleElement = document.createElement("h1");
+    titleElement.innerText = datalist.title;
+    titleElement.style.textAlign = "center";
+    titleElement.style.marginBottom = "20px";
+
+    // Get the table element
+    const tableElement = document
+      .getElementById("form-content")
+      .cloneNode(true);
+
+    // Append the title and table to the new div element
+    exportContent.appendChild(titleElement);
+    exportContent.appendChild(tableElement);
+
+    const opt = {
+      margin: 0.2,
+      filename: `${datalist.title}.pdf`,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    };
+
+    html2pdf().from(exportContent).set(opt).save();
   };
 
   const {
@@ -141,14 +173,74 @@ const DatalistView = ({ id }) => {
       {datalist ? (
         <Card>
           <Card.Header>
-            <Card.Title>{datalist.title}</Card.Title>
-            <h6 className="card-subtitle text-muted">{datalist.description}</h6>
+            <Container fluid className="p-0">
+              {datalist.actions && datalist.actions.length > 0 ? (
+                <React.Fragment>
+                  {datalist.actions
+                    .slice() // Create a shallow copy of the array
+                    .sort((a, b) => b.order - a.order)
+                    .map((action, index) => {
+                      if (
+                        action.segment === "Action" &&
+                        action.type === "Create"
+                      ) {
+                        return (
+                          <Button
+                            key={`add-new-${index}`}
+                            variant="primary"
+                            className="float-end mt-n1 me-2"
+                            onClick={() => {
+                              console.log("Click Add Button");
+                              navigate(
+                                `/form-builder-v2/view/preview/${datalist.form_id}`
+                              );
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faPlus} /> {action.label}
+                          </Button>
+                        );
+                      }
+                      if (
+                        action.segment === "Action" &&
+                        action.type === "Export"
+                      ) {
+                        return (
+                          <Button
+                            key={`export-${index}`}
+                            variant="primary"
+                            className="float-end mt-n1 me-2"
+                            onClick={() => {
+                              console.log("Click Export Button");
+                              handleExportFormButton(datalist);
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faFileExport} />{" "}
+                            {action.label}
+                          </Button>
+                        );
+                      }
+                      return null;
+                    })}
+                  <Card.Title>{datalist.title}</Card.Title>
+                  <h6 className="card-subtitle text-muted">
+                    {datalist.description}
+                  </h6>
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                  <Card.Title>{datalist.title}</Card.Title>
+                  <h6 className="card-subtitle text-muted">
+                    {datalist.description}
+                  </h6>
+                </React.Fragment>
+              )}
+            </Container>
           </Card.Header>
           <Card.Body>
             {loading ? (
               <div>Loading...</div>
             ) : (
-              <Table striped bordered {...getTableProps()}>
+              <Table striped bordered {...getTableProps()} id="form-content">
                 <thead>
                   {headerGroups.map((headerGroup) => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
