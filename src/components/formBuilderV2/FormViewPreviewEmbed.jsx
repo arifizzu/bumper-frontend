@@ -12,13 +12,6 @@ const FormViewPreviewEmbed = ({ id }) => (
           page and can also be embedded on other pages or websites.
         </h5>
       </div>
-
-      {/* <p className="card-subtitle text-muted">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam ipsum
-        fugit repellat commodi deserunt explicabo asperiores qui voluptates quis
-        nisi at quidem, eius velit accusantium eligendi odit repellendus
-        perferendis aspernatur!
-      </p> */}
     </Card.Header>
     <Card.Body className="pt-0">
       <div className="ratio ratio-1x1" style={{ marginBottom: "20px" }}>
