@@ -793,7 +793,7 @@ const DatalistLayout = ({ datalist }) => {
         <h1 className="h3 mb-3">Datalist Layout</h1>
         <Card>
           <Row>
-            <Col>
+            <Col lg="9" xl="9">
               <Segment
                 name="Filter"
                 items={datalistFilters}
@@ -813,6 +813,29 @@ const DatalistLayout = ({ datalist }) => {
                 onEdit={onEdit}
                 setStoreOrUpdate={setStoreOrUpdate}
                 setter={setDatalistFilters}
+                isSaving={isSaving}
+              />
+            </Col>
+            <Col lg="3" xl="3">
+              <Segment
+                name="Action"
+                items={datalistActions}
+                onAdd={() =>
+                  handleShow("Action", setDatalistActions, datalistActions)
+                }
+                onDelete={(id) =>
+                  deleteItem(
+                    setDatalistActions,
+                    id,
+                    deleteDatalistAction,
+                    datalistActions
+                  )
+                }
+                containerRef={actionsRef}
+                borderStyle={{ border: "2px solid blue" }}
+                onEdit={onEdit}
+                setStoreOrUpdate={setStoreOrUpdate}
+                setter={setDatalistActions}
                 isSaving={isSaving}
               />
             </Col>
@@ -869,7 +892,7 @@ const DatalistLayout = ({ datalist }) => {
               />
             </Col>
           </Row>
-          <Row>
+          {/* <Row>
             <Col>
               <Segment
                 name="Action"
@@ -893,7 +916,7 @@ const DatalistLayout = ({ datalist }) => {
                 isSaving={isSaving}
               />
             </Col>
-          </Row>
+          </Row> */}
         </Card>
       </Container>
 
@@ -965,9 +988,9 @@ const Segment = ({
   isSaving,
 }) => {
   const getColumnSizes = () => {
-    if (name === "Filter" || name === "Column" || name === "Action") {
+    if (name === "Filter" || name === "Column") {
       return { xs: 3, sm: 3, md: 3, lg: 3, xl: 3 };
-    } else if (name === "Row Action") {
+    } else if (name === "Row Action" || name === "Action") {
       return { xs: 6, sm: 6, md: 6, lg: 6, xl: 6 };
     }
   };
