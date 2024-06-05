@@ -438,6 +438,7 @@ const DatalistLayout = ({ datalist }) => {
       const itemsCopy = datalist.items.slice();
       const sortedItems = itemsCopy.sort((a, b) => a.order - b.order);
       const mappedItems = sortedItems.map((item) => {
+        columnOrder++;
         return {
           id: idCounter++,
           itemData: item,
@@ -487,6 +488,7 @@ const DatalistLayout = ({ datalist }) => {
       const actionsCopy = datalist.actions.slice();
       const sortedActions = actionsCopy.sort((a, b) => a.order - b.order);
       const mappedAction = sortedActions.map((item) => {
+        actionOrder++;
         if (item.segment === "Action") {
           return {
             id: idCounter++,
@@ -498,6 +500,7 @@ const DatalistLayout = ({ datalist }) => {
         (item) => item !== undefined
       );
       const mappedRowAction = sortedActions.map((item) => {
+        rowActionOrder++;
         if (item.segment === "Row Action") {
           return {
             id: idCounter++,
@@ -1344,6 +1347,9 @@ const DatalistColumn = ({ id, onDelete, onEdit, itemData }) => (
         <FontAwesomeIcon icon={faEyeSlash} /> Is Hidden:{" "}
         {itemData.is_hidden ? "Yes" : "No"}
       </p>
+      {/* <p style={{ color: "blue" }}>
+        <FontAwesomeIcon icon={faKey} /> Column Key: {itemData.order}
+      </p> */}
     </Card.Body>
   </Card>
 );
@@ -1817,7 +1823,7 @@ const DatalistActionForm = ({
       // }}
       initialValues={{
         label: currentItem?.itemData?.label || "",
-        type: currentItem?.itemData?.type || "Edit",
+        type: currentItem?.itemData?.type || "",
       }}
       onSubmit={async (values, { setSubmitting, setErrors }) => {
         const updatedValues = {
