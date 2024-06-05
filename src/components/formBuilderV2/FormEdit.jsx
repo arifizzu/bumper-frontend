@@ -650,8 +650,8 @@ const FormLayout = ({ formId }) => {
           centered
         >
           <Modal.Header closeButton>Enter Field Detail</Modal.Header>
-          <h1>fieldList.id = {fieldList.id}</h1>
-          <h1>index = {index}</h1>
+          {/* <h1>fieldList.id = {fieldList.id}</h1>
+          <h1>index = {index}</h1> */}
           <Modal.Body className="text-center m-3">
             <Formik
               onSubmit={async (values, { setSubmitting, setErrors }) => {
