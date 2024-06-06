@@ -39,7 +39,7 @@ const Dashboard = ({ children }) => {
           <Footer />
         </Main>
       </Wrapper>
-      <Settings />
+      {/* <Settings /> */}
     </React.Fragment>
   );
 };
