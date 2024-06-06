@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import html2pdf from "html2pdf.js";
+// import htmlDocx from "html-docx-js/dist/html-docx";
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
 import { useTable, usePagination } from "react-table";
 import {
   Card,
@@ -14,6 +17,8 @@ import {
   Button,
   Modal,
   Container,
+  Dropdown,
+  DropdownButton,
 } from "react-bootstrap";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -114,34 +119,71 @@ const DatalistView = ({ id }) => {
     });
   };
 
-  const handleExportFormButton = (datalist) => {
-    // Create a new div element
-    const exportContent = document.createElement("div");
+  const handleExportFormButton = (datalist, format) => {
+    const element = document.getElementById("form-content");
 
-    // Create the title element
-    const titleElement = document.createElement("h1");
-    titleElement.innerText = datalist.title;
-    titleElement.style.textAlign = "center";
-    titleElement.style.marginBottom = "20px";
+    if (format === "pdf") {
+      // Create a new div element
+      const exportContent = document.createElement("div");
 
-    // Get the table element
-    const tableElement = document
-      .getElementById("form-content")
-      .cloneNode(true);
+      // Create the title element
+      const titleElement = document.createElement("h1");
+      titleElement.innerText = datalist.title;
+      titleElement.style.textAlign = "center";
+      titleElement.style.marginBottom = "20px";
 
-    // Append the title and table to the new div element
-    exportContent.appendChild(titleElement);
-    exportContent.appendChild(tableElement);
+      // Get the table element
+      const tableElement = document
+        .getElementById("form-content")
+        .cloneNode(true);
 
-    const opt = {
-      margin: 0.2,
-      filename: `${datalist.title}.pdf`,
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-    };
+      // Append the title and table to the new div element
+      exportContent.appendChild(titleElement);
+      exportContent.appendChild(tableElement);
 
-    html2pdf().from(exportContent).set(opt).save();
+      const opt = {
+        margin: 0.2,
+        filename: `${datalist.title}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+      };
+
+      html2pdf().from(exportContent).set(opt).save();
+    }
+    // else if (format === "word") {
+    //   const content = `
+    //   <html>
+    //     <head>
+    //       <meta charset="utf-8">
+    //       <title>${datalist.title}</title>
+    //     </head>
+    //     <body>
+    //       ${element.outerHTML}
+    //     </body>
+    //   </html>
+    // `;
+    //   const converted = htmlDocx.asBlob(content);
+    //   FileSaver.saveAs(converted, `${datalist.title}.docx`);
+
+    // const content = element.innerHTML;
+    // const blob = new Blob(["\ufeff", content], {
+    //   type: "application/msword",
+    // });
+    // FileSaver.saveAs(blob, `${datalist.title}.doc`);
+    // }
+    else if (format === "csv") {
+      const rows = Array.from(element.querySelectorAll("tr"));
+      const csvData = rows
+        .map((row) => {
+          const columns = Array.from(row.querySelectorAll("td, th"));
+          return columns.map((column) => column.innerText).join(",");
+        })
+        .join("\n");
+
+      const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
+      FileSaver.saveAs(blob, `${datalist.title}.csv`);
+    }
   };
 
   const {
@@ -205,18 +247,39 @@ const DatalistView = ({ id }) => {
                         action.type === "Export"
                       ) {
                         return (
-                          <Button
+                          <DropdownButton
                             key={`export-${index}`}
                             variant="primary"
                             className="float-end mt-n1 me-2"
-                            onClick={() => {
-                              console.log("Click Export Button");
-                              handleExportFormButton(datalist);
-                            }}
+                            title={
+                              <>
+                                <FontAwesomeIcon icon={faFileExport} />{" "}
+                                {action.label}
+                              </>
+                            }
                           >
-                            <FontAwesomeIcon icon={faFileExport} />{" "}
-                            {action.label}
-                          </Button>
+                            <Dropdown.Item
+                              onClick={() =>
+                                handleExportFormButton(datalist, "pdf")
+                              }
+                            >
+                              Export as PDF
+                            </Dropdown.Item>
+                            {/* <Dropdown.Item
+                              onClick={() =>
+                                handleExportFormButton(datalist, "word")
+                              }
+                            >
+                              Export as Word
+                            </Dropdown.Item> */}
+                            <Dropdown.Item
+                              onClick={() =>
+                                handleExportFormButton(datalist, "csv")
+                              }
+                            >
+                              Export as CSV
+                            </Dropdown.Item>
+                          </DropdownButton>
                         );
                       }
                       return null;

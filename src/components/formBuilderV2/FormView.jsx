@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import html2pdf from "html2pdf.js";
+// import * as FileSaver from "file-saver";
+// import * as XLSX from "xlsx";
+// import htmlDocx from "html-docx-js";
 
 import {
   Badge,
@@ -12,6 +15,8 @@ import {
   Container,
   Row,
   Modal,
+  Dropdown,
+  DropdownButton,
 } from "react-bootstrap";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -104,19 +109,46 @@ const FormView = ({ id }) => {
 
   const url = window.location.origin;
 
-  const handleExportFormButton = () => {
-    const element = document.getElementById("form-content"); // Assuming you have a container with id 'form-content' wrapping your form
-    //   html2pdf(element);
+  const handleExportFormButton = (format) => {
+    const element = document.getElementById("form-content");
 
-    const opt = {
-      margin: 0.1,
-      filename: `${form.name}.pdf`,
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-    };
+    if (format === "pdf") {
+      const opt = {
+        margin: 0.1,
+        filename: `${form.name}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+      };
+      html2pdf().from(element).set(opt).save();
+    }
+    // else if (format === "word") {
+    //   const content = `
+    //       <html>
+    //         <head>
+    //           <meta charset="utf-8">
+    //           <title>${form.name}</title>
+    //         </head>
+    //         <body>
+    //           ${element.innerHTML}
+    //         </body>
+    //       </html>
+    //     `;
+    //   const converted = htmlDocx.asBlob(content);
+    //   FileSaver.saveAs(converted, `${form.name}.docx`);
+    // }
+    // else if (format === "csv") {
+    //   const rows = Array.from(element.querySelectorAll("tr"));
+    //   const csvData = rows
+    //     .map((row) => {
+    //       const columns = Array.from(row.querySelectorAll("td, th"));
+    //       return columns.map((column) => column.innerText).join(",");
+    //     })
+    //     .join("\n");
 
-    html2pdf().from(element).set(opt).save();
+    //   const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
+    //   FileSaver.saveAs(blob, `${form.name}.csv`);
+    // }
   };
 
   const handleViewPreviewButton = async (id) => {
@@ -209,16 +241,25 @@ const FormView = ({ id }) => {
       <Card>
         <Card.Header>
           <Card.Title className="mb-0 ">Form Preview</Card.Title>
-
-          <Button
+          <DropdownButton
             variant="primary"
             className="float-end mt-n1 me-2"
-            onClick={() => {
-              handleExportFormButton();
-            }}
+            title={
+              <>
+                <FontAwesomeIcon icon={faFileExport} /> Export Form
+              </>
+            }
           >
-            <FontAwesomeIcon icon={faFileExport} /> Export Form
-          </Button>
+            <Dropdown.Item onClick={() => handleExportFormButton("pdf")}>
+              PDF
+            </Dropdown.Item>
+            {/* <Dropdown.Item onClick={() => handleExportFormButton("word")}>
+              Word
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => handleExportFormButton("csv")}>
+              CSV
+            </Dropdown.Item> */}
+          </DropdownButton>
 
           <Button
             variant="info"
@@ -229,7 +270,6 @@ const FormView = ({ id }) => {
           >
             <FontAwesomeIcon icon={faMagnifyingGlassArrowRight} /> Embed Form
           </Button>
-
           <Button
             variant="info"
             className="float-end mt-n1 me-2"
@@ -249,22 +289,13 @@ const FormView = ({ id }) => {
           }}
         >
           <Card.Body>
-            {/* <Container id="form-content" fluid className="p-0"> */}
             <Container
               id="form-content"
               fluid
               className="p-0"
               style={{ width: "800px", maxWidth: "100%", overflow: "hidden" }}
             >
-              <div
-                style={{
-                  //   border: "1px solid black",
-                  // minHeight: "400px",
-                  background: "white",
-                  // marginTop: "10px",
-                  // padding: "10px",
-                }}
-              >
+              <div style={{ background: "white" }}>
                 <h3 className="mt-3 mb-4 text-center">
                   {form ? form.name : "Loading..."}
                 </h3>
