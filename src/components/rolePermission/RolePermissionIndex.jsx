@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useTable, usePagination } from "react-table";
+import { useTable, usePagination, useFilters } from "react-table";
 import {
   Card,
   Table,
@@ -36,7 +35,34 @@ import {
   deleteRole,
 } from "../../repositories/api/services/roleServices";
 
-const RolePermissionIndex = ({ tableColumns }) => {
+// Default column filter for text input
+const DefaultColumnFilter = ({ column: { filterValue, setFilter } }) => (
+  <Form.Control
+    value={filterValue || ""}
+    onChange={(e) => setFilter(e.target.value || undefined)}
+    placeholder="Search..."
+  />
+);
+
+const tableColumns = [
+  {
+    Header: "No.",
+    accessor: (row, index) => index + 1,
+    disableFilters: true,
+  },
+  {
+    Header: "Name",
+    accessor: "name",
+    Filter: DefaultColumnFilter,
+  },
+  {
+    Header: "Action",
+    accessor: "action",
+    disableFilters: true,
+  },
+];
+
+const RolePermissionIndex = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { roles, loading, error } = useSelector((state) => state.role);
@@ -164,7 +190,7 @@ const RolePermissionIndex = ({ tableColumns }) => {
 
     setUpdatedColumns(updatedColumns);
     fetchRoles();
-  }, [tableColumns]);
+  }, []);
 
   const {
     getTableProps,
@@ -187,6 +213,7 @@ const RolePermissionIndex = ({ tableColumns }) => {
       data: roles,
       initialState: { pageIndex: 0 },
     },
+    useFilters,
     usePagination
   );
 
@@ -207,6 +234,10 @@ const RolePermissionIndex = ({ tableColumns }) => {
                   {headerGroup.headers.map((column) => (
                     <th {...column.getHeaderProps()}>
                       {column.render("Header")}
+                      {/* Render the filter UI */}
+                      <div>
+                        {column.canFilter ? column.render("Filter") : null}
+                      </div>
                     </th>
                   ))}
                 </tr>

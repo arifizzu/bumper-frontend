@@ -34,7 +34,8 @@ const UserIndexPage = () => {
         <Breadcrumb style={{ fontSize: "1.3rem" }}>
           <Breadcrumb.Item active>User</Breadcrumb.Item>
         </Breadcrumb>
-        <UserIndex tableColumns={tableColumns} />
+        {/* <UserIndex tableColumns={tableColumns} /> */}
+        <UserIndex />
       </Container>
     </React.Fragment>
   );

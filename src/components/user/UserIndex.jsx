@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useTable, usePagination } from "react-table";
+import { useTable, usePagination, useFilters } from "react-table";
 import {
   Card,
   Table,
@@ -13,7 +12,6 @@ import {
   Button,
   Modal,
 } from "react-bootstrap";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
@@ -36,7 +34,81 @@ import {
   deleteUser,
 } from "../../repositories/api/services/userServices";
 
-const UserIndex = ({ tableColumns }) => {
+// Default column filter for text input
+const DefaultColumnFilter = ({ column: { filterValue, setFilter } }) => (
+  <Form.Control
+    value={filterValue || ""}
+    onChange={(e) => setFilter(e.target.value || undefined)}
+    placeholder="Search..."
+  />
+);
+
+// Select column filter for dropdown selection
+const SelectColumnFilter = ({
+  column: { filterValue, setFilter, preFilteredRows, id },
+}) => {
+  const options = React.useMemo(() => {
+    const options = new Set();
+    preFilteredRows.forEach((row) => {
+      row.values[id].forEach((role) => options.add(role.name));
+    });
+    return [...options.values()];
+  }, [id, preFilteredRows]);
+
+  return (
+    <Form.Select
+      value={filterValue}
+      onChange={(e) => setFilter(e.target.value || undefined)}
+    >
+      <option value="">All</option>
+      {options.map((option, i) => (
+        <option key={i} value={option}>
+          {option}
+        </option>
+      ))}
+    </Form.Select>
+  );
+};
+
+// Custom filter function for roles
+const filterRoles = (rows, id, filterValue) => {
+  return rows.filter((row) => {
+    const roles = row.values[id];
+    return roles.some((role) => role.name === filterValue);
+  });
+};
+
+const tableColumns = [
+  {
+    Header: "No.",
+    accessor: (row, index) => index + 1,
+    disableFilters: true,
+  },
+  {
+    Header: "Name",
+    accessor: "name",
+    Filter: DefaultColumnFilter,
+  },
+  {
+    Header: "Email",
+    accessor: "email",
+    Filter: DefaultColumnFilter,
+  },
+  {
+    Header: "Roles",
+    accessor: "roles",
+    Filter: SelectColumnFilter,
+    filter: filterRoles,
+    Cell: ({ row }) => row.original.roles.map((role) => role.name).join(", "),
+  },
+  {
+    Header: "Action",
+    accessor: "action",
+    disableFilters: true,
+  },
+];
+
+const UserIndex = ({}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { users, loading, error } = useSelector((state) => state.user);
@@ -187,6 +259,7 @@ const UserIndex = ({ tableColumns }) => {
       data: users,
       initialState: { pageIndex: 0 },
     },
+    useFilters,
     usePagination
   );
 
@@ -207,6 +280,9 @@ const UserIndex = ({ tableColumns }) => {
                   {headerGroup.headers.map((column) => (
                     <th {...column.getHeaderProps()}>
                       {column.render("Header")}
+                      <div>
+                        {column.canFilter ? column.render("Filter") : null}
+                      </div>
                     </th>
                   ))}
                 </tr>
@@ -217,26 +293,15 @@ const UserIndex = ({ tableColumns }) => {
                 prepareRow(row);
                 return (
                   <tr {...row.getRowProps()}>
-                    {row.cells.map((cell) => {
-                      return (
-                        <td {...cell.getCellProps()}>
-                          {/* Modify the rendering of the cell based on the column ID */}
-                          {cell.column.id === "roles"
-                            ? // If the column is "roles", render the role names as a string
-                              row.original.roles
-                                .map((role) => role.name)
-                                .join(", ")
-                            : cell.render("Cell")}
-                        </td>
-                      );
-                    })}
+                    {row.cells.map((cell) => (
+                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                    ))}
                   </tr>
                 );
               })}
             </tbody>
           </Table>
         )}
-
         <Row>
           <Col md="6">
             <span className="mx-2">
@@ -249,9 +314,7 @@ const UserIndex = ({ tableColumns }) => {
             <Form.Select
               className="d-inline-block w-auto"
               value={pageSize}
-              onChange={(e) => {
-                setPageSize(Number(e.target.value));
-              }}
+              onChange={(e) => setPageSize(Number(e.target.value))}
             >
               {[10, 20, 30, 40, 50].map((pageSize) => (
                 <option key={pageSize} value={pageSize}>
@@ -259,16 +322,14 @@ const UserIndex = ({ tableColumns }) => {
                 </option>
               ))}
             </Form.Select>
-
             <span className="ms-3 me-2">Go to page:</span>
             <Form.Control
               className="d-inline-block"
               type="number"
               defaultValue={pageIndex + 1}
-              onChange={(e) => {
-                const page = e.target.value ? Number(e.target.value) - 1 : 0;
-                gotoPage(page);
-              }}
+              onChange={(e) =>
+                gotoPage(e.target.value ? Number(e.target.value) - 1 : 0)
+              }
               style={{ width: "75px" }}
             />
           </Col>

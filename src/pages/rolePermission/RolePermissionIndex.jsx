@@ -34,7 +34,8 @@ const RolePermissionIndexPage = () => {
         <Breadcrumb style={{ fontSize: "1.3rem" }}>
           <Breadcrumb.Item active>Role & Permission</Breadcrumb.Item>
         </Breadcrumb>
-        <RolePermissionIndex tableColumns={tableColumns} />
+        {/* <RolePermissionIndex tableColumns={tableColumns} /> */}
+        <RolePermissionIndex />
       </Container>
     </React.Fragment>
   );
