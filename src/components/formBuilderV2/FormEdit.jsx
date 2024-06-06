@@ -43,7 +43,7 @@ import {
   FieldRadioButton,
   FieldSwitch,
   FieldDropdown,
-  FieldFileUpload,
+  // FieldFileUpload,
   FieldDatePicker,
   FieldTimePicker,
   FieldEmailInput,
@@ -409,7 +409,7 @@ const FieldList = ({}) => {
             {field.name === "Radio Button" && <FieldRadioButton />}
             {field.name === "Switch" && <FieldSwitch />}
             {field.name === "Dropdown" && <FieldDropdown />}
-            {field.name === "File Upload" && <FieldFileUpload />}
+            {/* {field.name === "File Upload" && <FieldFileUpload />} */}
             {field.name === "Date Picker" && <FieldDatePicker />}
             {field.name === "Time Picker" && <FieldTimePicker />}
             {field.name === "Email Input" && <FieldEmailInput />}
@@ -636,7 +636,7 @@ const FormLayout = ({ formId }) => {
             {fieldList.name === "Radio Button" && <FieldRadioButton />}
             {fieldList.name === "Switch" && <FieldSwitch />}
             {fieldList.name === "Dropdown" && <FieldDropdown />}
-            {fieldList.name === "File Upload" && <FieldFileUpload />}
+            {/* {fieldList.name === "File Upload" && <FieldFileUpload />} */}
             {fieldList.name === "Date Picker" && <FieldDatePicker />}
             {fieldList.name === "Time Picker" && <FieldTimePicker />}
             {fieldList.name === "Email Input" && <FieldEmailInput />}
