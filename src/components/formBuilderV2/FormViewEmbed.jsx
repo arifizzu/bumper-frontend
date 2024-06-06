@@ -229,9 +229,7 @@ const FormViewEmbed = ({ id }) => {
               >
                 <h2 className="mt-3 mb-4 text-center">
                   {fields && fields.length > 0 ? (
-                    <>
-                      <h3>{fields[0]?.form?.name}</h3>
-                    </>
+                    <>{fields[0]?.form?.name}</>
                   ) : (
                     <Col>
                       <h5>Loading...</h5>
