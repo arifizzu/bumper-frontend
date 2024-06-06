@@ -31,6 +31,7 @@ import {
   faKey,
   faEyeSlash,
   faGear,
+  faFilter,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -119,6 +120,8 @@ const schemaDatalistColumn = Yup.object().shape({
   column_name: Yup.string().required("Column Name is required"),
   column_key: Yup.string().required("Column Key is required"),
   is_hidden: Yup.boolean(),
+  include_filter: Yup.boolean(),
+  filter_type: Yup.string().nullable(),
 });
 
 const schemaDatalistAction = Yup.object().shape({
@@ -422,18 +425,6 @@ const DatalistLayout = ({ datalist }) => {
       setDatalistFilters(mappedItems);
     }
 
-    // if (datalist && datalist.items) {
-    //   const mappedItems = datalist.items.map((item, index) => {
-    //     columnOrder++;
-    //     return {
-    //       id: idCounter++,
-    //       itemData: item,
-    //     };
-    //   });
-    //   setDatalistColumns([]);
-    //   setDatalistColumns(mappedItems);
-    // }
-
     if (datalist && datalist.items) {
       const itemsCopy = datalist.items.slice();
       const sortedItems = itemsCopy.sort((a, b) => a.order - b.order);
@@ -448,41 +439,6 @@ const DatalistLayout = ({ datalist }) => {
       setDatalistColumns([]);
       setDatalistColumns(mappedItems);
     }
-
-    // if (datalist && datalist.actions) {
-    //   const mappedAction = datalist.actions.map((item, index) => {
-    //     actionOrder++;
-    //     if (item.segment === "Action") {
-    //       return {
-    //         id: idCounter++,
-    //         itemData: item,
-    //       };
-    //     }
-    //   });
-    //   const filteredMappedAction = mappedAction.filter(
-    //     (item) => item !== undefined
-    //   );
-
-    //   const mappedRowAction = datalist.actions.map((item, index) => {
-    //     rowActionOrder++;
-    //     if (item.segment === "Row Action") {
-    //       return {
-    //         id: idCounter++,
-    //         itemData: item,
-    //       };
-    //     }
-    //   });
-    //   const filteredMappedRowAction = mappedRowAction.filter(
-    //     (item) => item !== undefined
-    //   );
-
-    //   console.log("filteredMappedAction", filteredMappedAction);
-    //   console.log("filteredMappedRowAction", filteredMappedRowAction);
-    //   setDatalistActions([]);
-    //   setDatalistActions(filteredMappedAction);
-    //   setDatalistRowActions([]);
-    //   setDatalistRowActions(filteredMappedRowAction);
-    // }
 
     if (datalist && datalist.actions) {
       const actionsCopy = datalist.actions.slice();
@@ -796,6 +752,83 @@ const DatalistLayout = ({ datalist }) => {
         <h1 className="h3 mb-3">Datalist Layout</h1>
         <Card>
           <Row>
+            <Col lg="12" xl="12">
+              <Segment
+                name="Column"
+                items={datalistColumns}
+                onAdd={() =>
+                  handleShow("Column", setDatalistColumns, datalistColumns)
+                }
+                onDelete={(id) =>
+                  deleteItem(
+                    setDatalistColumns,
+                    id,
+                    deleteDatalistColumn,
+                    datalistColumns
+                  )
+                }
+                containerRef={columnsRef}
+                borderStyle={{ border: "2px solid blue" }}
+                onEdit={onEdit}
+                setStoreOrUpdate={setStoreOrUpdate}
+                setter={setDatalistColumns}
+                isSaving={isSaving}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg="6" xl="6">
+              <Segment
+                name="Action"
+                items={datalistActions}
+                onAdd={() =>
+                  handleShow("Action", setDatalistActions, datalistActions)
+                }
+                onDelete={(id) =>
+                  deleteItem(
+                    setDatalistActions,
+                    id,
+                    deleteDatalistAction,
+                    datalistActions
+                  )
+                }
+                containerRef={actionsRef}
+                borderStyle={{ border: "2px solid blue" }}
+                onEdit={onEdit}
+                setStoreOrUpdate={setStoreOrUpdate}
+                setter={setDatalistActions}
+                isSaving={isSaving}
+              />
+            </Col>
+            <Col lg="6" xl="6">
+              <Segment
+                name="Row Action"
+                items={datalistRowActions}
+                onAdd={() =>
+                  handleShow(
+                    "Row Action",
+                    setDatalistRowActions,
+                    datalistRowActions
+                  )
+                }
+                onDelete={(id) =>
+                  deleteItem(
+                    setDatalistRowActions,
+                    id,
+                    deleteDatalistAction,
+                    datalistRowActions
+                  )
+                }
+                containerRef={rowActionsRef}
+                borderStyle={{ border: "2px solid blue" }}
+                onEdit={onEdit}
+                setStoreOrUpdate={setStoreOrUpdate}
+                setter={setDatalistRowActions}
+                isSaving={isSaving}
+              />
+            </Col>
+          </Row>
+          {/* <Row>
             <Col lg="9" xl="9">
               <Segment
                 name="Filter"
@@ -891,31 +924,6 @@ const DatalistLayout = ({ datalist }) => {
                 onEdit={onEdit}
                 setStoreOrUpdate={setStoreOrUpdate}
                 setter={setDatalistRowActions}
-                isSaving={isSaving}
-              />
-            </Col>
-          </Row>
-          {/* <Row>
-            <Col>
-              <Segment
-                name="Action"
-                items={datalistActions}
-                onAdd={() =>
-                  handleShow("Action", setDatalistActions, datalistActions)
-                }
-                onDelete={(id) =>
-                  deleteItem(
-                    setDatalistActions,
-                    id,
-                    deleteDatalistAction,
-                    datalistActions
-                  )
-                }
-                containerRef={actionsRef}
-                borderStyle={{ border: "2px solid blue" }}
-                onEdit={onEdit}
-                setStoreOrUpdate={setStoreOrUpdate}
-                setter={setDatalistActions}
                 isSaving={isSaving}
               />
             </Col>
@@ -1025,8 +1033,8 @@ const Segment = ({
             display: "flex",
             flexDirection: "row",
             flexWrap: "nowrap",
-            minHeight: "300px",
-            maxHeight: "300px",
+            minHeight: "175px",
+            maxHeight: "350px",
             maxWidth: "1500px",
             overflowX: "auto",
           }}
@@ -1343,13 +1351,18 @@ const DatalistColumn = ({ id, onDelete, onEdit, itemData }) => (
       <p style={{ color: "blue" }}>
         <FontAwesomeIcon icon={faKey} /> Column Key: {itemData.column_key}
       </p>
-      <p style={{ color: "blue" }}>
+      {/* <p style={{ color: "blue" }}>
         <FontAwesomeIcon icon={faEyeSlash} /> Is Hidden:{" "}
         {itemData.is_hidden ? "Yes" : "No"}
-      </p>
-      {/* <p style={{ color: "blue" }}>
-        <FontAwesomeIcon icon={faKey} /> Column Key: {itemData.order}
       </p> */}
+      <p style={{ color: "blue" }}>
+        <FontAwesomeIcon icon={faFilter} /> Include Filter:{" "}
+        {itemData.include_filter ? "Yes" : "No"}
+      </p>
+      <p style={{ color: "blue" }}>
+        <FontAwesomeIcon icon={faFilter} /> Filter Type:{" "}
+        {itemData.filter_type || "None"}
+      </p>
     </Card.Body>
   </Card>
 );
@@ -1401,6 +1414,8 @@ const DatalistColumnForm = ({
         column_name: currentItem?.itemData?.column_name || "",
         column_key: currentItem?.itemData?.column_key || "",
         is_hidden: currentItem?.itemData?.is_hidden || 0,
+        include_filter: currentItem?.itemData?.include_filter || 0,
+        filter_type: currentItem?.itemData?.filter_type || "",
       }}
       onSubmit={async (values, { setSubmitting, setErrors }) => {
         const updatedValues = {
@@ -1554,7 +1569,7 @@ const DatalistColumnForm = ({
               </Form.Group>
             </React.Fragment>
           )}
-          <Form.Group as={Row} className="mb-3">
+          {/* <Form.Group as={Row} className="mb-3">
             <Form.Label column sm={3} className="text-sm-right">
               Is Hidden*
             </Form.Label>
@@ -1573,8 +1588,61 @@ const DatalistColumnForm = ({
                 {errors.is_hidden}
               </Form.Control.Feedback>
             </Col>
+          </Form.Group> */}
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={3} className="text-sm-right">
+              Include Filter*
+            </Form.Label>
+            <Col sm={9}>
+              <Form.Select
+                name="include_filter"
+                // onChange={handleChange}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value === "0") {
+                    // If include_filter is set to "No", set filter_type to empty string
+                    handleChange({
+                      target: { name: "filter_type", value: "" },
+                    });
+                  }
+                  handleChange(e);
+                }}
+                value={values.include_filter || "0"}
+                isValid={touched.include_filter && !errors.include_filter}
+                isInvalid={touched.include_filter && !!errors.include_filter}
+              >
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                {errors.include_filter}
+              </Form.Control.Feedback>
+            </Col>
           </Form.Group>
-
+          {values.include_filter === "1" && (
+            <Form.Group as={Row} className="mb-3">
+              <Form.Label column sm={3} className="text-sm-right">
+                Filter Type*
+              </Form.Label>
+              <Col sm={9}>
+                <Form.Select
+                  name="filter_type"
+                  onChange={handleChange}
+                  value={values.filter_type || ""}
+                  isValid={touched.filter_type && !errors.filter_type}
+                  isInvalid={touched.filter_type && !!errors.filter_type}
+                >
+                  <option value="">Not Chosen</option>
+                  <option value="Search">Search</option>
+                  <option value="Select">Select</option>
+                  <option value="Range">Range</option>
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">
+                  {errors.filter_type}
+                </Form.Control.Feedback>
+              </Col>
+            </Form.Group>
+          )}
           <Button
             type="submit"
             variant="success"
@@ -1825,7 +1893,7 @@ const DatalistActionForm = ({
       // }}
       initialValues={{
         label: currentItem?.itemData?.label || "",
-        type: currentItem?.itemData?.type || "",
+        type: currentItem?.itemData?.type || "Create",
       }}
       onSubmit={async (values, { setSubmitting, setErrors }) => {
         const updatedValues = {

@@ -232,7 +232,7 @@ const FormViewEmbed = ({ id }) => {
                     <>{fields[0]?.form?.name}</>
                   ) : (
                     <Col>
-                      <h5>Loading...</h5>
+                      <h5>No Form Related</h5>
                     </Col>
                   )}
                 </h2>
