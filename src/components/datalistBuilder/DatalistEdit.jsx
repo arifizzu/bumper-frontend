@@ -1541,7 +1541,9 @@ const DatalistColumnForm = ({
                     <option value="">Not chosen</option>
                     {columnOptions.map((columnName, index) => (
                       <option key={index} value={columnName}>
-                        {columnName}
+                        {columnName === "id"
+                          ? `${columnName} (*Recommended)`
+                          : columnName}
                       </option>
                     ))}
                   </Form.Select>
