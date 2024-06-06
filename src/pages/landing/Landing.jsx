@@ -13,6 +13,7 @@ import {
   Row,
   Tooltip,
   OverlayTrigger,
+  Table,
 } from "react-bootstrap";
 
 import {
@@ -22,6 +23,8 @@ import {
   Sliders,
   Smartphone,
   Users,
+  CheckSquare,
+  Table as TableIcon,
 } from "react-feather";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -47,6 +50,7 @@ import screenshotThemeColored from "../../assets/img/screenshots/theme-colored.j
 import screenshotThemeLight from "../../assets/img/screenshots/theme-light.jpg";
 import screenshotSidebarCompact from "../../assets/img/screenshots/sidebar-compact.jpg";
 import screenshotSidebarRight from "../../assets/img/screenshots/sidebar-right.jpg";
+import bumperDashboardScreenshot from "../../assets/img/bumper/dashboardScreenshot.png";
 
 import screenshotDashboardDefault from "../../assets/img/screenshots/dashboard-default.jpg";
 import screenshotDashboardAnalytics from "../../assets/img/screenshots/dashboard-analytics.jpg";
@@ -76,8 +80,8 @@ const Navigation = () => (
           BUMPER
         </Badge>
       </Navbar.Brand>
-      {/* <Nav className="ms-auto" navbar>
-        <Nav.Item className="d-none d-md-inline-block">
+      <Nav className="ms-auto" navbar>
+        {/* <Nav.Item className="d-none d-md-inline-block">
           <Nav.Link
             href="/dashboard/default"
             target="_blank"
@@ -98,44 +102,43 @@ const Navigation = () => (
           >
             Documentation
           </Nav.Link>
-        </Nav.Item>
+        </Nav.Item> */}
         <Nav.Item className="d-none d-md-inline-block">
-          <Nav.Link
-            href="mailto:support@bootlab.io"
-            active
-            className="text-lg px-lg-3"
-          >
-            Support
+          <Nav.Link href="#introduction" active className="text-lg px-lg-3">
+            Introduction
           </Nav.Link>
         </Nav.Item>
-      </Nav> */}
-      <Button
-        href="/auth/sign-in"
-        target="_blank"
-        rel="noopener noreferrer"
-        variant="success"
-        className="ms-2"
-        size="lg"
-      >
-        Login
-      </Button>
+        <Nav.Item className="d-none d-md-inline-block">
+          <Nav.Link href="#features" active className="text-lg px-lg-3">
+            Features
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item className="d-none d-md-inline-block">
+          <Nav.Link href="/auth/sign-in" active className="text-lg px-lg-3">
+            Login
+          </Nav.Link>
+        </Nav.Item>
+      </Nav>
     </Container>
   </Navbar>
 );
 
 const Intro = () => (
-  <section className="landing-intro landing-bg pt-5 pt-lg-6 pb-5 pb-lg-7">
+  <section
+    className="landing-intro landing-bg pt-5 pt-lg-6 pb-5 pb-lg-7"
+    id="introduction"
+  >
     <Container className="landing-intro-content">
       <Row className="align-items-center">
         <Col lg="5" className="mx-auto">
           <Badge bg="" className="badge-soft-primary p-1">
-            v3.0.0
+            v1.0.0
           </Badge>
 
-          <div className="my-4">
+          {/* <div className="my-4">
             <OverlayTrigger
               placement="bottom"
-              overlay={<Tooltip>Available for JavaScript</Tooltip>}
+              overlay={<Tooltip>Available for Web</Tooltip>}
             >
               <img
                 width="40"
@@ -157,21 +160,21 @@ const Intro = () => (
                 className="d-inline-block"
               />
             </OverlayTrigger>
-          </div>
+          </div> */}
 
           <h1 className="my-4">
-            Fully-featured React Admin & Dashboard Template
+            Fully-featured Form and Datalist Builder Platform
           </h1>
 
           <p className="text-lg">
-            A professional package that comes with hundreds of UI components,
-            forms, tables, charts, dashboards, pages and svg icons.
+            A professional platform that offers intuitive drag-and-drop
+            functionality for creating custom forms and data lists with ease.
           </p>
 
-          <div className="my-4">
+          {/* <div className="my-4">
             <div className="d-inline-block me-3">
-              <h2 className="text-dark">500+</h2>
-              <span className="text-muted">UI Components</span>
+              <h2 className="text-dark">10+</h2>
+              <span className="text-muted">Custom Fields</span>
             </div>
             <div className="d-inline-block me-3">
               <h2 className="text-dark">1500+</h2>
@@ -181,26 +184,18 @@ const Intro = () => (
               <h2 className="text-dark">45+</h2>
               <span className="text-muted">Pages</span>
             </div>
-          </div>
+          </div> */}
           <div className="my-4">
-            <a href="#demos" className="btn btn-primary btn-lg me-2">
-              View Demos
-            </a>
-            <a
-              href="https://themes.getbootstrap.com/product/appstack-react-admin-dashboard-template/"
-              target="_blank"
-              rel="noreferrer"
-              className="btn btn-outline-primary btn-lg me-1"
-            >
-              Purchase
+            <a href="/auth/sign-in" className="btn btn-primary btn-lg me-2">
+              Login
             </a>
           </div>
         </Col>
         <Col lg="7" className="d-none d-lg-flex mx-auto text-center">
           <div className="landing-intro-screenshot pb-3">
             <img
-              src={screenshotMixed}
-              alt="Dark/Light Bootstrap React Admin Template"
+              src={bumperDashboardScreenshot}
+              alt="Bumper Dashboard"
               className="img-fluid"
             />
           </div>
@@ -721,15 +716,16 @@ const DashboardsAndPages = () => (
 );
 
 const Features = () => (
-  <section className="py-6">
+  <section className="py-6" id="features">
     <Container>
       <Row>
         <Col md="10" className="mx-auto text-center">
           <div className="mb-5">
             <h2 className="h1">Features you'll love</h2>
             <p className="text-muted text-lg">
-              A responsive dashboard built for everyone who wants to create
-              webapps on top of Bootstrap &amp; React.
+              A responsive platform built for everyone who wants to create and
+              manage forms and data lists with ease, powered by intuitive
+              drag-and-drop functionality.
             </p>
           </div>
 
@@ -737,13 +733,15 @@ const Features = () => (
             <Col md="6">
               <div className="d-flex py-3">
                 <div className="landing-feature">
-                  <Sliders />
+                  <CheckSquare />
                 </div>
                 <div className="flex-grow-1">
-                  <h4 className="mt-0">Customizable</h4>
+                  <h4 className="mt-0">Intuitive Drag-and-Drop Form Builder</h4>
                   <p className="fs-lg">
-                    You don't need to be an expert to customize our themes. Our
-                    code is very readable and well documented.
+                    With our user-friendly drag-and-drop interface, creating
+                    customized forms is a breeze. No technical knowledge
+                    required! Users can effortlessly tailor forms to their
+                    specific needs.
                   </p>
                 </div>
               </div>
@@ -751,13 +749,16 @@ const Features = () => (
             <Col md="6">
               <div className="d-flex py-3">
                 <div className="landing-feature">
-                  <Smartphone />
+                  <TableIcon />
                 </div>
                 <div className="flex-grow-1">
-                  <h4 className="mt-0">Fully Responsive</h4>
+                  <h4 className="mt-0">
+                    Flexible Datalist Creation and Management
+                  </h4>
                   <p className="fs-lg">
-                    With mobile, tablet & desktop support it doesn't matter what
-                    device you're using. AdminKit is responsive in all browsers.
+                    Easily create and manage data lists with our powerful
+                    Datalist Builder. Add, remove, and reorder columns, filters,
+                    and action buttons to suit your needs.
                   </p>
                 </div>
               </div>
@@ -768,10 +769,13 @@ const Features = () => (
                   <Mail />
                 </div>
                 <div className="flex-grow-1">
-                  <h4 className="mt-0">Dev-to-dev Support</h4>
+                  <h4 className="mt-0">
+                    Seamless Integration with Existing Systems
+                  </h4>
                   <p className="fs-lg">
-                    Our themes are supported by specialists who provide quick
-                    and effective support. Usually an email reply takes &lt;24h.
+                    Integrate seamlessly with your existing databases. No need
+                    for complex data migrations—enjoy continuity and simplicity
+                    in data management.
                   </p>
                 </div>
               </div>
@@ -782,10 +786,13 @@ const Features = () => (
                   <Users />
                 </div>
                 <div className="flex-grow-1">
-                  <h4 className="mt-0">Authentication Examples</h4>
+                  <h4 className="mt-0">
+                    Comprehensive Role and Permission Management
+                  </h4>
                   <p className="fs-lg">
-                    The package comes with fully working authentication
-                    examples, including Firebase, Auth0, AWS Cognito and JWT.
+                    Admins can create roles, assign permissions, and manage user
+                    access with precision. Enhance security and operational
+                    control effortlessly.
                   </p>
                 </div>
               </div>
@@ -796,10 +803,13 @@ const Features = () => (
                   <Code />
                 </div>
                 <div className="flex-grow-1">
-                  <h4 className="mt-0">Clean Code</h4>
+                  <h4 className="mt-0">
+                    Embedded Forms and Data Lists for Easy Access
+                  </h4>
                   <p className="fs-lg">
-                    We strictly follow Bootstrap's guidelines to make your
-                    integration as easy as possible. All code is handwritten.
+                    Embed forms and data lists directly into your web pages.
+                    Enhance the accessibility and usability of your data
+                    collection processes.
                   </p>
                 </div>
               </div>
@@ -811,10 +821,11 @@ const Features = () => (
                   <DownloadCloud />
                 </div>
                 <div className="flex-grow-1">
-                  <h4 className="mt-0">Regular Updates</h4>
+                  <h4 className="mt-0">Multi-Format File Export</h4>
                   <p className="fs-lg">
-                    From time to time you'll receive an update containing new
-                    components, improvements and bugfixes.
+                    Transform your forms into multiple file formats, including
+                    PDF and CSV. Download these files effortlessly to share and
+                    store your data as needed.
                   </p>
                 </div>
               </div>
@@ -943,27 +954,44 @@ const Faq = () => {
 };
 
 const Footer = () => (
-  <section className="landing-footer py-6">
-    <Container className="text-center landing-footer-container">
-      <Row>
-        <Col md="9" lg="8" xl="6" className="mx-auto">
-          <h2 className="h1 mb-3">
-            Join over 5,000 developers who are already working with our products
-          </h2>
-          <Button
-            variant="success"
-            size="lg"
-            href="https://themes.getbootstrap.com/product/appstack-react-admin-dashboard-template/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-n1"
-          >
-            Purchase Now
-          </Button>
+  <footer className="footer">
+    <Container fluid>
+      <Row className="text-muted">
+        <Col xs="6" className="text-start">
+          <ul className="list-inline">
+            <li className="list-inline-item">
+              <span className="text-muted" href="#">
+                Support
+              </span>
+            </li>
+            <li className="list-inline-item">
+              <span className="text-muted" href="#">
+                Help Center
+              </span>
+            </li>
+            <li className="list-inline-item">
+              <span className="text-muted" href="#">
+                Privacy
+              </span>
+            </li>
+            <li className="list-inline-item">
+              <span className="text-muted" href="#">
+                Terms of Service
+              </span>
+            </li>
+          </ul>
+        </Col>
+        <Col xs="6" className="text-end">
+          <p className="mb-0">
+            &copy; {new Date().getFullYear()} -{" "}
+            <span href="/" className="text-muted">
+              BUMPER
+            </span>
+          </p>
         </Col>
       </Row>
     </Container>
-  </section>
+  </footer>
 );
 
 const Landing = () => {
@@ -984,12 +1012,12 @@ const Landing = () => {
     <React.Fragment>
       <Navigation />
       <Intro />
-      <ColorSchemesAndLayouts />
-      <Integrations />
-      <Testimonials />
-      <DashboardsAndPages />
+      {/* <ColorSchemesAndLayouts /> */}
+      {/* <Integrations /> */}
+      {/* <Testimonials /> */}
+      {/* <DashboardsAndPages /> */}
       <Features />
-      <Faq />
+      {/* <Faq /> */}
       <Footer />
     </React.Fragment>
   );
