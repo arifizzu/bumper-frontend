@@ -330,6 +330,7 @@ const FormUsageBarChart = ({ formLogs }) => {
         hoverBackgroundColor: palette.primary,
         hoverBorderColor: palette.primary,
         data: monthlyCounts,
+        // data: [120, 86, 78, 65, 43, 53, 120, 86, 78, 65, 43, 53],
         barPercentage: 0.325,
         categoryPercentage: 0.5,
       },
