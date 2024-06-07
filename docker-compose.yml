@@ -4,7 +4,7 @@ networks:
   bumper:
 
 services:
-  site:
+  bumper_site:
     env_file:
       - .env
     build:
@@ -21,7 +21,7 @@ services:
     networks:
       - bumper
 
-  npm:
+  bumper_npm:
     image: node:lts-alpine3.18
     container_name: bumper-frontend-npm
     volumes:
