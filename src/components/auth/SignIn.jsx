@@ -26,8 +26,10 @@ function SignIn() {
     <Formik
       //for development only
       initialValues={{
-        email: "admin@example.com",
-        password: "password",
+        // email: "admin@bumper.com",
+        // password: "bumper@2024!",
+        email: "",
+        password: "",
         submit: false,
       }}
       // initialValues={{
