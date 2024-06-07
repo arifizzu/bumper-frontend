@@ -1,0 +1,32 @@
+version: "3.8"
+
+networks:
+  bumper:
+
+services:
+  site:
+    env_file:
+      - .env
+    build:
+      context: ./dockerfiles
+      dockerfile: nginx.dockerfile
+      args:
+        - UID=${DOCKER_UID:-1000}
+        - GID=${DOCKER_GID:-1000}
+    container_name: bumper-frontend-nginx
+    ports:
+      - ${DOCKER_NGINX_PORT}:80
+    volumes:
+      - ./:/var/www/html:delegated
+    networks:
+      - bumper
+
+  npm:
+    image: node:lts-alpine3.18
+    container_name: bumper-frontend-npm
+    volumes:
+      - ./:/var/www/html:delegated
+    working_dir: /var/www/html
+    entrypoint: ["npm"]
+    networks:
+      - bumper
