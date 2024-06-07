@@ -493,18 +493,18 @@ const navItems = [
     title: "Management Settings",
     pages: managementSettingsSection,
   },
-  {
-    title: "Pages",
-    pages: pagesSection,
-  },
-  {
-    title: "Tools & Components",
-    pages: componentsSection,
-  },
-  {
-    title: "Plugins & Addons",
-    pages: pluginsSection,
-  },
+  // {
+  //   title: "Pages",
+  //   pages: pagesSection,
+  // },
+  // {
+  //   title: "Tools & Components",
+  //   pages: componentsSection,
+  // },
+  // {
+  //   title: "Plugins & Addons",
+  //   pages: pluginsSection,
+  // },
 ];
 
 export default navItems;
