@@ -6,18 +6,18 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Select from "react-select";
 
-import ReactFlow, {
-  ReactFlowProvider,
-  addEdge,
-  useNodesState,
-  useEdgesState,
-  Controls,
-} from "reactflow";
+// import ReactFlow, {
+//   ReactFlowProvider,
+//   addEdge,
+//   useNodesState,
+//   useEdgesState,
+//   Controls,
+// } from "reactflow";
 // import "reactflow/dist/style.css";
 
-import "./style.css";
-import "./index.css";
-import DnDFlow from "./DnDFlow";
+// import "./style.css";
+// import "./index.css";
+// import DnDFlow from "./DnDFlow";
 
 import {
   Button,
@@ -61,30 +61,30 @@ const schemaProcessDetail = Yup.object().shape({
 });
 
 const ProcessEdit = ({ id }) => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const process = useSelector((state) => state.process.process);
-  const [showModalProcessDetail, setShowModalProcessDetail] = useState(false);
+  // const navigate = useNavigate();
+  // const dispatch = useDispatch();
+  // const process = useSelector((state) => state.process.process);
+  // const [showModalProcessDetail, setShowModalProcessDetail] = useState(false);
 
-  const toggleModalProcessDetail = () => {
-    setShowModalProcessDetail(
-      (prevShowModalProcessDetail) => !prevShowModalProcessDetail
-    );
-  };
+  // const toggleModalProcessDetail = () => {
+  //   setShowModalProcessDetail(
+  //     (prevShowModalProcessDetail) => !prevShowModalProcessDetail
+  //   );
+  // };
 
-  useEffect(() => {
-    const fetchProcess = async () => {
-      try {
-        dispatch(showProcessStart());
-        const process = await showProcess(id);
-        console.log("process", process);
-        dispatch(showProcessSuccess(process));
-      } catch (error) {
-        dispatch(showProcessFailure(error));
-      }
-    };
-    fetchProcess();
-  }, []);
+  // useEffect(() => {
+  //   const fetchProcess = async () => {
+  //     try {
+  //       dispatch(showProcessStart());
+  //       const process = await showProcess(id);
+  //       console.log("process", process);
+  //       dispatch(showProcessSuccess(process));
+  //     } catch (error) {
+  //       dispatch(showProcessFailure(error));
+  //     }
+  //   };
+  //   fetchProcess();
+  // }, []);
 
   return (
     <React.Fragment>
@@ -104,7 +104,7 @@ const ProcessEdit = ({ id }) => {
               </Card.Body>
             </Card>
           </Col>
-          <Col md={9}>
+          {/* <Col md={9}>
             <Card>
               <Card.Header>
                 <Row>
@@ -245,179 +245,181 @@ const ProcessEdit = ({ id }) => {
           </Formik>
         </Modal.Body>
       </Modal>
-      <DnDFlow />
+      <DnDFlow /> */}
+        </Row>
+      </Container>
     </React.Fragment>
   );
 };
 
-const ToolList = ({}) => {
-  const dispatch = useDispatch();
-  const onDragStart = (event, nodeType) => {
-    event.dataTransfer.setData("application/reactflow", nodeType);
-    event.dataTransfer.effectAllowed = "move";
-    console.log("Drag start:", nodeType);
-  };
+// const ToolList = ({}) => {
+//   const dispatch = useDispatch();
+//   const onDragStart = (event, nodeType) => {
+//     event.dataTransfer.setData("application/reactflow", nodeType);
+//     event.dataTransfer.effectAllowed = "move";
+//     console.log("Drag start:", nodeType);
+//   };
 
-  return (
-    <React.Fragment>
-      <aside>
-        <div className="description">
-          You can drag these nodes to the pane on the right.
-        </div>
-        <div
-          className="dndnode input"
-          onDragStart={(event) => onDragStart(event, "input")}
-          draggable
-        >
-          Input Node
-        </div>
-        <div
-          className="dndnode"
-          onDragStart={(event) => onDragStart(event, "default")}
-          draggable
-        >
-          Default Node
-        </div>
-        <div
-          className="dndnode output"
-          onDragStart={(event) => onDragStart(event, "output")}
-          draggable
-        >
-          Output Node
-        </div>
-      </aside>
-    </React.Fragment>
-  );
-};
+//   return (
+//     <React.Fragment>
+//       <aside>
+//         <div className="description">
+//           You can drag these nodes to the pane on the right.
+//         </div>
+//         <div
+//           className="dndnode input"
+//           onDragStart={(event) => onDragStart(event, "input")}
+//           draggable
+//         >
+//           Input Node
+//         </div>
+//         <div
+//           className="dndnode"
+//           onDragStart={(event) => onDragStart(event, "default")}
+//           draggable
+//         >
+//           Default Node
+//         </div>
+//         <div
+//           className="dndnode output"
+//           onDragStart={(event) => onDragStart(event, "output")}
+//           draggable
+//         >
+//           Output Node
+//         </div>
+//       </aside>
+//     </React.Fragment>
+//   );
+// };
 
-const ProcessLayout = ({}) => {
-  const initialNodes = [
-    {
-      id: "1",
-      type: "input",
-      data: { label: "input node" },
-      position: { x: 250, y: 5 },
-    },
-  ];
-  let id = 0;
-  const getId = () => `dndnode_${id++}`;
+// const ProcessLayout = ({}) => {
+//   const initialNodes = [
+//     {
+//       id: "1",
+//       type: "input",
+//       data: { label: "input node" },
+//       position: { x: 250, y: 5 },
+//     },
+//   ];
+//   let id = 0;
+//   const getId = () => `dndnode_${id++}`;
 
-  const reactFlowWrapper = useRef(null);
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [reactFlowInstance, setReactFlowInstance] = useState(null);
+//   const reactFlowWrapper = useRef(null);
+//   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+//   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+//   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
-  const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
-    []
-  );
+//   const onConnect = useCallback(
+//     (params) => setEdges((eds) => addEdge(params, eds)),
+//     []
+//   );
 
-  const onDragOver = useCallback((event) => {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
-  }, []);
+//   const onDragOver = useCallback((event) => {
+//     event.preventDefault();
+//     event.dataTransfer.dropEffect = "move";
+//   }, []);
 
-  //   const onDrop = useCallback(
-  //     (event) => {
-  //       event.preventDefault();
+//   //   const onDrop = useCallback(
+//   //     (event) => {
+//   //       event.preventDefault();
 
-  //       const type = event.dataTransfer.getData("application/reactflow");
-  //       // check if the dropped element is valid
-  //       if (typeof type === "undefined" || !type) {
-  //         return;
-  //       }
+//   //       const type = event.dataTransfer.getData("application/reactflow");
+//   //       // check if the dropped element is valid
+//   //       if (typeof type === "undefined" || !type) {
+//   //         return;
+//   //       }
 
-  //       // reactFlowInstance.project was renamed to reactFlowInstance.screenToFlowPosition
-  //       // and you don't need to subtract the reactFlowBounds.left/top anymore
-  //       // details: https://reactflow.dev/whats-new/2023-11-10
-  //       const position = reactFlowInstance.screenToFlowPosition({
-  //         x: event.clientX,
-  //         y: event.clientY,
-  //       });
+//   //       // reactFlowInstance.project was renamed to reactFlowInstance.screenToFlowPosition
+//   //       // and you don't need to subtract the reactFlowBounds.left/top anymore
+//   //       // details: https://reactflow.dev/whats-new/2023-11-10
+//   //       const position = reactFlowInstance.screenToFlowPosition({
+//   //         x: event.clientX,
+//   //         y: event.clientY,
+//   //       });
 
-  //       const newNode = {
-  //         id: getId(),
-  //         type,
-  //         position,
-  //         data: { label: `${type} node` },
-  //       };
+//   //       const newNode = {
+//   //         id: getId(),
+//   //         type,
+//   //         position,
+//   //         data: { label: `${type} node` },
+//   //       };
 
-  //       setNodes((nds) => nds.concat(newNode));
-  //     },
-  //     [reactFlowInstance]
-  //     );
+//   //       setNodes((nds) => nds.concat(newNode));
+//   //     },
+//   //     [reactFlowInstance]
+//   //     );
 
-  const onDrop = useCallback(
-    (event) => {
-      event.preventDefault();
-      const type = event.dataTransfer.getData("application/reactflow");
-      console.log("Dropped node type:", type);
-      // rest of the onDrop logic...
-      if (typeof type === "undefined" || !type) {
-        return;
-      }
+//   const onDrop = useCallback(
+//     (event) => {
+//       event.preventDefault();
+//       const type = event.dataTransfer.getData("application/reactflow");
+//       console.log("Dropped node type:", type);
+//       // rest of the onDrop logic...
+//       if (typeof type === "undefined" || !type) {
+//         return;
+//       }
 
-      // reactFlowInstance.project was renamed to reactFlowInstance.screenToFlowPosition
-      // and you don't need to subtract the reactFlowBounds.left/top anymore
-      // details: https://reactflow.dev/whats-new/2023-11-10
-      const position = reactFlowInstance.screenToFlowPosition({
-        x: event.clientX,
-        y: event.clientY,
-      });
+//       // reactFlowInstance.project was renamed to reactFlowInstance.screenToFlowPosition
+//       // and you don't need to subtract the reactFlowBounds.left/top anymore
+//       // details: https://reactflow.dev/whats-new/2023-11-10
+//       const position = reactFlowInstance.screenToFlowPosition({
+//         x: event.clientX,
+//         y: event.clientY,
+//       });
 
-      //   const position = reactFlowInstance.project({
-      //     x:
-      //       event.clientX - reactFlowWrapper.current.getBoundingClientRect().left,
-      //     y: event.clientY - reactFlowWrapper.current.getBoundingClientRect().top,
-      //   });
-      const newNode = {
-        id: getId(),
-        type,
-        position,
-        data: { label: `${type} node` },
-      };
+//       //   const position = reactFlowInstance.project({
+//       //     x:
+//       //       event.clientX - reactFlowWrapper.current.getBoundingClientRect().left,
+//       //     y: event.clientY - reactFlowWrapper.current.getBoundingClientRect().top,
+//       //   });
+//       const newNode = {
+//         id: getId(),
+//         type,
+//         position,
+//         data: { label: `${type} node` },
+//       };
 
-      setNodes((nds) => nds.concat(newNode));
-    },
-    [reactFlowInstance]
-  );
+//       setNodes((nds) => nds.concat(newNode));
+//     },
+//     [reactFlowInstance]
+//   );
 
-  return (
-    <React.Fragment>
-      <div className="dndflow">
-        <ReactFlowProvider>
-          <div
-            className="reactflow-wrapper"
-            ref={reactFlowWrapper}
-            style={{
-              border: "1px solid black",
-              minHeight: "400px",
-              background: "white",
-              marginTop: "10px",
-            }}
-          >
-            <h1>he</h1>
-            <ReactFlow
-              nodes={nodes}
-              edges={edges}
-              onNodesChange={onNodesChange}
-              onEdgesChange={onEdgesChange}
-              onConnect={onConnect}
-              onInit={setReactFlowInstance}
-              onDrop={onDrop}
-              onDragOver={onDragOver}
-              fitView
-            >
-              <Controls />
-            </ReactFlow>
-            <h1>he</h1>
-          </div>
-          <ToolList />
-        </ReactFlowProvider>
-      </div>
-      <DnDFlow />
-    </React.Fragment>
-  );
-};
+//   return (
+//     <React.Fragment>
+//       <div className="dndflow">
+//         <ReactFlowProvider>
+//           <div
+//             className="reactflow-wrapper"
+//             ref={reactFlowWrapper}
+//             style={{
+//               border: "1px solid black",
+//               minHeight: "400px",
+//               background: "white",
+//               marginTop: "10px",
+//             }}
+//           >
+//             <h1>he</h1>
+//             <ReactFlow
+//               nodes={nodes}
+//               edges={edges}
+//               onNodesChange={onNodesChange}
+//               onEdgesChange={onEdgesChange}
+//               onConnect={onConnect}
+//               onInit={setReactFlowInstance}
+//               onDrop={onDrop}
+//               onDragOver={onDragOver}
+//               fitView
+//             >
+//               <Controls />
+//             </ReactFlow>
+//             <h1>he</h1>
+//           </div>
+//           <ToolList />
+//         </ReactFlowProvider>
+//       </div>
+//       <DnDFlow />
+//     </React.Fragment>
+//   );
+// };
 
 export default ProcessEdit;
