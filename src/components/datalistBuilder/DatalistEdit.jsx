@@ -544,6 +544,10 @@ const DatalistLayout = ({ datalist }) => {
   };
 
   const getOrder = (container, items) => {
+    if (!container) {
+      console.error("Container is null or undefined");
+      return [];
+    }
     const order = [];
     container.querySelectorAll(".item").forEach((item) => {
       const itemId = item.dataset.id;
@@ -642,107 +646,116 @@ const DatalistLayout = ({ datalist }) => {
             console.log(datalistRowActions, "datalistRowActions");
             console.log(datalistActions, "datalistActions");
 
-            const newFilterOrder = getOrder(
-              filtersRef.current,
-              datalistFilters
-            );
-            for (let index = 0; index < newFilterOrder.length; index++) {
-              const itemFilter = newFilterOrder[index];
-              try {
-                const result = await updateDatalistFilterOrder(
-                  itemFilter.itemData.id,
-                  { order: index + 1 }
-                );
-                if (result.success === true) {
-                  console.log("Datalist Filter Order updated successfully");
-                } else {
-                  console.error(
-                    "Error updating datalist filter order:",
-                    result
+            if (filtersRef.current) {
+              const newFilterOrder = getOrder(
+                filtersRef.current,
+                datalistFilters
+              );
+              for (let index = 0; index < newFilterOrder.length; index++) {
+                const itemFilter = newFilterOrder[index];
+                try {
+                  const result = await updateDatalistFilterOrder(
+                    itemFilter.itemData.id,
+                    { order: index + 1 }
                   );
+                  if (result.success === true) {
+                    console.log("Datalist Filter Order updated successfully");
+                  } else {
+                    console.error(
+                      "Error updating datalist filter order:",
+                      result
+                    );
+                  }
+                } catch (error) {
+                  console.error("Error updating datalist filter order:", error);
                 }
-              } catch (error) {
-                console.error("Error updating datalist filter order:", error);
               }
             }
 
-            const newColumnOrder = getOrder(
-              columnsRef.current,
-              datalistColumns
-            );
-            for (let index = 0; index < newColumnOrder.length; index++) {
-              const itemColumn = newColumnOrder[index];
-              try {
-                const result = await updateDatalistColumnOrder(
-                  itemColumn.itemData.id,
-                  { order: index + 1 }
-                );
-                if (result.success === true) {
-                  console.log("Datalist Column Order updated successfully");
-                } else {
-                  console.error(
-                    "Error updating datalist column order:",
-                    result
+            if (columnsRef.current) {
+              const newColumnOrder = getOrder(
+                columnsRef.current,
+                datalistColumns
+              );
+              for (let index = 0; index < newColumnOrder.length; index++) {
+                const itemColumn = newColumnOrder[index];
+                try {
+                  const result = await updateDatalistColumnOrder(
+                    itemColumn.itemData.id,
+                    { order: index + 1 }
                   );
+                  if (result.success === true) {
+                    console.log("Datalist Column Order updated successfully");
+                  } else {
+                    console.error(
+                      "Error updating datalist column order:",
+                      result
+                    );
+                  }
+                } catch (error) {
+                  console.error("Error updating datalist column order:", error);
                 }
-              } catch (error) {
-                console.error("Error updating datalist column order:", error);
               }
             }
 
-            const newRowActionOrder = getOrder(
-              rowActionsRef.current,
-              datalistRowActions
-            );
-            for (let index = 0; index < newRowActionOrder.length; index++) {
-              const itemRowAction = newRowActionOrder[index];
-              try {
-                const result = await updateDatalistActionOrder(
-                  itemRowAction.itemData.id,
-                  { order: index + 1 }
-                );
-                if (result.success === true) {
-                  console.log("Datalist Row Action updated successfully");
-                } else {
+            if (rowActionsRef.current) {
+              const newRowActionOrder = getOrder(
+                rowActionsRef.current,
+                datalistRowActions
+              );
+              for (let index = 0; index < newRowActionOrder.length; index++) {
+                const itemRowAction = newRowActionOrder[index];
+                try {
+                  const result = await updateDatalistActionOrder(
+                    itemRowAction.itemData.id,
+                    { order: index + 1 }
+                  );
+                  if (result.success === true) {
+                    console.log("Datalist Row Action updated successfully");
+                  } else {
+                    console.error(
+                      "Error updating datalist row action order:",
+                      result
+                    );
+                  }
+                } catch (error) {
                   console.error(
                     "Error updating datalist row action order:",
-                    result
+                    error
                   );
                 }
-              } catch (error) {
-                console.error(
-                  "Error updating datalist row action order:",
-                  error
-                );
               }
             }
 
-            const newActionOrder = getOrder(
-              actionsRef.current,
-              datalistActions
-            );
-            for (let index = 0; index < newActionOrder.length; index++) {
-              const itemAction = newActionOrder[index];
-              try {
-                const result = await updateDatalistActionOrder(
-                  itemAction.itemData.id,
-                  { order: index + 1 }
-                );
-                if (result.success === true) {
-                  console.log("Datalist Action updated successfully");
-                } else {
+            if (actionsRef.current) {
+              const newActionOrder = getOrder(
+                actionsRef.current,
+                datalistActions
+              );
+              for (let index = 0; index < newActionOrder.length; index++) {
+                const itemAction = newActionOrder[index];
+                try {
+                  const result = await updateDatalistActionOrder(
+                    itemAction.itemData.id,
+                    { order: index + 1 }
+                  );
+                  if (result.success === true) {
+                    console.log("Datalist Action updated successfully");
+                  } else {
+                    console.error(
+                      "Error updating datalist action order:",
+                      result
+                    );
+                  }
+                } catch (error) {
                   console.error(
-                    "Error updating datalist action order:",
-                    result
+                    "Error updating datalist row action order:",
+                    error
                   );
                 }
-              } catch (error) {
-                console.error(
-                  "Error updating datalist row action order:",
-                  error
-                );
               }
             }
+
             window.location.reload();
           }}
         >
