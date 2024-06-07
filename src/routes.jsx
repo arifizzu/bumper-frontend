@@ -115,7 +115,7 @@ const Changelog = lazy(() => import("./pages/docs/Changelog"));
 const ProtectedPage = lazy(() => import("./pages/protected/ProtectedPage"));
 
 // Users
-const UserIndex = lazy(() => import("./pages/user/userIndex"));
+const UserIndex = lazy(() => import("./pages/user/UserIndex"));
 const UserNew = lazy(() => import("./pages/user/UserNew"));
 const UserView = lazy(() => import("./pages/user/UserView"));
 const UserEdit = lazy(() => import("./pages/user/UserEdit"));
