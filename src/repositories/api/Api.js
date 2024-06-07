@@ -1,4 +1,6 @@
-export const API_URL = "http://bumper-backend.test/api";
+import appConfig from "../../config";
+
+export const API_URL = appConfig.apiHostname;
 
 export function authHeader() {
   const token = JSON.parse(localStorage.getItem("token"));
