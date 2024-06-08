@@ -6,7 +6,12 @@ import html2pdf from "html2pdf.js";
 // import htmlDocx from "html-docx-js/dist/html-docx";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
-import { useTable, usePagination } from "react-table";
+import {
+  useTable,
+  usePagination,
+  useFilters,
+  useGlobalFilter,
+} from "react-table";
 import {
   Card,
   Table,
@@ -40,6 +45,109 @@ import { showDatalist } from "../../repositories/api/services/datalistServices";
 
 import { retrieveDataFromDatabase } from "../../repositories/api/services/datalistServices";
 
+function NumberRangeColumnFilter({
+  column: { filterValue = [], preFilteredRows, setFilter, id },
+}) {
+  const [min, max] = React.useMemo(() => {
+    let min = Infinity;
+    let max = -Infinity;
+    preFilteredRows.forEach((row) => {
+      const rowValue = row.values[id];
+      if (rowValue !== null && rowValue !== undefined) {
+        min = Math.min(rowValue, min);
+        max = Math.max(rowValue, max);
+      }
+    });
+    return [min === Infinity ? 0 : min, max === -Infinity ? 0 : max];
+  }, [id, preFilteredRows]);
+
+  return (
+    <div className="d-flex mt-2">
+      <Form.Control
+        value={filterValue[0] || ""}
+        type="number"
+        onChange={(e) => {
+          const val = e.target.value;
+          setFilter((old = []) => [
+            val ? parseInt(val, 10) : undefined,
+            old[1],
+          ]);
+        }}
+        placeholder={`Min (${min})`}
+        // style={{
+        //   width: "110px",
+        // }}
+      />
+      <span className="mx-2 mt-1">to</span>
+      <Form.Control
+        value={filterValue[1] || ""}
+        type="number"
+        onChange={(e) => {
+          const val = e.target.value;
+          setFilter((old = []) => [
+            old[0],
+            val ? parseInt(val, 10) : undefined,
+          ]);
+        }}
+        placeholder={`Max (${max})`}
+        // style={{
+        //   width: "110px",
+        // }}
+      />
+    </div>
+  );
+}
+
+// This is a custom filter UI for selecting
+// a unique option from a list
+function SelectColumnFilter({
+  column: { filterValue, setFilter, preFilteredRows, id },
+}) {
+  // Calculate the options for filtering
+  // using the preFilteredRows
+  const options = React.useMemo(() => {
+    const options = new Set();
+    preFilteredRows.forEach((row) => {
+      options.add(row.values[id]);
+    });
+    return [...options.values()];
+  }, [id, preFilteredRows]);
+
+  // Render a multi-select box
+  return (
+    <Form.Select
+      value={filterValue}
+      onChange={(e) => {
+        setFilter(e.target.value || undefined);
+      }}
+    >
+      <option value="">All</option>
+      {options.map((option, i) => (
+        <option key={i} value={option}>
+          {option}
+        </option>
+      ))}
+    </Form.Select>
+  );
+}
+
+function SearchColumnFilter({
+  column: { filterValue, preFilteredRows, setFilter },
+}) {
+  const count = preFilteredRows.length;
+
+  return (
+    <Form.Control
+      value={filterValue || ""}
+      onChange={(e) => {
+        setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
+      }}
+      placeholder={`Search ${count} records...`}
+      className="mt-2"
+    />
+  );
+}
+
 const DatalistView = ({ id }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -65,9 +173,20 @@ const DatalistView = ({ id }) => {
     if (datalist && datalist.items) {
       const sortedItems = [...datalist.items].sort((a, b) => a.order - b.order);
       // Dynamically create columns based on sorted items
+      console.log("sortedItems", sortedItems);
+
       const columns = sortedItems.map((item) => ({
         Header: item.label,
         accessor: item.column_name,
+        Filter:
+          item.include_filter && item.filter_type === "Search"
+            ? SearchColumnFilter
+            : item.include_filter && item.filter_type === "Select"
+            ? SelectColumnFilter
+            : item.include_filter && item.filter_type === "Range"
+            ? NumberRangeColumnFilter
+            : false,
+        filter: item.filter_type === "Range" ? "numberRange" : undefined,
       }));
 
       // Add the No. column at the beginning
@@ -75,6 +194,7 @@ const DatalistView = ({ id }) => {
         {
           Header: "No.",
           accessor: (row, index) => index + 1,
+          Filter: false,
         },
         ...columns,
       ];
@@ -123,7 +243,7 @@ const DatalistView = ({ id }) => {
     const element = document.getElementById("form-content");
 
     if (format === "pdf") {
-      // Create a new div element
+      // Create a new div element for export
       const exportContent = document.createElement("div");
 
       // Create the title element
@@ -132,12 +252,14 @@ const DatalistView = ({ id }) => {
       titleElement.style.textAlign = "center";
       titleElement.style.marginBottom = "20px";
 
-      // Get the table element
-      const tableElement = document
-        .getElementById("form-content")
-        .cloneNode(true);
+      // Clone the table element
+      const tableElement = element.cloneNode(true);
 
-      // Append the title and table to the new div element
+      // Remove filter fields from the cloned table
+      const filters = tableElement.querySelectorAll("div");
+      filters.forEach((filter) => filter.remove());
+
+      // Append the title and cleaned table to the new div element
       exportContent.appendChild(titleElement);
       exportContent.appendChild(tableElement);
 
@@ -173,7 +295,14 @@ const DatalistView = ({ id }) => {
     // FileSaver.saveAs(blob, `${datalist.title}.doc`);
     // }
     else if (format === "csv") {
-      const rows = Array.from(element.querySelectorAll("tr"));
+      // Clone the table element
+      const tableElement = element.cloneNode(true);
+
+      // Remove filter fields from the cloned table
+      const filters = tableElement.querySelectorAll("div");
+      filters.forEach((filter) => filter.remove());
+
+      const rows = Array.from(tableElement.querySelectorAll("tr"));
       const csvData = rows
         .map((row) => {
           const columns = Array.from(row.querySelectorAll("td, th"));
@@ -185,6 +314,51 @@ const DatalistView = ({ id }) => {
       FileSaver.saveAs(blob, `${datalist.title}.csv`);
     }
   };
+
+  // const filterTypes = React.useMemo(
+  //   () => ({
+  //     // Or, override the default text filter to use
+  //     // "startWith"
+  //     text: (rows, id, filterValue) => {
+  //       return rows.filter((row) => {
+  //         const rowValue = row.values[id];
+  //         return rowValue !== undefined
+  //           ? String(rowValue)
+  //               .toLowerCase()
+  //               .startsWith(String(filterValue).toLowerCase())
+  //           : true;
+  //       });
+  //     },
+  //   }),
+  //   []
+  // );
+
+  const filterTypes = React.useMemo(
+    () => ({
+      numberRange: (rows, id, filterValue) => {
+        const [min, max] = filterValue;
+        return rows.filter((row) => {
+          const rowValue = row.values[id];
+          if (rowValue === null || rowValue === undefined) {
+            return true;
+          }
+          return (
+            (min === undefined || rowValue >= min) &&
+            (max === undefined || rowValue <= max)
+          );
+        });
+      },
+    }),
+    []
+  );
+
+  const defaultColumn = React.useMemo(
+    () => ({
+      // Let's set up our default Filter UI
+      Filter: SearchColumnFilter,
+    }),
+    []
+  );
 
   const {
     getTableProps,
@@ -206,7 +380,11 @@ const DatalistView = ({ id }) => {
       columns: datalistItemColumns,
       data: retrievedData,
       initialState: { pageIndex: 0 },
+      defaultColumn,
+      filterTypes,
     },
+    useFilters,
+    useGlobalFilter,
     usePagination
   );
 
@@ -310,6 +488,10 @@ const DatalistView = ({ id }) => {
                       {headerGroup.headers.map((column) => (
                         <th {...column.getHeaderProps()}>
                           {column.render("Header")}
+                          {/* Render the columns filter UI */}
+                          <div>
+                            {column.canFilter ? column.render("Filter") : null}
+                          </div>
                         </th>
                       ))}
                     </tr>
