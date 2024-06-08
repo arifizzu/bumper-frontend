@@ -115,7 +115,7 @@ const FormView = ({ id }) => {
     if (format === "pdf") {
       const opt = {
         margin: 0.1,
-        filename: `${form.name}.pdf`,
+        filename: `${form.name} Form.pdf`,
         image: { type: "jpeg", quality: 0.98 },
         html2canvas: { scale: 2 },
         jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
@@ -135,7 +135,7 @@ const FormView = ({ id }) => {
     //       </html>
     //     `;
     //   const converted = htmlDocx.asBlob(content);
-    //   FileSaver.saveAs(converted, `${form.name}.docx`);
+    //   FileSaver.saveAs(converted, `${form.name} Form.docx`);
     // }
     // else if (format === "csv") {
     //   const rows = Array.from(element.querySelectorAll("tr"));
@@ -147,7 +147,7 @@ const FormView = ({ id }) => {
     //     .join("\n");
 
     //   const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
-    //   FileSaver.saveAs(blob, `${form.name}.csv`);
+    //   FileSaver.saveAs(blob, `${form.name} Form.csv`);
     // }
   };
 

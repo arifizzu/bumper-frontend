@@ -265,7 +265,7 @@ const DatalistView = ({ id }) => {
 
       const opt = {
         margin: 0.2,
-        filename: `${datalist.title}.pdf`,
+        filename: `${datalist.title} Datalist.pdf`,
         image: { type: "jpeg", quality: 0.98 },
         html2canvas: { scale: 2 },
         jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
@@ -311,7 +311,7 @@ const DatalistView = ({ id }) => {
         .join("\n");
 
       const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
-      FileSaver.saveAs(blob, `${datalist.title}.csv`);
+      FileSaver.saveAs(blob, `${datalist.title} Datalist.csv`);
     }
   };
 
