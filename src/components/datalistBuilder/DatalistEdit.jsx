@@ -398,17 +398,7 @@ const DatalistLayout = ({ datalist }) => {
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    // if (datalist && datalist.filters) {
-    //   const mappedFilters = datalist.filters.map((filter, index) => {
-    //     filterOrder++;
-    //     return {
-    //       id: idCounter++,
-    //       itemData: filter,
-    //     };
-    //   });
-    //   setDatalistFilters([]);
-    //   setDatalistFilters(mappedFilters);
-    // }
+    idCounter = 1;
 
     if (datalist && datalist.filters) {
       const itemsCopy = datalist.filters.slice();
