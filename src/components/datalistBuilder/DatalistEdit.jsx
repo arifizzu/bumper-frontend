@@ -1648,7 +1648,9 @@ const DatalistColumnForm = ({
                   <option value="">Not Chosen</option>
                   <option value="Search">Search</option>
                   <option value="Select">Select</option>
-                  <option value="Range">Range</option>
+                  <option value="Range">
+                    Range (Only Suitable for Number Data Type)
+                  </option>
                 </Form.Select>
                 <Form.Control.Feedback type="invalid">
                   {errors.filter_type}
