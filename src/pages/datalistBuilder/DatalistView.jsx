@@ -27,6 +27,7 @@ const DatalistViewPage = () => {
   const { id } = useParams();
   const [showEmbedModal, setShowEmbedModal] = useState(false);
   const url = window.location.origin;
+  const permissions = JSON.parse(localStorage.getItem("permissions"));
 
   const handleEditButton = async (id) => {
     try {
@@ -56,15 +57,17 @@ const DatalistViewPage = () => {
     <React.Fragment>
       <Helmet title="Datalist" />
       <Container fluid className="p-0">
-        <Button
-          variant="warning"
-          className="float-end mt-n1 me-2"
-          onClick={() => {
-            handleEditButton(id);
-          }}
-        >
-          <FontAwesomeIcon icon={faEdit} /> Edit
-        </Button>
+        {permissions.includes("edit datalist") && (
+          <Button
+            variant="warning"
+            className="float-end mt-n1 me-2"
+            onClick={() => {
+              handleEditButton(id);
+            }}
+          >
+            <FontAwesomeIcon icon={faEdit} /> Edit
+          </Button>
+        )}
         <Button
           variant="info"
           className="float-end mt-n1 me-2"

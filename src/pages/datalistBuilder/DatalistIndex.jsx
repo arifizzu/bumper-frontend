@@ -79,6 +79,8 @@ const DatalistIndexPage = () => {
   const { groups } = useSelector((state) => state.group);
   const formOptions = useSelector((state) => state.form.forms);
 
+  const permissions = JSON.parse(localStorage.getItem("permissions"));
+
   useEffect(() => {
     const fetchGroupForm = async () => {
       try {
@@ -347,20 +349,24 @@ const DatalistIndexPage = () => {
 
       <Helmet title="Form" />
       <Container fluid className="p-0">
-        <Button
-          variant="primary"
-          className="float-end mt-n1 me-2"
-          onClick={toggleModalDatalist}
-        >
-          <FontAwesomeIcon icon={faFileCirclePlus} /> New Datalist
-        </Button>
-        <Button
-          variant="primary"
-          className="float-end mt-n1 me-2"
-          onClick={toggleModalGroup}
-        >
-          <FontAwesomeIcon icon={faFolderPlus} /> New Group
-        </Button>
+        {permissions.includes("create datalist") && (
+          <Button
+            variant="primary"
+            className="float-end mt-n1 me-2"
+            onClick={toggleModalDatalist}
+          >
+            <FontAwesomeIcon icon={faFileCirclePlus} /> New Datalist
+          </Button>
+        )}
+        {permissions.includes("create datalist") && (
+          <Button
+            variant="primary"
+            className="float-end mt-n1 me-2"
+            onClick={toggleModalGroup}
+          >
+            <FontAwesomeIcon icon={faFolderPlus} /> New Group
+          </Button>
+        )}
         <Breadcrumb style={{ fontSize: "1.3rem" }}>
           <Breadcrumb.Item active>Datalist</Breadcrumb.Item>
         </Breadcrumb>
