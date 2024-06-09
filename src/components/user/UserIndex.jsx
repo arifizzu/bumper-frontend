@@ -113,6 +113,7 @@ const UserIndex = ({}) => {
   const dispatch = useDispatch();
   const { users, loading, error } = useSelector((state) => state.user);
   const [updatedColumns, setUpdatedColumns] = useState([]);
+  const permissions = JSON.parse(localStorage.getItem("permissions"));
 
   const handleViewButton = async (id) => {
     try {
@@ -162,32 +163,38 @@ const UserIndex = ({}) => {
 
     return (
       <>
-        <Button
-          variant="info"
-          size="sm"
-          className="me-2"
-          onClick={() => {
-            handleViewButton(row.id);
-          }}
-        >
-          <FontAwesomeIcon icon={faEye} /> View
-        </Button>
+        {permissions.includes("view user") && (
+          <Button
+            variant="info"
+            size="sm"
+            className="me-2"
+            onClick={() => {
+              handleViewButton(row.id);
+            }}
+          >
+            <FontAwesomeIcon icon={faEye} /> View
+          </Button>
+        )}
 
-        <Button
-          variant="warning"
-          size="sm"
-          className="me-2"
-          onClick={() => {
-            handleEditButton(row.id);
-          }}
-        >
-          <FontAwesomeIcon icon={faEdit} /> Edit
-        </Button>
+        {permissions.includes("edit user") && (
+          <Button
+            variant="warning"
+            size="sm"
+            className="me-2"
+            onClick={() => {
+              handleEditButton(row.id);
+            }}
+          >
+            <FontAwesomeIcon icon={faEdit} /> Edit
+          </Button>
+        )}
 
         <React.Fragment key={row.id}>
-          <Button variant="danger" size="sm" onClick={() => toggle(row.id)}>
-            <FontAwesomeIcon icon={faTrash} /> Delete
-          </Button>
+          {permissions.includes("delete user") && (
+            <Button variant="danger" size="sm" onClick={() => toggle(row.id)}>
+              <FontAwesomeIcon icon={faTrash} /> Delete
+            </Button>
+          )}
           <Modal show={showModal[row.id]} onHide={() => toggle(row.id)}>
             <Modal.Header closeButton>Delete User</Modal.Header>
             <Modal.Body className="text-center m-3">

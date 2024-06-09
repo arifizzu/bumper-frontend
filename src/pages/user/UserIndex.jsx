@@ -12,6 +12,8 @@ import { tableColumns } from "./data.js";
 
 const UserIndexPage = () => {
   const navigate = useNavigate();
+  const permissions = JSON.parse(localStorage.getItem("permissions"));
+
   const handleCreateNew = async () => {
     try {
       navigate("/users/create");
@@ -24,13 +26,15 @@ const UserIndexPage = () => {
     <React.Fragment>
       <Helmet title="User" />
       <Container fluid className="p-0">
-        <Button
-          variant="primary"
-          className="float-end mt-n1"
-          onClick={handleCreateNew}
-        >
-          <FontAwesomeIcon icon={faPlus} /> New user
-        </Button>
+        {permissions.includes("create user") && (
+          <Button
+            variant="primary"
+            className="float-end mt-n1"
+            onClick={handleCreateNew}
+          >
+            <FontAwesomeIcon icon={faPlus} /> New user
+          </Button>
+        )}
         <Breadcrumb style={{ fontSize: "1.3rem" }}>
           <Breadcrumb.Item active>User</Breadcrumb.Item>
         </Breadcrumb>
