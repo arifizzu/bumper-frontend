@@ -79,6 +79,14 @@ const DatalistIndex = ({ datalistTableColumns }) => {
     }));
   };
 
+  const handleUseButton = async (id) => {
+    try {
+      navigate(`/datalist-builder/use/${id}`);
+    } catch (error) {
+      console.error("Use datalist failed:", error);
+    }
+  };
+
   const handleViewButton = async (id) => {
     try {
       navigate(`/datalist-builder/view/${id}`);
@@ -141,6 +149,17 @@ const DatalistIndex = ({ datalistTableColumns }) => {
 
     return (
       <>
+        <Button
+          variant="primary"
+          size="sm"
+          className="me-2"
+          onClick={() => {
+            handleUseButton(row.id);
+          }}
+        >
+          <FontAwesomeIcon icon={faEye} /> Use
+        </Button>
+
         <Button
           variant="info"
           size="sm"

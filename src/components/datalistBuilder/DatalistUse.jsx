@@ -148,7 +148,7 @@ function SearchColumnFilter({
   );
 }
 
-const DatalistView = ({ id }) => {
+const DatalistUse = ({ id }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { datalist, loading, error } = useSelector((state) => state.datalist);
@@ -581,4 +581,4 @@ const DatalistView = ({ id }) => {
   );
 };
 
-export default DatalistView;
+export default DatalistUse;
