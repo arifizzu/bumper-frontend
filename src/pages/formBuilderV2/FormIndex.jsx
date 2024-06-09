@@ -68,6 +68,7 @@ const FormIndexPage = () => {
   const formGroup = useSelector((state) => state.group.form);
   const formDetail = useSelector((state) => state.form.formDetailInput);
   const { groups } = useSelector((state) => state.group);
+  const permissions = JSON.parse(localStorage.getItem("permissions"));
 
   useEffect(() => {
     const fetchGroupForm = async () => {
@@ -292,20 +293,25 @@ const FormIndexPage = () => {
 
       <Helmet title="Form" />
       <Container fluid className="p-0">
-        <Button
-          variant="primary"
-          className="float-end mt-n1 me-2"
-          onClick={toggleModalForm}
-        >
-          <FontAwesomeIcon icon={faFileCirclePlus} /> New Form
-        </Button>
-        <Button
-          variant="primary"
-          className="float-end mt-n1 me-2"
-          onClick={toggleModalGroup}
-        >
-          <FontAwesomeIcon icon={faFolderPlus} /> New Group
-        </Button>
+        {permissions.includes("create form") && (
+          <Button
+            variant="primary"
+            className="float-end mt-n1 me-2"
+            onClick={toggleModalForm}
+          >
+            <FontAwesomeIcon icon={faFileCirclePlus} /> New Form
+          </Button>
+        )}
+        {permissions.includes("create form") && (
+          <Button
+            variant="primary"
+            className="float-end mt-n1 me-2"
+            onClick={toggleModalGroup}
+          >
+            <FontAwesomeIcon icon={faFolderPlus} /> New Group
+          </Button>
+        )}
+
         <Breadcrumb style={{ fontSize: "1.3rem" }}>
           <Breadcrumb.Item active>Form</Breadcrumb.Item>
         </Breadcrumb>

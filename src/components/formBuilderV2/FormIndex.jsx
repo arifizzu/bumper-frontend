@@ -72,6 +72,7 @@ const FormIndex = ({ formTableColumns }) => {
   const { groups } = useSelector((state) => state.group);
   const [showModalGroupEdit, setShowModalGroupEdit] = useState({});
   const formGroup = useSelector((state) => state.group.form);
+  const permissions = JSON.parse(localStorage.getItem("permissions"));
 
   const toggleModalGroupEdit = (id) => {
     setShowModalGroupEdit((prev) => ({
@@ -150,43 +151,52 @@ const FormIndex = ({ formTableColumns }) => {
 
     return (
       <>
-        <Button
-          variant="primary"
-          size="sm"
-          className="me-2"
-          onClick={() => {
-            handleUseButton(row.id);
-          }}
-        >
-          <FontAwesomeIcon icon={faMagnifyingGlass} /> Use
-        </Button>
+        {permissions.includes("use form") && (
+          <Button
+            variant="primary"
+            size="sm"
+            className="me-2"
+            onClick={() => {
+              handleUseButton(row.id);
+            }}
+          >
+            <FontAwesomeIcon icon={faMagnifyingGlass} /> Use
+          </Button>
+        )}
 
-        <Button
-          variant="info"
-          size="sm"
-          className="me-2"
-          onClick={() => {
-            handleViewButton(row.id);
-          }}
-        >
-          <FontAwesomeIcon icon={faEye} /> View
-        </Button>
+        {permissions.includes("view form") && (
+          <Button
+            variant="info"
+            size="sm"
+            className="me-2"
+            onClick={() => {
+              handleViewButton(row.id);
+            }}
+          >
+            <FontAwesomeIcon icon={faEye} /> View
+          </Button>
+        )}
 
-        <Button
-          variant="warning"
-          size="sm"
-          className="me-2"
-          onClick={() => {
-            handleEditButton(row.id);
-          }}
-        >
-          <FontAwesomeIcon icon={faEdit} /> Edit
-        </Button>
+        {permissions.includes("edit form") && (
+          <Button
+            variant="warning"
+            size="sm"
+            className="me-2"
+            onClick={() => {
+              handleEditButton(row.id);
+            }}
+          >
+            <FontAwesomeIcon icon={faEdit} /> Edit
+          </Button>
+        )}
 
         <React.Fragment key={row.id}>
-          <Button variant="danger" size="sm" onClick={() => toggle(row.id)}>
-            <FontAwesomeIcon icon={faTrash} /> Delete
-          </Button>
+          {permissions.includes("delete form") && (
+            <Button variant="danger" size="sm" onClick={() => toggle(row.id)}>
+              <FontAwesomeIcon icon={faTrash} /> Delete
+            </Button>
+          )}
+
           <Modal show={showModal[row.id]} onHide={() => toggle(row.id)}>
             <Modal.Header closeButton>Delete Form</Modal.Header>
             <Modal.Body className="text-center m-3">

@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 const FormViewPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const permissions = JSON.parse(localStorage.getItem("permissions"));
 
   const handleEditButton = async (id) => {
     try {
@@ -38,15 +39,18 @@ const FormViewPage = () => {
     <React.Fragment>
       <Helmet title="Form" />
       <Container fluid className="p-0">
-        <Button
-          variant="warning"
-          className="float-end mt-n1"
-          onClick={() => {
-            handleEditButton(id);
-          }}
-        >
-          <FontAwesomeIcon icon={faEdit} /> Edit
-        </Button>
+        {permissions.includes("edit form") && (
+          <Button
+            variant="warning"
+            className="float-end mt-n1"
+            onClick={() => {
+              handleEditButton(id);
+            }}
+          >
+            <FontAwesomeIcon icon={faEdit} /> Edit
+          </Button>
+        )}
+
         <Breadcrumb style={{ fontSize: "1.3rem" }}>
           <Breadcrumb.Item onClick={handleFormBreadcrumb}>Form</Breadcrumb.Item>
           <Breadcrumb.Item active>View</Breadcrumb.Item>
