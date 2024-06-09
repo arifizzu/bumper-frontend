@@ -231,7 +231,7 @@ const RolePermissionView = ({ id }) => {
 
               <hr></hr>
 
-              <Row>
+              {/* <Row>
                 <Col>
                   <h6 className="card-subtitle ">Process Builder</h6>
                 </Col>
@@ -282,7 +282,7 @@ const RolePermissionView = ({ id }) => {
                 </Row>
               </Form.Group>
 
-              <hr></hr>
+              <hr></hr> */}
 
               <Row>
                 <Col>

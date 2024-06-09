@@ -363,7 +363,7 @@ const RolePermissionEdit = ({ id }) => {
 
               <hr></hr>
 
-              <Row>
+              {/* <Row>
                 <Col>
                   <h6 className="card-subtitle ">Process Builder</h6>
                 </Col>
@@ -434,7 +434,7 @@ const RolePermissionEdit = ({ id }) => {
                 </Row>
               </Form.Group>
 
-              <hr></hr>
+              <hr></hr> */}
 
               <Row>
                 <Col>

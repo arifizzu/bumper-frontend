@@ -124,7 +124,7 @@ const RolePermissionNew = ({}) => {
 
   const initialPermissionNames = [
     "form",
-    "process",
+    // "process",
     "role",
     "permission",
     "user",
@@ -133,7 +133,7 @@ const RolePermissionNew = ({}) => {
 
   const permissionSections = {
     form: ["use", "view", "create", "edit", "delete"],
-    process: ["view", "create", "edit", "delete"],
+    // process: ["view", "create", "edit", "delete"],
     role: ["view", "create", "edit", "delete"],
     permission: ["view", "create", "edit", "delete"],
     user: ["view", "create", "edit", "delete"],
@@ -377,7 +377,7 @@ const RolePermissionNew = ({}) => {
 
               <hr></hr>
 
-              <Row>
+              {/* <Row>
                 <Col>
                   <h6 className="card-subtitle ">Process Builder</h6>
                 </Col>
@@ -432,7 +432,7 @@ const RolePermissionNew = ({}) => {
                 </Row>
               </Form.Group>
 
-              <hr></hr>
+              <hr></hr> */}
 
               <Row>
                 <Col>
