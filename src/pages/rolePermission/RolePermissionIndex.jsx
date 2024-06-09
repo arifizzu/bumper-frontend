@@ -12,6 +12,8 @@ import { tableColumns } from "./data.js";
 
 const RolePermissionIndexPage = () => {
   const navigate = useNavigate();
+  const permissions = JSON.parse(localStorage.getItem("permissions"));
+
   const handleCreateNew = async () => {
     try {
       navigate("/role-permission/create");
@@ -24,13 +26,16 @@ const RolePermissionIndexPage = () => {
     <React.Fragment>
       <Helmet title="Role & Permission" />
       <Container fluid className="p-0">
-        <Button
-          variant="primary"
-          className="float-end mt-n1"
-          onClick={handleCreateNew}
-        >
-          <FontAwesomeIcon icon={faPlus} /> New role
-        </Button>
+        {permissions.includes("create role") && (
+          <Button
+            variant="primary"
+            className="float-end mt-n1"
+            onClick={handleCreateNew}
+          >
+            <FontAwesomeIcon icon={faPlus} /> New role
+          </Button>
+        )}
+
         <Breadcrumb style={{ fontSize: "1.3rem" }}>
           <Breadcrumb.Item active>Role & Permission</Breadcrumb.Item>
         </Breadcrumb>

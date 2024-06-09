@@ -12,6 +12,7 @@ const RolePermissionViewPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   //   console.log("id", id);
+  const permissions = JSON.parse(localStorage.getItem("permissions"));
 
   const handleEditButton = async (id) => {
     try {
@@ -29,15 +30,17 @@ const RolePermissionViewPage = () => {
     <React.Fragment>
       <Helmet title="Role & Permission" />
       <Container fluid className="p-0">
-        <Button
-          variant="warning"
-          className="float-end mt-n1"
-          onClick={() => {
-            handleEditButton(id);
-          }}
-        >
-          <FontAwesomeIcon icon={faEdit} /> Edit
-        </Button>
+        {permissions.includes("edit role") && (
+          <Button
+            variant="warning"
+            className="float-end mt-n1"
+            onClick={() => {
+              handleEditButton(id);
+            }}
+          >
+            <FontAwesomeIcon icon={faEdit} /> Edit
+          </Button>
+        )}
         <Breadcrumb style={{ fontSize: "1.3rem" }}>
           <Breadcrumb.Item onClick={handleBreadcrumb}>
             Role & Permission
