@@ -24,6 +24,7 @@ import {
   faEye,
   faEdit,
   faTrash,
+  faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 
 import {
@@ -157,7 +158,7 @@ const DatalistIndex = ({ datalistTableColumns }) => {
             handleUseButton(row.id);
           }}
         >
-          <FontAwesomeIcon icon={faEye} /> Use
+          <FontAwesomeIcon icon={faMagnifyingGlass} /> Use
         </Button>
 
         <Button
