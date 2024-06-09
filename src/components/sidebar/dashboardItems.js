@@ -366,8 +366,35 @@ const dashboardSection = [
     href: "/dashboard",
     icon: List,
     title: "Dashboard",
-    roles: ["admin", "user"],
-    permissions: ["view form"],
+    // roles: ["admin", "user"],
+    permissions: [
+      "use form",
+      "view form",
+      "create form",
+      "edit form",
+      "delete form",
+      "view user",
+      "create user",
+      "edit user",
+      "delete user",
+      "view role",
+      "create role",
+      "edit role",
+      "delete role",
+      "view permission",
+      "create permission",
+      "edit permission",
+      "delete permission",
+      "view process",
+      "create process",
+      "edit process",
+      "delete process",
+      "use datalist",
+      "view datalist",
+      "create datalist",
+      "edit datalist",
+      "delete datalist",
+    ],
   },
 ];
 
@@ -376,8 +403,14 @@ const formBuilderSection = [
     href: "/form-builder",
     icon: CheckSquare,
     title: "Forms",
-    roles: ["admin"],
-    permissions: ["view form", "create form", "edit form", "delete form"],
+    // roles: ["admin"],
+    permissions: [
+      "use form",
+      "view form",
+      "create form",
+      "edit form",
+      "delete form",
+    ],
   },
   // {
   //   href: "/notifications",
@@ -391,8 +424,14 @@ const formBuilderSectionV2 = [
     href: "/form-builder-v2",
     icon: CheckSquare,
     title: "Forms",
-    roles: ["admin"],
-    permissions: ["view form", "create form", "edit form", "delete form"],
+    // roles: ["admin"],
+    permissions: [
+      "use form",
+      "view form",
+      "create form",
+      "edit form",
+      "delete form",
+    ],
   },
 ];
 
@@ -401,8 +440,9 @@ const datalistBuilderSection = [
     href: "/datalist-builder",
     icon: Table,
     title: "Datalist",
-    roles: ["admin"],
+    // roles: ["admin"],
     permissions: [
+      "use datalist",
       "view datalist",
       "create datalist",
       "edit datalist",
@@ -416,7 +456,7 @@ const processBuilderSection = [
     href: "/process-builder",
     icon: Trello,
     title: "Processes",
-    roles: ["admin"],
+    // roles: ["admin"],
     permissions: [
       "view process",
       "create process",
@@ -436,35 +476,24 @@ const managementSettingsSection = [
     href: "/role-permission",
     icon: Key,
     title: "Role & Permission",
-    roles: ["admin"],
-    // permissions: ["view process"],
-    // children: [
-    //   {
-    //     href: "/role-permission",
-    //     title: "Lists",
-    //   },
-    //   {
-    //     href: "/form-plugins/formik",
-    //     title: "Assign to User",
-    //   },
-    // ],
+    // roles: ["admin"],
+    permissions: [
+      "view permission",
+      "create permission",
+      "edit permission",
+      "delete permission",
+      "view role",
+      "create role",
+      "edit role",
+      "delete role",
+    ],
   },
   {
     href: "/users",
     icon: Users,
     title: "User Account",
-    roles: ["admin"],
+    // roles: ["admin"],
     permissions: ["view user", "create user", "edit user", "delete user"],
-    // children: [
-    //   {
-    //     href: "/users",
-    //     title: "Existing Users",
-    //   },
-    //   {
-    //     href: "/form-plugins/advanced-inputs",
-    //     title: "Create New User",
-    //   },
-    // ],
   },
 ];
 
@@ -493,18 +522,18 @@ const navItems = [
     title: "Management Settings",
     pages: managementSettingsSection,
   },
-  // {
-  //   title: "Pages",
-  //   pages: pagesSection,
-  // },
-  // {
-  //   title: "Tools & Components",
-  //   pages: componentsSection,
-  // },
-  // {
-  //   title: "Plugins & Addons",
-  //   pages: pluginsSection,
-  // },
+  {
+    title: "Pages",
+    pages: pagesSection,
+  },
+  {
+    title: "Tools & Components",
+    pages: componentsSection,
+  },
+  {
+    title: "Plugins & Addons",
+    pages: pluginsSection,
+  },
 ];
 
 export default navItems;
