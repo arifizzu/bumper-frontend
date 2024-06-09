@@ -140,6 +140,7 @@ const FormViewEmbedV2 = lazy(() =>
   import("./pages/formBuilderV2/FormViewEmbed")
 );
 const FormEditV2 = lazy(() => import("./pages/formBuilderV2/FormEdit"));
+const FormUseV2 = lazy(() => import("./pages/formBuilderV2/FormUse"));
 
 // Datalist Builder
 const DatalistIndex = lazy(() =>
@@ -154,6 +155,7 @@ const DatalistViewEmbed = lazy(() =>
 const DatalistViewPreviewEmbed = lazy(() =>
   import("./pages/datalistBuilder/DatalistViewPreviewEmbed")
 );
+const DatalistUse = lazy(() => import("./pages/datalistBuilder/DatalistUse"));
 
 // Process Builder
 const ProcessIndex = lazy(() => import("./pages/processBuilder/ProcessIndex"));
@@ -662,7 +664,10 @@ const routes = [
         path: "edit/:id",
         element: <DatalistEdit />,
       },
-      ,
+      {
+        path: "use/:id",
+        element: <DatalistUse />,
+      },
     ],
   },
   {
@@ -705,7 +710,10 @@ const routes = [
         path: "edit/:id",
         element: <FormEditV2 />,
       },
-      ,
+      {
+        path: "use/:id",
+        element: <FormUseV2 />,
+      },
     ],
   },
 

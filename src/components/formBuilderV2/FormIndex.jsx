@@ -79,6 +79,14 @@ const FormIndex = ({ formTableColumns }) => {
     }));
   };
 
+  const handleUseButton = async (id) => {
+    try {
+      navigate(`/form-builder-v2/use/${id}`);
+    } catch (error) {
+      console.error("Use form failed:", error);
+    }
+  };
+
   const handleViewButton = async (id) => {
     try {
       navigate(`/form-builder-v2/view/${id}`);
@@ -141,6 +149,17 @@ const FormIndex = ({ formTableColumns }) => {
 
     return (
       <>
+        <Button
+          variant="primary"
+          size="sm"
+          className="me-2"
+          onClick={() => {
+            handleUseButton(row.id);
+          }}
+        >
+          <FontAwesomeIcon icon={faEye} /> Use
+        </Button>
+
         <Button
           variant="info"
           size="sm"
