@@ -28,7 +28,7 @@ import {
   FieldTimePickerDynamic,
   FieldEmailInputDynamic,
   FieldPasswordInputDynamic,
-} from "./fieldType/FieldTypeDynamic";
+} from "./fieldType/FieldTypeDynamicEmbed";
 
 import {
   showFieldStart,
