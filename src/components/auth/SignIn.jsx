@@ -26,17 +26,10 @@ function SignIn() {
     <Formik
       //for development only
       initialValues={{
-        // email: "admin@bumper.com",
-        // password: "bumper@2024!",
         email: "",
         password: "",
         submit: false,
       }}
-      // initialValues={{
-      //   email: "",
-      //   password: "",
-      //   submit: false,
-      // }}
       validationSchema={Yup.object().shape({
         email: Yup.string()
           .email("Must be a valid email")
