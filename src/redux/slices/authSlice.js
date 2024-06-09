@@ -15,7 +15,6 @@ export const authSlice = createSlice({
     loginStart: (state) => {
       state.loading = true;
       state.error = null;
-      // console.log("loginStart");
     },
     loginSuccess: (state, action) => {
       state.loading = false;
@@ -28,29 +27,24 @@ export const authSlice = createSlice({
         "permissions",
         JSON.stringify(action.payload.permissions)
       );
-      console.log("action", action.payload);
-      // console.log("loginSuccess");
+      // console.log("action", action.payload);
     },
     loginFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
-      // console.log("loginFailure");
     },
     logoutStart: (state) => {
       state.loading = true;
       state.error = null;
-      // console.log("logoutStart");
     },
     logoutSuccess: (state) => {
       state.loading = false;
       localStorage.removeItem("isAuthenticated");
       state.user = null;
-      // console.log("logoutSuccess");
     },
     logoutFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
-      // console.log("loginFailure");
     },
   },
 });
