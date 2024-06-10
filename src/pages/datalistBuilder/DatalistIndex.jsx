@@ -347,7 +347,7 @@ const DatalistIndexPage = () => {
         {/* <Modal.Footer></Modal.Footer> */}
       </Modal>
 
-      <Helmet title="Form" />
+      <Helmet title="Datalist" />
       <Container fluid className="p-0">
         {permissions.includes("create datalist") && (
           <Button
