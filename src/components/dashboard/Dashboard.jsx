@@ -419,9 +419,13 @@ const TopFormUsage = ({ formLogs }) => {
               {topForms.map((form, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{form.form.name}</td>
+                  <td>{form.form ? form.form.name : "N/A"}</td>
                   <td>{form.count}</td>
-                  <td>{new Date(form.form.created_at).toLocaleDateString()}</td>
+                  <td>
+                    {form.form
+                      ? new Date(form.form.created_at).toLocaleDateString()
+                      : "N/A"}
+                  </td>
                 </tr>
               ))}
             </tbody>
