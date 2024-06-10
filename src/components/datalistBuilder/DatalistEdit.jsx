@@ -803,7 +803,7 @@ const DatalistLayout = ({ datalist }) => {
                 isSaving={isSaving}
               />
             </Col>
-            <Col lg="6" xl="6">
+            {/* <Col lg="6" xl="6">
               <Segment
                 name="Row Action"
                 items={datalistRowActions}
@@ -829,7 +829,7 @@ const DatalistLayout = ({ datalist }) => {
                 setter={setDatalistRowActions}
                 isSaving={isSaving}
               />
-            </Col>
+            </Col> */}
           </Row>
           {/* <Row>
             <Col lg="9" xl="9">
