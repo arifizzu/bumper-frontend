@@ -12,24 +12,25 @@ import {
 export const FieldTextInputDynamic = ({ fieldList }) => {
   return (
     <React.Fragment>
-      <Form.Group as={Row} className="mb-3">
-        <Form.Label
-          column
-          sm={5}
-          className="text-sm-right"
-          style={{ color: "black" }}
-        >
-          {fieldList.caption} :
-        </Form.Label>
-        <Col sm={7}>
-          <Form.Control
-            type="text"
-            name={fieldList.caption} // Use field caption as the input name
-            placeholder=""
-            defaultValue={""}
-          />
-        </Col>
-      </Form.Group>
+      <Container>
+        <Form.Group as={Row} className="mb-3 align-items-center">
+          <Col sm={5} className="text-right">
+            <Form.Label
+              style={{ color: "black", textAlign: "right", marginBottom: "0" }}
+            >
+              {fieldList.caption}:
+            </Form.Label>
+          </Col>
+          <Col sm={7}>
+            <Form.Control
+              type="text"
+              name={fieldList.caption} // Use field caption as the input name
+              placeholder=""
+              defaultValue={""}
+            />
+          </Col>
+        </Form.Group>
+      </Container>
     </React.Fragment>
   );
 };
@@ -38,14 +39,15 @@ export const FieldTextareaDynamic = ({ fieldList }) => {
   return (
     <React.Fragment>
       <Form.Group as={Row} className="mb-3">
-        <Form.Label
-          column
-          sm={5}
-          className="text-sm-right"
-          style={{ color: "black" }}
-        >
-          {fieldList.caption} :
-        </Form.Label>
+        <Col sm={5} className="text-right">
+          <Form.Label
+            column
+            style={{ color: "black", textAlign: "right", marginBottom: "0" }}
+          >
+            {fieldList.caption}:
+          </Form.Label>
+        </Col>
+
         <Col sm={7}>
           <Form.Control
             type="textarea"
@@ -66,10 +68,10 @@ export const FieldNumberInputDynamic = ({ fieldList }) => {
         <Form.Label
           column
           sm={5}
-          className="text-sm-right"
-          style={{ color: "black" }}
+          className="text-sm-left"
+          style={{ color: "black", textAlign: "left" }}
         >
-          {fieldList.caption} :
+          {fieldList.caption}:
         </Form.Label>
         <Col sm={7}>
           <Form.Control
@@ -88,8 +90,13 @@ export const FieldCheckboxDynamic = ({ fieldList }) => {
   return (
     <React.Fragment>
       <Form.Group as={Row} className="mb-3">
-        <Form.Label column className="text-sm-right" style={{ color: "black" }}>
-          {fieldList.caption} :
+        <Form.Label
+          column
+          sm={5}
+          className="text-sm-left"
+          style={{ color: "black", textAlign: "left" }}
+        >
+          {fieldList.caption}:
         </Form.Label>
         <Col sm={7}>
           {fieldList.list_values.map((listValue, index) => (
@@ -113,8 +120,13 @@ export const FieldRadioButtonDynamic = ({ fieldList }) => {
   return (
     <React.Fragment>
       <Form.Group as={Row} className="mb-3">
-        <Form.Label column className="text-sm-right" style={{ color: "black" }}>
-          {fieldList.caption} :
+        <Form.Label
+          column
+          sm={5}
+          className="text-sm-left"
+          style={{ color: "black", textAlign: "left" }}
+        >
+          {fieldList.caption}:
         </Form.Label>
         <Col sm={7}>
           {fieldList.list_values.map((listValue, index) => (
@@ -152,8 +164,13 @@ export const FieldDropdownDynamic = ({ fieldList }) => {
   return (
     <React.Fragment>
       <Form.Group as={Row} className="mb-3">
-        <Form.Label column className="text-sm-right" style={{ color: "black" }}>
-          {fieldList.caption} :
+        <Form.Label
+          column
+          sm={5}
+          className="text-sm-left"
+          style={{ color: "black", textAlign: "left" }}
+        >
+          {fieldList.caption}:
         </Form.Label>
         <Col sm={7}>
           <Form.Select
@@ -177,8 +194,13 @@ export const FieldFileUploadDynamic = ({ fieldList }) => {
   return (
     <React.Fragment>
       <Form.Group as={Row} className="mb-3">
-        <Form.Label column className="text-sm-right" style={{ color: "black" }}>
-          {fieldList.caption} :
+        <Form.Label
+          column
+          sm={5}
+          className="text-sm-left"
+          style={{ color: "black", textAlign: "left" }}
+        >
+          {fieldList.caption}:
         </Form.Label>
         <Col sm={7}>
           <Form.Control
@@ -195,8 +217,13 @@ export const FieldDatePickerDynamic = ({ fieldList }) => {
   return (
     <React.Fragment>
       <Form.Group as={Row} className="mb-3">
-        <Form.Label column className="text-sm-right" style={{ color: "black" }}>
-          {fieldList.caption} :
+        <Form.Label
+          column
+          sm={5}
+          className="text-sm-left"
+          style={{ color: "black", textAlign: "left" }}
+        >
+          {fieldList.caption}:
         </Form.Label>
         <Col sm={7}>
           <Form.Control
@@ -215,8 +242,13 @@ export const FieldTimePickerDynamic = ({ fieldList }) => {
   return (
     <React.Fragment>
       <Form.Group as={Row} className="mb-3">
-        <Form.Label column className="text-sm-right" style={{ color: "black" }}>
-          {fieldList.caption} :
+        <Form.Label
+          column
+          sm={5}
+          className="text-sm-left"
+          style={{ color: "black", textAlign: "left" }}
+        >
+          {fieldList.caption}:
         </Form.Label>
         <Col sm={7}>
           <Form.Control
@@ -235,8 +267,13 @@ export const FieldEmailInputDynamic = ({ fieldList }) => {
   return (
     <React.Fragment>
       <Form.Group as={Row} className="mb-3">
-        <Form.Label column className="text-sm-right" style={{ color: "black" }}>
-          {fieldList.caption} :
+        <Form.Label
+          column
+          sm={5}
+          className="text-sm-left"
+          style={{ color: "black", textAlign: "left" }}
+        >
+          {fieldList.caption}:
         </Form.Label>
         <Col sm={7}>
           <Form.Control
@@ -255,8 +292,13 @@ export const FieldPasswordInputDynamic = ({ fieldList }) => {
   return (
     <React.Fragment>
       <Form.Group as={Row} className="mb-3">
-        <Form.Label column className="text-sm-right" style={{ color: "black" }}>
-          {fieldList.caption} :
+        <Form.Label
+          column
+          sm={5}
+          className="text-sm-left"
+          style={{ color: "black", textAlign: "left" }}
+        >
+          {fieldList.caption}:
         </Form.Label>
         <Col sm={7}>
           <Form.Control
